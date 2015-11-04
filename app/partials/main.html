@@ -59,7 +59,8 @@
         <md-select style="margin-right: 20px;color: white !important;border-bottom-color: white !important;"
                    aria-label="select language"
                    data-md-on-close="vm.changeLocale()"
-                   data-ng-model="vm.selectedLocale">
+                   data-ng-model="vm.selectedLocale"
+                   id="langue">
             <md-option value="fr">Français</md-option>
             <md-option value="en">English</md-option>
             <md-option value="es">Español</md-option>
@@ -72,7 +73,7 @@
 
         </md-select>
     </md-toolbar>
-    
+
     <md-content data-ui-view data-autoscroll data-md-scroll-y layout="column" flex>
 
         <md-grid-list data-ng-if="vm.showModulesGrid" data-md-row-height="300px" data-md-gutter="8px" data-md-cols="1"

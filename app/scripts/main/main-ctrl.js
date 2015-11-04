@@ -12,7 +12,7 @@ angular.module('workingRoom')
         vm.showModulesGrid = true;
         vm.selectedLocale = 'fr';
         vm.changeLocale = changeLocale;
-        vm.getLocale = getLocale;
+
 
         updateState();
         checkModulesState($state.params);
@@ -65,12 +65,7 @@ angular.module('workingRoom')
         function changeLocale() {
             $translate.use(vm.selectedLocale);
             amMoment.changeLocale(vm.selectedLocale);
-            lang = vm.selectedLocale;
-        }
-
-        function getLocale(){
-          var L = document.getElementById('id');
-          var lang = L.options[L.selectedIndex].text;
-          return lang;
+            //$scope.lang = vm.selectedLocale;
+            //console.log($scope.lang);
         }
     });

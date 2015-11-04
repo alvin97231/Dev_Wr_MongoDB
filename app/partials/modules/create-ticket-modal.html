@@ -13,6 +13,9 @@
         </md-toolbar>
         <md-dialog-content layout="row" layout-wrap="">
             <md-input-container flex="100">
+              <span data-ng-model="vm.selectedLocale">{{vm.selectedLocale}}</span>
+            </md-input-container>
+            <md-input-container flex="100">
                 <label>Sujet</label>
                 <input autofocus data-ng-model="vm.ticket.subject" type="text" required title="sujet"/>
             </md-input-container>
@@ -20,10 +23,12 @@
                 <div data-ng-switch="field.type">
                     <md-input-container data-ng-switch-when="text">
                         <label>{{field.name}}</label>
-                        <input data-ng-if="field.name==='No. de Commande' || field.name==='No. de Vente'" data-ng-model="vm.ticket[key]" type="text"
-                               required title="{{field.name}}" data-ng-pattern="vm.getPattern(field.minSize)" md-maxlength="field.minSize"/>
+                        <input data-ng-if="field.name==='No. de Commande'" data-ng-model="vm.ticket[key]" type="text"
+                               required title="{{field.name}}" md-maxlength="field.minSize" maxlength="8"/>
+                        <input data-ng-if="field.name==='No. de Vente'" data-ng-model="vm.ticket[key]" type="text"
+                                      required title="{{field.name}}" md-maxlength="field.minSize" maxlength="5"/>
                         <input data-ng-if="field.name==='Mail Client'" data-ng-model="vm.ticket[key]" type="text"
-                               required title="{{field.name}}" data-ng-pattern="vm.getPattern(field.minSize)"/>
+                              title="{{field.name}}"/>
                         <input data-ng-if="field.name==='Ref. SRP'" data-ng-model="vm.ticket[key]" type="text"
                                       required title="{{field.name}}"/>
                     </md-input-container>

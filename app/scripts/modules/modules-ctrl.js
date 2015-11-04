@@ -20,6 +20,7 @@ angular.module('workingRoom')
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
+        vm.getLocale = getLocale;
 
         var defaultStatus = getDefaultStatus();
         vm.currentFilter = {status: defaultStatus};
@@ -153,6 +154,12 @@ angular.module('workingRoom')
             }
             return 'Tous les tickets';
         }
+
+        function getLocale(){
+          var L = document.getElementById('langue');
+          var lang = L.options[L.selectedIndex].text;
+          return lang;
+          }
 
         function statusDuration()
         {

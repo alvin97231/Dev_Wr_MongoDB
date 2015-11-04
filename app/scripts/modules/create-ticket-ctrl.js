@@ -5,12 +5,13 @@ angular.module('workingRoom')
         var vm = this;
 
         var defaultStatus = getDefaultStatus();
+
         vm.ticket = {
             user: {
                 id: User.$id,
-                name: User.name,
-                lang ='fr',
+                name: User.name
             },
+            //lang : $rootScope.lang,
             status: defaultStatus
         };
         vm.module = Module;
@@ -20,6 +21,7 @@ angular.module('workingRoom')
         vm.deleteFile = deleteFile;
         vm.getPattern = getPattern;
         vm.upload = new FileUploader();
+
 
         vm.getSubCat = function (cat, subcats) {
             var ret = [];
