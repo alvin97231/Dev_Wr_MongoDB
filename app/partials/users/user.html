@@ -1,0 +1,35 @@
+<div data-ui-view>
+    <div layout="row" layout-margin layout-fill>
+        <md-card flex flex-gt-md="66">
+            <md-card-content>
+                <h3>{{vm.user.name}}</h3>
+
+                <div layout="row" layout-align="start center" data-ng-show="!vm.user.connected">
+                    <h5 layout-margin>{{'PROFILE_CONNECTED' | translate}} </h5><span data-am-time-ago="vm.user.lastOnline"></span>
+                </div>
+                <h5 data-ng-show="vm.user.connected">{{'PROFILE_CONNECT' | translate}}</h5>
+            </md-card-content>
+        </md-card>
+    </div>
+    <div>
+        <md-fab-speed-dial class="fab md-scale" data-md-direction="up" data-ng-if="vm.admin">
+            <md-fab-trigger>
+                <md-button aria-label="edit profile" data-ui-sref=".edit" class="md-fab accent">
+                    <md-tooltip data-md-direction="left">
+                      {{'PROFILE_BUTTON_MODIFY' | translate}}
+                    </md-tooltip>
+                    <md-icon>edit</md-icon>
+                </md-button>
+            </md-fab-trigger>
+            <md-fab-actions>
+                <md-button aria-label="group-settings" data-ng-click="vm.deleteUser($event)"
+                           class="md-fab md-raised md-mini">
+                    <md-tooltip data-md-direction="left">
+                      {{'PROFILE_BUTTON_DEL' | translate}}
+                    </md-tooltip>
+                    <md-icon style="color: #808080;">delete</md-icon>
+                </md-button>
+            </md-fab-actions>
+        </md-fab-speed-dial>
+    </div>
+</div>

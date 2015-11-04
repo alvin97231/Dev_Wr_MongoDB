@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>WorkingRoom</title>
+    <meta name="description"
+          content="">
+    <meta name="viewport"
+          content="width=device-width">
+    <link rel="shortcut icon" href="favicon.ico?v=2" />
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+
+    <!-- build:css(app) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/angular-date-picker/angular-date-picker.css" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.min.css" />
+    <link rel="stylesheet" href="bower_components/MultipleDatePicker/dist/multiple-date-picker.css" />
+    <link rel="stylesheet" href="bower_components/mdPickers/dist/mdPickers.min.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css(.tmp) styles/main.css -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="styles/loader.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endinject -->
+    <!-- endbuild -->
+
+</head>
+
+<body layout="row">
+<div flex
+     layout="row"
+     class="mw0"
+     data-ui-view>
+    <div class="loader-container">
+        <div>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+            <span class="dots"></span>
+        </div>
+    </div>
+</div>
+<!-- build:js(app) scripts/vendor.min.js -->
+<!-- bower:js -->
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/angular-date-picker/angular-date-picker.js"></script>
+<script src="bower_components/angular-aria/angular-aria.js"></script>
+<script src="bower_components/angular-material/angular-material.js"></script>
+<script src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
+<script src="bower_components/angular-messages/angular-messages.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/angular-translate/angular-translate.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="bower_components/firebase/firebase.js"></script>
+<script src="bower_components/angularfire/dist/angularfire.js"></script>
+<script src="bower_components/file-saver.js/FileSaver.js"></script>
+<script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
+<script src="bower_components/MultipleDatePicker/dist/multipleDatePicker.min.js"></script>
+<script src="bower_components/mdPickers/dist/mdPickers.min.js"></script>
+<script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
+<!-- endbower -->
+<script src="bower_components/moment/locale/fr.js"></script>
+<script src="bower_components/moment/locale/es.js"></script>
+<script src="bower_components/moment/locale/it.js"></script>
+<script src="bower_components/moment/locale/pt.js"></script>
+<script src="bower_components/moment/locale/de.js"></script>
+<script src="bower_components/moment/locale/pl.js"></script>
+<script src="bower_components/moment/locale/nl.js"></script>
+<!-- endbuild -->
+
+<!-- build:js(app) scripts/main.min.js -->
+<!-- inject:js -->
+<script src="scripts/workingRoom.js"></script>
+<script src="scripts/shared/services/users.js"></script>
+<script src="scripts/shared/services/toast.js"></script>
+<script src="scripts/shared/services/tickets.js"></script>
+<script src="scripts/shared/services/notif.js"></script>
+<script src="scripts/shared/services/modules.js"></script>
+<script src="scripts/shared/services/groups.js"></script>
+<script src="scripts/users/user-ctrl.js"></script>
+<script src="scripts/users/edit-user-ctrl.js"></script>
+<script src="scripts/users/delete-user-ctrl.js"></script>
+<script src="scripts/users/change-password-ctrl.js"></script>
+<script src="scripts/users/change-email-ctrl.js"></script>
+<script src="scripts/translate/pt.js"></script>
+<script src="scripts/translate/pl.js"></script>
+<script src="scripts/translate/nl.js"></script>
+<script src="scripts/translate/it.js"></script>
+<script src="scripts/translate/fr.js"></script>
+<script src="scripts/translate/es.js"></script>
+<script src="scripts/translate/en.js"></script>
+<script src="scripts/translate/de.js"></script>
+<script src="scripts/translate/be.js"></script>
+<script src="scripts/modules/view-ticket-ctrl.js"></script>
+<script src="scripts/modules/new-ticket-field-ctrl.js"></script>
+<script src="scripts/modules/modules-stats-ctrl.js"></script>
+<script src="scripts/modules/modules-search-ctrl.js"></script>
+<script src="scripts/modules/modules-ctrl.js"></script>
+<script src="scripts/modules/edit-ticket-field-ctrl.js"></script>
+<script src="scripts/modules/edit-modules-ctrl.js"></script>
+<script src="scripts/modules/create-ticket-ctrl.js"></script>
+<script src="scripts/main/main-ctrl.js"></script>
+<script src="scripts/login/reset-password-ctrl.js"></script>
+<script src="scripts/login/login-ctrl.js"></script>
+<script src="scripts/firebase/ref.js"></script>
+<script src="scripts/firebase/config.js"></script>
+<script src="scripts/firebase/auth.js"></script>
+<script src="scripts/admin/edit-group-ctrl.js"></script>
+<script src="scripts/admin/create-user-ctrl.js"></script>
+<script src="scripts/admin/create-module-ctrl.js"></script>
+<script src="scripts/admin/create-group-ctrl.js"></script>
+<script src="scripts/admin/admin-ctrl.js"></script>
+<!-- endinject -->
+<!-- endbuild -->
+
+<!-- partials:js -->
+<!-- endinject -->
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+<md-dialog flex="50" aria-label="New ticket field">
+    <form name="newFieldForm" data-ng-submit="vm.saveField()">
+        <md-dialog-content>
+            <div layout="row">
+                <md-input-container>
+                    <label>{{'MODIFY_MODULE_FIELDS' | translate}}</label>
+                    <input type="text" data-ng-model="vm.newTicketField" title="Champ pour les tickets" required/>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions">
+            <md-button data-ng-click="vm.cancel($event)">
+                {{'MODIFY_FIELDS_BUTTON_CLOSE' | translate}}
+            </md-button>
+            <md-button class="md-raised md-accent" type="submit" data-ng-disabled="newFieldForm.$invalid">
+                {{'MODIFY_FIELDS_BUTTON_SAVE' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

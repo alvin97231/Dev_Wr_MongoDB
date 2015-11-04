@@ -1,0 +1,64 @@
+{
+  "name": "material-start",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular-uid": "^0.1.1",
+    "bower": "^1.6.5",
+    "gulp": "^3.9.0",
+    "gulp-install": "^0.4.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-sass": "^2.1.0",
+    "install": "^0.1.8",
+    "wiredep": "^2.2.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.8.2",
+    "del": "^1.2.0",
+    "gulp": "^3.9.0",
+    "gulp-angular-filesort": "^1.1.1",
+    "gulp-autoprefixer": "^3.0.1",
+    "gulp-clip-empty-files": "^0.1.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-filesize": "0.0.6",
+    "gulp-if": "^1.2.5",
+    "gulp-imagemin": "^2.3",
+    "gulp-inject": "^1.5",
+    "gulp-jshint": "^1.11.2",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-minify-html": "~1.0.4",
+    "gulp-newer": "^0.5.1",
+    "gulp-ng-annotate": "^1.1.0",
+    "gulp-ng-html2js": "~0.2.0",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.0.4",
+    "gulp-size": "^1.2",
+    "gulp-uglify": "^1.4.1",
+    "gulp-useref": "^1.2.0",
+    "gulp-util": "^3.0.6",
+    "jshint-stylish": "^2.0",
+    "node-gyp": "^2.0.2",
+    "node-sass": "^3.2.0",
+    "require-dir": "^0.3",
+    "wiredep": "^2.2.2"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "description": "This Material **start*** project is a *seed* for AngularJS Material applications. The project contains a sample AngularJS application and is pre-configured to install the Angular framework and a bunch of development and testing tools for instant web development gratification.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvin97231/material-start.git"
+  },
+  "author": "Alvin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alvin97231/material-start/issues"
+  },
+  "homepage": "https://github.com/alvin97231/material-start#readme"
+}

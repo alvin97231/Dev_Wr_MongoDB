@@ -1,0 +1,102 @@
+<div layout="row" layout-wrap style="margin-right: 80px;">
+    <ui-view flex="100"></ui-view>
+    <div flex="100" data-ng-show="vm.tickets">
+        <md-card>
+            <md-data-table-toolbar>
+                <!---->
+                <md-button class="md-accent" data-ng-if="vm.user || vm.admin || vm.super || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ng-click="vm.openCreateTicket($event)">
+                    {{ 'TICKET_CREATE' | translate }}
+                </md-button>
+                <md-button class="md-accent" data-ng-if="vm.admin"  data-ui-sref="main.modulesAll({id: vm.module.$id})">
+                    {{ 'ALL_TICKETS' | translate }}
+                </md-button>
+                <md-button class="md-accent" data-ui-sref="main.modulesStats({id: vm.module.$id})">
+                    {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
+                </md-button>
+                <div flex></div>
+                <md-button data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
+                  <md-icon>forum</md-icon>
+                  <span>{{vm.ticketsCurrent.length}}</span>
+                </md-button>
+                <md-button data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
+                  <md-icon>messenger</md-icon>
+                  <span>{{vm.ticketsNotRead.length}}</span>
+                </md-button>
+            </md-data-table-toolbar>
+            <md-tabs md-dynamic-height aria-label="select status" >
+              <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Escalade injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
+                <md-tab-body>
+                  <md-data-table-container>
+                      <table md-data-table id='testTable'>
+                          <thead md-order="vm.query.order">
+                          <tr>
+                              <th order-by="id" style="text-align:center">#</th>
+                              <th trim order-by="user.name" style="text-align:center">Nom</th>
+                              <th trim order-by="subject" style="text-align:center">Sujet</th>
+                              <th trim order-by="status" style="text-align:center">Statuts</th>
+                              <th trim order-by="created" style="text-align:center">Créé</th>
+                              <th trim order-by="lastResponse" style="text-align:center">Réponse par</th>
+                              <th trim order-by="created" style="text-align:center">J+</th>
+                              <th trim order-by="{{key}}"
+                                  data-ng-repeat="(key, field) in vm.module.ticketFields"
+                                  style="text-align:center">{{field.name}}</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr ng-repeat="ticket in vm.tickets | orderBy:vm.query.order | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)"
+                              data-ng-click="vm.openTicketView($event, ticket.$id)">
+                              <td style="text-align:center" id="id">{{ticket.id}}</td>
+                              <td style="text-align:center" id="user">{{ticket.user.name}}</td>
+                              <td style="text-align:center" id="subject">{{ticket.subject}}</td>
+                              <td style="text-align:center" id="status">{{ticket.status}}</td>
+                              <td style="text-align:center" id="date">{{ticket.created | amCalendar}}</td>
+                              <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
+                              <td style="text-align:center" id="nbjours" value="{{ticket.created | amDifference: null : 'days'}}">{{ticket.created | amDifference: null : 'days' | amDurationFormat : 'day'}}</td>
+                              <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">
+                                  <div data-ng-if="field.type !== 'dropdouble'">
+                                      {{ticket[key]}}
+                                  </div>
+                                  <div data-ng-if="field.type === 'dropdouble'">
+                                      {{ticket[key].first + ' - ' + ticket[key].second}}
+                                  </div>
+                              </td>
+                          </tr>
+                          </tbody>
+                      </table>
+                  </md-data-table-container>
+                  <div data-ng-show="!vm.tickets" layout-fill layout="row" layout-align="center">
+                      <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
+                  </div>
+                  <md-data-table-toolbar layout-align="end">
+                      <md-data-table-pagination md-label="vm.label" md-limit="vm.query.limit" md-page="vm.query.page"
+                                                md-row-select="vm.query.rowSelect" md-total="{{vm.tickets.length}}">
+                      </md-data-table-pagination>
+                  </md-data-table-toolbar>
+                </md-tab-body>
+          </md-tab>
+        </md-tabs>
+        </md-card>
+    </div>
+    <div data-ng-hide="vm.tickets" layout-fill layout="row" layout-align="center" style="padding-top: 50px;">
+        <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
+    </div>
+</div>
+<md-fab-speed-dial class="fab md-scale" data-md-direction="up">
+    <md-fab-trigger>
+        <md-button aria-label="search" data-ui-sref="main.modules.search({id: vm.moduleId})" class="md-fab accent">
+            <md-tooltip data-md-direction="left">
+                {{ 'TICKET_BUTTON_SEARCH' | translate }}
+            </md-tooltip>
+            <md-icon>search</md-icon>
+        </md-button>
+    </md-fab-trigger>
+    <md-fab-actions data-ng-if="vm.admin || vm.module.$rights === 'a'">
+        <md-button aria-label="group-settings" data-ui-sref="main.modules.edit({id: vm.moduleId})"
+                   class="md-fab md-raised md-mini">
+            <md-tooltip data-md-direction="left">
+                {{ 'TICKET_BUTTON_EDIT' | translate }}
+            </md-tooltip>
+            <md-icon style="color: #808080;">settings</md-icon>
+        </md-button>
+    </md-fab-actions>
+</md-fab-speed-dial>

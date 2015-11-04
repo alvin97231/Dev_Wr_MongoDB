@@ -1,0 +1,54 @@
+<md-dialog flex="50" aria-label="Edit ticket field">
+    <form name="fieldForm" data-ng-submit="vm.saveField()">
+        <md-dialog-content>
+            <div layout="row">
+                <md-input-container style="margin-right: 15px;">
+                    <label>{{'MODIFY_FIELDS_NAME' | translate}}</label>
+                    <input data-ng-model="vm.field.name" type="text" required title="field name"/>
+                </md-input-container>
+                <md-input-container style="margin-right: 15px;" data-ng-if="vm.field.type === 'dropdouble'">
+                    <label>Second nom</label>
+                    <input data-ng-model="vm.field.subName" type="text" required title="field sub name"/>
+                </md-input-container>
+                <md-input-container style="margin-right: 15px;" data-ng-show="vm.field.type === 'text'">
+                    <label>Longueur minimum</label>
+                    <input data-ng-model="vm.field.minSize" type="number"  title="field min size"
+                           value="0" min="0"/>
+                </md-input-container>
+                <md-select data-ng-model="vm.field.type" aria-label="field type">
+                    <md-option value="text">Texte</md-option>
+                    <md-option value="checkbox">Checkbox</md-option>
+                    <md-option value="dropsimple">Dropdown simple</md-option>
+                    <md-option value="dropdouble">Dropdown double</md-option>
+                </md-select>
+            </div>
+            <div data-ng-switch="vm.field.type">
+                <div data-ng-switch-when="dropsimple">
+                    <md-chips data-ng-model="vm.field.data"
+                              data-md-on-append="vm.appendDouble($chip)">
+                        <md-chip-template>{{$chip.name}}</md-chip-template>
+                    </md-chips>
+                </div>
+                <div data-ng-switch-when="dropdouble">
+                    <md-chips data-ng-model="vm.field.data"
+                              data-md-on-append="vm.appendDouble($chip)">
+                        <md-chip-template>{{$chip.name}}</md-chip-template>
+                    </md-chips>
+                    <div data-ng-repeat="data in vm.field.data" data-md-on-append="vm.appendDouble($chip)">
+                        <h5>{{data.name}}</h5>
+                        <md-chips data-ng-model="data.data"></md-chips>
+                        <md-chip-template>{{$chip.name}}</md-chip-template>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions">
+            <md-button type="button" data-ng-click="vm.hide($event)">
+              {{'MODIFY_FIELDS_BUTTON_CLOSE' | translate}}
+            </md-button>
+            <md-button class="md-raised md-accent" type="submit" data-ng-disabled="fieldForm.$invalid">
+                {{'MODIFY_FIELDS_BUTTON_SAVE' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

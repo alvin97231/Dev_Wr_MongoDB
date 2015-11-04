@@ -1,0 +1,87 @@
+<md-dialog flex="50">
+    <form name="ticketForm" data-ng-submit="vm.hide(vm.ticket)">
+        <md-toolbar class="md-accent">
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>{{ 'TICKET_CREATE' | translate }}</span>
+                </h2>
+                <span flex></span>
+                <md-button type="button" aria-label="add" data-ng-click="vm.cancel($event)" class="md-icon-button">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content layout="row" layout-wrap="">
+            <md-input-container flex="100">
+                <label>Sujet</label>
+                <input autofocus data-ng-model="vm.ticket.subject" type="text" required title="sujet"/>
+            </md-input-container>
+            <div flex="50" data-ng-repeat="(key, field) in vm.module.ticketFields">
+                <div data-ng-switch="field.type">
+                    <md-input-container data-ng-switch-when="text">
+                        <label>{{field.name}}</label>
+                        <input data-ng-if="field.name==='No. de Commande' || field.name==='No. de Vente'" data-ng-model="vm.ticket[key]" type="text"
+                               required title="{{field.name}}" data-ng-pattern="vm.getPattern(field.minSize)" md-maxlength="field.minSize"/>
+                        <input data-ng-if="field.name==='Mail Client'" data-ng-model="vm.ticket[key]" type="text"
+                               required title="{{field.name}}" data-ng-pattern="vm.getPattern(field.minSize)"/>
+                        <input data-ng-if="field.name==='Ref. SRP'" data-ng-model="vm.ticket[key]" type="text"
+                                      required title="{{field.name}}"/>
+                    </md-input-container>
+                    <md-input-container data-ng-switch-when="checkbox">
+                        <md-checkbox data-ng-model="vm.ticket[key]"
+                                     data-ng-true-value="'oui'"
+                                     data-ng-false-value="'non'"
+                                     aria-label="{{field.name}}"
+                                      data-ng-init="vm.ticket[key] = 'non'">
+                            <label>{{ field.name }}</label>
+                        </md-checkbox>
+                    </md-input-container>
+                    <md-input-container data-ng-switch-when="dropsimple">
+                        <label>{{field.name}}</label>
+                        <md-select data-ng-model="vm.ticket[key]" required>
+                            <md-option data-ng-repeat="data in field.data" value="{{data.name}}">{{data.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div flex layout="row" data-ng-switch-when="dropdouble">
+                        <md-input-container flex>
+                            <label>{{field.name}}</label>
+                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" required>
+                                <md-option data-ng-repeat="data in field.data" value="{{data.name}}">
+                                    {{data.name}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                        <md-input-container flex data-ng-show="vm.ticket[key].first">
+                            <label>{{field.subName}}</label>
+                            <md-select data-ng-model="vm.ticket[key].second" aria-label="subcat" required>
+                                <md-option data-ng-repeat="subdata in vm.getSubCat(vm.ticket[key].first, field.data)"
+                                           value="{{subdata}}">{{subdata}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+            <md-input-container flex="100">
+                <label>Message</label>
+                <textarea data-ng-model="vm.ticket.message" type="text"
+                          columns="1" required title="message"></textarea>
+            </md-input-container>
+        </md-dialog-content>
+        <div class="md-actions">
+          <input type="file" nv-file-select uploader="vm.upload"/><br/>
+      <ul>
+          <li ng-repeat="item in upload.queue">
+              Name: <span ng-bind="item.file.name"></span><br/>
+              <button ng-click="item.upload()">upload</button>
+          </li>
+      </ul>
+
+            <md-button class="md-raised" type="button" data-ng-if="vm.ticket.file" data-ng-click="vm.deleteFile()">Supprimer</md-button>
+            <md-button class="md-raised md-accent" type="submit" data-ng-disabled="ticketForm.$invalid">
+                {{'BUTTON_CREATE_MODULE' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

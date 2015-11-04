@@ -1,0 +1,32 @@
+<md-dialog flex="50" aria-label="Edit ticket pattern">
+    <form name="fieldForm" data-ng-submit="vm.saveField()">
+        <md-dialog-content>
+            <div data-ng-switch="vm.field.type">
+                <div data-ng-switch-when="dropsimple">
+                    <md-chips data-ng-model="vm.field.data"
+                              data-md-on-append="vm.appendDouble($chip)">
+                        <md-chip-template>{{$chip.name}}</md-chip-template>
+                    </md-chips>
+                </div>
+                <div data-ng-switch-when="dropdouble">
+                    <md-chips data-ng-model="vm.field.data"
+                              data-md-on-append="vm.appendDouble($chip)">
+                        <md-chip-template>{{$chip.name}}</md-chip-template>
+                    </md-chips>
+                    <div data-ng-repeat="data in vm.field.data">
+                        <h5>{{data.name}}</h5>
+                        <md-chips data-ng-model="data.data"></md-chips>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions">
+            <md-button type="button" data-ng-click="vm.hide($event)">
+              {{'MODIFY_FIELDS_BUTTON_CLOSE' | translate}}
+            </md-button>
+            <md-button class="md-raised md-accent" type="submit" data-ng-disabled="fieldForm.$invalid">
+                {{'MODIFY_FIELDS_BUTTON_SAVE' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

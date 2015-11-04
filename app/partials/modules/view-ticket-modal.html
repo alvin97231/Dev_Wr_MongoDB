@@ -1,0 +1,75 @@
+<md-dialog flex="66">
+    <md-dialog-content layout="column" style="padding: 0;">
+        <md-toolbar class="md-accent">
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>{{vm.ticket.id}} - {{ vm.ticket.subject }} - {{vm.ticket.status}}</span>
+                </h2>
+                <span flex></span>
+                <md-button type="button" aria-label="add" data-ng-click="vm.cancel()" class="md-icon-button">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content>
+            <div flex layout="row" layout-wrap style="padding: 20px;" layout-padding>
+                <div flex="33" data-ng-repeat="(key, field) in vm.module.ticketFields">
+                    <span>{{field.name}} :</span>
+                    <h4 data-ng-if="field.type !== 'dropdouble'">{{ vm.ticket[key] }}</h4>
+                    <h4 data-ng-if="field.type === 'dropdouble'">{{ vm.ticket[key].first + ' - ' + vm.ticket[key].second }}</h4>
+                </div>
+                <div flex="100">
+                    <span>Message :</span>
+                    <h4 flex style="padding: 0 8px">{{ vm.ticket.message }}</h4>
+                </div>
+                <a data-ng-if="vm.ticket.file" data-ng-href="{{vm.ticket.file.data}}" download="{{vm.ticket.file.name}}">Fichier joint</a>
+            </div>
+            <md-divider></md-divider>
+            <div flex style="overflow-x: hidden;">
+                <md-list data-ng-show="vm.ticket.messages.length > 0">
+                    <md-subheader class="md-no-sticky">{{ vm.ticket.messages.length }} réponse(s)</md-subheader>
+                    <md-list-item class="md-3-line" ng-repeat="message in vm.ticket.messages" style="padding: 0; margin-left:16px;">
+                        <div class="md-list-item-text ticket-response">
+                            <h3>{{ message.author.name }} - {{message.date | amDateFormat:'dddd, Do MMMM YYYY, H:mm:ss'}} - {{message.recontact}}</h3>
+
+                            <p style="white-space: pre;">{{ message.content }}</p>
+                            <a data-ng-if="message.file" data-ng-href="{{message.file.data}}" download="{{message.file.name}}">Fichier joint</a>
+                        </div>
+                    </md-list-item>
+                </md-list>
+                <div layout="row">
+                </div>
+            </div>
+        </md-content>
+        <md-divider></md-divider>
+    </md-dialog-content>
+    <form layout="row" class="md-actions" ng-hide="vm.ticket.status === 'Clos'" data-ng-if="vm.admin || vm.super || vm.module.$rights === 'r' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+          name="responseForm" data-ng-submit="vm.sendMessage()">
+        <div flex>
+            <md-input-container>
+                <label>{{'VIEW_TICKET_MODAL_ANSWER' | translate}}</label>
+                <textarea md-no-autogrow data-ng-model="vm.newMessage" type="text"
+                          columns="1" title="nouveau message" required></textarea>
+            </md-input-container>
+        </div>
+        <div flex="20">
+            <md-checkbox ng-model="vm.recontact">
+              Recontacter Membre
+            </md-ckeckbox>
+        </div>
+        <md-input-container>
+            <label>Statut</label>
+            <md-select data-ng-model="vm.newStatus" required>
+                <md-option data-ng-repeat="status in vm.module.status" value="{{status.name}}">
+                    {{status.name}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-button class="md-raised" type="button" ng-model="files" data-ng-if="!vm.newFile" ngf-select="vm.uploadFiles($file)" ngf-change="vm.uploadFiles($file)" ngf-multiple="true">Fichier</md-button>
+        <md-button class="md-raised" type="button" data-ng-if="vm.newFile" data-ng-click="vm.deleteFile()">Supprimer</md-button>
+        <md-button class="md-accent md-raised" type="submit" data-ng-disabled="responseForm.$invalid">
+          {{'VIEW_TICKET_MODAL_SEND' | translate}}
+        </md-button>
+        <div ngf-src="$file"></div>
+    </form>
+</md-dialog>

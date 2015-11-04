@@ -1,0 +1,16 @@
+<md-dialog flex="50">
+  <form name="moduleForm" data-ng-submit="vm.hide(vm.module)">
+    <md-dialog-content>
+      <md-input-container flex>
+        <label>{{ 'CREATE_NAME_MODULE' | translate }}</label>
+        <input autofocus data-ng-model="vm.module.name" type="text" required  title="Nom du module"/>
+      </md-input-container>
+    </md-dialog-content>
+    <div class="md-actions">
+      <md-button type="button" data-ng-click="vm.cancel()">{{ 'BUTTON_CLOSE_CREATION_MODULE' | translate }}</md-button>
+      <md-button class="md-raised md-accent" type="submit" data-ng-disabled="moduleForm.$invalid">
+        {{ 'BUTTON_CREATE_MODULE' | translate }}
+      </md-button>
+    </div>
+  </form>
+</md-dialog>

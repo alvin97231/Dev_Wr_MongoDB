@@ -1,0 +1,37 @@
+<form flex
+      name="loginForm"
+      layout="row"
+      layout-align="center center"
+      data-ng-submit="vm.passwordLogin()">
+    <md-card flex="33"
+             flex-md="50"
+             flex-sm="100">
+        <md-card-content>
+            <div layout="column" layout-align="start center">
+                <img src="../../images/logo-soft-grey.png"
+                     alt=""/>
+
+                <h1>Working Room</h1>
+            </div>
+            <md-input-container class="md-accent">
+                <label>Email</label>
+                <input type="email" name="email" required data-ng-model="vm.email" title="email">
+            </md-input-container>
+            <md-input-container class="md-accent">
+                <label>Mot de passe</label>
+                <input type="password" name="password" required data-ng-model="vm.password" title="mot de passe">
+            </md-input-container>
+        </md-card-content>
+        <div class="md-actions"
+             layout="row"
+             layout-align="center">
+            <div layout="column">
+                <md-button type="submit"
+                           class="md-raised md-accent"
+                           data-ng-disabled="loginForm.$invalid">Connexion
+                </md-button>
+                <md-button type="button" data-ng-click="vm.passwordReset($event)">Mot de passe oublié ?</md-button>
+            </div>
+        </div>
+    </md-card>
+</form>

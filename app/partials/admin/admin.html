@@ -1,0 +1,99 @@
+<div layout="row" layout-wrap>
+    <div flex="100" flex-gt-md="50">
+        <md-card>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>{{'ADMIN_MODULE_TAB' | translate}}</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button aria-label="add" data-ng-click="vm.openCreateModule($event)" class="md-icon-button">
+                        <md-tooltip data-md-direction="left">{{'ADMIN_MODULES_BUTTON_CREATE' | translate}}</md-tooltip>
+                        <md-icon>playlist_add</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <md-list>
+                    <md-subheader class="md-no-sticky">{{'ADMIN_MODULE_CPM_MODIFY' | translate}}</md-subheader>
+                    <md-list-item data-ng-repeat="module in vm.modules | orderBy:'name'" ng-click="vm.goToModule(module)">
+                        <p> {{ module.name }} </p>
+                        <div class="md-secondary" ng-click="vm.openDeleteModule($event, module)" aria-label="delete">
+                            <md-tooltip data-md-direction="left">{{'ADMIN_MODULE_CPM_DEL' | translate}}</md-tooltip>
+                            <md-icon>delete</md-icon>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+        <md-card>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>{{'ADMIN_GROUPS_TAB' | translate}}</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button aria-label="add" data-ng-click="vm.openCreateGroup($event)" class="md-icon-button">
+                        <md-tooltip data-md-direction="left">{{'ADMIN_GROUPS_BUTTON_CREATE' | translate}}</md-tooltip>
+                        <md-icon>group_add</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <md-list>
+                    <md-subheader class="md-no-sticky">{{'ADMIN_GROUPS_BUTTON_MODIFY' | translate}}</md-subheader>
+                    <md-list-item data-ng-repeat="group in vm.groups | orderBy:'name'" ng-click="vm.openEditGroup($event, group)">
+                        <p> {{ group.name }} </p>
+                        <div class="md-secondary" ng-click="vm.openDeleteGroup($event, group)" aria-label="delete">
+                            <md-tooltip data-md-direction="left">{{'ADMIN_GROUPS_BUTTON_DEL' | translate}}</md-tooltip>
+                            <md-icon>delete</md-icon>
+                        </div>
+                    </md-list-item>
+                </md-list>
+            </md-card-content>
+        </md-card>
+    </div>
+    <div flex="100" flex-gt-md="50">
+        <md-card>
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>{{'ADMIN_USERS_TAB' | translate}}</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button aria-label="add" data-ng-click="vm.openCreateUser($event)" class="md-icon-button">
+                        <md-tooltip data-md-direction="left">{{'ADMIN_USERS_BUTTON_CREATE' | translate}}</md-tooltip>
+                        <md-icon>person_add</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <md-data-table-container>
+                <table md-data-table>
+                    <thead md-order="vm.query.order">
+                    <tr>
+                        <th order-by="id" name="#"></th>
+                        <th order-by="name" name="Nom"></th>
+                        <th order-by="email" name="Email"></th>
+                        <th order-by="type" name="Type"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="user in vm.users | orderBy:vm.query.order | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)"
+                        data-ui-sref="main.users({id: user.$id})">
+                        <td>{{user.id}}</td>
+                        <td>{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.type}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-data-table-container>
+
+            <md-data-table-toolbar layout-align="end" fix-bottom update-func="vm">
+                <md-data-table-pagination md-label="vm.label" md-limit="vm.query.limit" md-page="vm.query.page"
+                                          md-row-select="vm.query.rowSelect" md-total="{{vm.users.length}}">
+                </md-data-table-pagination>
+            </md-data-table-toolbar>
+        </md-card>
+    </div>
+</div>

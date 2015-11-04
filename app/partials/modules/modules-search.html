@@ -1,0 +1,85 @@
+<md-card layout-padding>
+    <md-content layout-padding layout="row" layout-wrap="" layout-sm="column">
+        <div flex="33">
+            <md-input-container>
+                <label>Sujet</label>
+                <input autofocus data-ng-model="vm.ticket.subject" type="text" title="sujet"/>
+            </md-input-container>
+        </div>
+        <div flex="33" layout="row">
+            <md-input-container flex="97">
+                <md-select data-ng-model="vm.ticket.status" placeholder="Statut">
+                  <md-option data-ng-repeat="data in vm.module.status" value="{{data.name}}">{{data.name}}
+                  </md-option>
+                </md-select>
+            </md-input-container>
+            <md-icon data-ng-click="vm.ticket.status = undifined">cancel</md-icon>
+        </div>
+        <div flex="33">
+            <md-input-container>
+                <label>N° de Ticket</label>
+                <input autofocus data-ng-model="vm.ticket.id" type="text" title="N°ticket"/>
+            </md-input-container>
+        </div>
+        <div flex="33">
+            <md-input-container>
+                <label>Agent</label>
+                <input autofocus data-ng-model="vm.ticket.user.name" type="text" title="Nom"/>
+            </md-input-container>
+        </div>
+        <div flex="33" data-ng-repeat="(key, field) in vm.module.ticketFields">
+
+            <div data-ng-switch="field.type">
+                <md-input-container data-ng-switch-when="text">
+                    <label>{{field.name}}</label>
+                        <textarea data-ng-model="vm.ticket[key]" type="text"
+                                  columns="1" title="{{field.name}}"></textarea>
+                </md-input-container>
+                <md-input-container data-ng-switch-when="checkbox">
+                    <md-checkbox ng-model="vm.ticket[key]" aria-label="{{field.name}}">
+                        <label>{{ field.name }}</label>
+                    </md-checkbox>
+                </md-input-container>
+              </div>
+
+              <div layout="row" data-ng-switch="field.type">
+                <md-input-container data-ng-switch-when="dropsimple" flex="97">
+                    <label>{{field.name}}</label>
+                    <md-select data-ng-model="vm.ticket[key]">
+                        <md-option data-ng-repeat="data in field.data" value="{{data.name}}">{{data.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+                <md-icon data-ng-switch-when="dropsimple" data-ng-click="vm.ticket[key] = undifined">cancel</md-icon>
+              </div>
+
+              <div layout="row" data-ng-switch="field.type">
+                <div flex layout="row" data-ng-switch-when="dropdouble">
+                    <md-input-container flex>
+                        <label>{{field.name}}</label>
+                        <md-select data-ng-model="vm.ticket[key].first" aria-label="cat">
+                            <md-option data-ng-repeat="data in field.data" value="{{data.name}}">
+                                {{data.name}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container flex data-ng-show="vm.ticket[key].first">
+                        <md-select data-ng-model="vm.ticket[key].second" aria-label="subcat">
+                            <md-option data-ng-repeat="subdata in vm.getSubCat(vm.ticket[key].first, field.data)"
+                                       value="{{subdata}}">{{subdata}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                  </div>
+                  <md-icon data-ng-switch-when="dropdouble" data-ng-click="vm.ticket[key].first = undifined">cancel</md-icon>
+                </div>
+            </div>
+        </div>
+    </md-content>
+    <md-divider></md-divider>
+    <div class="md-actions" layout="row" layout-align="end center">
+        <md-button class="md-accent" data-ng-click="vm.exportExcel('testTable','Export')">Export Excel</md-button>
+        <md-button class="md-accent" data-ng-click="vm.back()">{{'SEARCH_TICKETS_CLOSE' | translate}}</md-button>
+        <md-button class="md-accent md-raised" data-ng-click="vm.searchTickets()">{{'SEARCH_TICKETS' | translate}}</md-button>
+    </div>
+</md-card>

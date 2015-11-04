@@ -1,0 +1,77 @@
+<div layout="column">
+  <md-content layout-padding>
+
+    <!--<form name="userForm">-->
+      <div layout layout-sm="column">
+
+          <md-input-container flex ng-model= "startDate">
+            <label>Selectionner la période</label>
+            <input type="date" onclick="showPicker($event)">
+          </md-input-container>
+
+          <md-select flex md-on-open="loadUsers()" ng-model="vm.users">
+            <md-option  ng-value="user" data-ng-repeat="user in vm.users">{{ user.name }}</md-option>
+          </md-select>
+        <md-button flex class="md-warn" ng-click="vm.periodFilter()">Lancer</md-button>
+      </div>
+    <!--</form>-->
+  </md-content>
+</div>
+
+<div layout="row" layout-margin data-ng-show="vm.tickets">
+  <div flex flex-order="3" style="background-color: #FF0000;" layout-padding>
+    <h2 id="h2Stats"><br/>Tickets non lus<br/>{{vm.ticketsNotRead.length}}<br/></h2><br/>
+  </div>
+  <div flex flex-order="2" style="background-color: #fff513;" layout-padding>
+    <h2 id="h2Stats"><br/>Tickets à traiter<br/>{{vm.ticketsToDeal.length}}<br/></h2>
+  </div>
+  <div flex="50" flex-order="1" style="background-color: #F36A3E;" layout-padding>
+    <h2 id="h2Stats"><br/>Tickets Créés<br/>{{vm.tickets.length}}<br/></h2>
+  </div>
+</div>
+
+<div layout="row" layout-margin data-ng-show="vm.tickets">
+  <div flex="50" flex-order="3" style="background-color: #3EC7F3;" layout-padding>
+    <h2 id="h2Stats"><br/>Tickets en cours<br/>{{vm.ticketsCurrent.length}}<br/></h2>
+  </div>
+  <div flex flex-order="2" style="background-color: #c34034;" layout-padding>
+    <h2 id="h2Stats"><br/>En cours:Attente conseiller<br/>{{vm.ticketsCurrentCC.length}}<br/></h2>
+  </div>
+  <div flex flex-order="1" style="background-color: #fcd209;" layout-padding>
+    <h2 id="h2Stats"><br/>En cours:Attente CPM<br/>{{vm.ticketsCurrentCPM.length}}<br/></h2>
+  </div>
+</div>
+
+<div layout="row" layout-margin data-ng-show="vm.tickets">
+  <div flex flex-order="6" style="background-color: grey" layout-padding>
+    <h2 id="h2Stats"><br/>Doublons<br/>{{vm.ticketsDouble.length}}<br/></h2>
+  </div>
+  <div flex flex-order="5" style="background-color: #fff513;" layout-padding>
+    <h2 id="h2Stats"><br/>Tickets escaladé<br/>{{vm.ticketsClimb.length}}<br/></h2>
+  </div>
+  <div flex flex-order="4" style="background-color: #e8870C;" layout-padding>
+    <h2 id="h2Stats"><br/>Hors procédure CPM<br/>{{vm.ticketsNoCPM.length}}<br/></h2>
+  </div>
+  <div flex flex-order="3" style="background-color: #FF0000;" layout-padding>
+    <h2 id="h2Stats"><br/>A relancer<br/>{{vm.ticketsReminder.length}}<br/></h2>
+  </div>
+  <div flex flex-order="2" style="background-color: #790CE8;" layout-padding>
+    <h2 id="h2Stats"><br/>Traité avec résolution DC<br/>{{vm.ticketsDCYes.length}}<br/></h2>
+  </div>
+  <div flex flex-order="1" style="background-color: #0D8EFF;" layout-padding>
+    <h2 id="h2Stats"><br/>Traité sans résolution DC<br/>{{vm.ticketsDCNo.length}}<br/></h2>
+  </div>
+</div>
+
+<div layout="row" layout-margin data-ng-show="vm.tickets">
+  <div flex flex-order="2" style="background-color: orange;" layout-padding>
+    <h2 id="h2Stats"><br/>A solder: En attente de recontact client<br/>{{vm.ticketsClientNeedCtc.length}}<br/></h2>
+  </div>
+  <div flex flex-order="1" style="background-color: grey;" layout-padding>
+    <h2 id="h2Stats"><br/>Soldé : Recontact client effectué<br/>{{vm.ticketsClientCtc.length}}<br/></h2>
+  </div>
+</div>
+
+<div data-ng-hide="vm.tickets" layout-fill layout="row" layout-align="center" style="padding-top: 50px;">
+    <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
+</div>

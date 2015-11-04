@@ -1,0 +1,59 @@
+<md-card>
+    <md-toolbar>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>
+                    <span>Edition du module {{vm.module.name}}</span>
+                </h2>
+                <span flex></span>
+                <md-button aria-label="add" data-ng-click="vm.addTicketField($event)" class="md-icon-button">
+                    <md-tooltip data-md-direction="left">Ajouter un champ</md-tooltip>
+                    <md-icon>add</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+    </md-toolbar>
+  <div layout="row">
+    <div flex="50">
+        <div flex>
+            <md-content layout-padding layout="column">
+                <md-input-container class="md-accent">
+                    <label>{{'MODIFY_MODULE_NAME' | translate}}</label>
+                    <input type="text" data-ng-model="vm.module.name" title="nom du module"/>
+                </md-input-container>
+                <md-input-container class="md-accent">
+                    <label>Description</label>
+                    <textarea type="text" data-ng-model="vm.module.description" title="description du module"></textarea>
+                </md-input-container>
+                <md-input-container>
+                    <h5>Statut</h5>
+                    <md-chips data-ng-model="vm.module.status"
+                              data-md-on-append="vm.appendStatus($chip)">
+                        <md-chip-template>{{$chip.name}}</md-chip-template>
+                    </md-chips>
+                </md-input-container>
+            </md-content>
+        </div>
+      </div>
+        <div flex="50">
+          <div flex>
+            <md-list>
+                <md-subheader class="md-no-sticky">Champs des tickets</md-subheader>
+                <md-list-item data-ng-repeat="(key, field) in vm.module.ticketFields" ng-click="vm.openEditTicketField($event, field)">
+                    <p> {{ field.name }} </p>
+                    <div class="md-secondary" ng-click="vm.openDeleteField($event, key)" aria-label="delete">
+                        <md-tooltip data-md-direction="left">{{'ADMIN_GROUPS_BUTTON_DEL' | translate}}</md-tooltip>
+                        <md-icon>delete</md-icon>
+                    </div>
+                </md-list-item>
+            </md-list>
+          </div>
+        </div>
+      </div>
+        <md-divider data-ng-show="vm.module.ticketFields.length > 0"></md-divider>
+
+        <div class="md-actions" layout="row" layout-align="end center">
+        <md-button class="md-accent" data-ui-sref="main.modules({id: vm.moduleId})">{{'MODIFY_MODULE_BUTTON_CLOSE' | translate}}</md-button>
+        <md-button class="md-accent md-raised" data-ng-click="vm.saveModule()">{{'MODIFY_MODULE_BUTTON_SAVE' | translate}}</md-button>
+        </div>
+</md-card>
