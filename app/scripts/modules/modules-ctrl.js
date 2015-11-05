@@ -21,6 +21,8 @@ angular.module('workingRoom')
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
         vm.getLocale = getLocale;
+        vm.orderByField = 'id';
+        vm.reverseSort = false;
 
         var defaultStatus = getDefaultStatus();
         vm.currentFilter = {status: defaultStatus};
@@ -39,6 +41,7 @@ angular.module('workingRoom')
         };
 
         vm.query = {
+            filter: '',
             order: '-id',
             limit: 10,
             page: 1,

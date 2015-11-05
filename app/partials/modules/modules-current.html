@@ -28,20 +28,20 @@
                 <md-tab-body>
                   <md-data-table-container>
                       <table md-data-table id='testTable'>
-                          <thead md-order="vm.query.order">
-                          <tr>
-                              <th order-by="id" style="text-align:center">#</th>
-                              <th trim order-by="user.name" style="text-align:center">Nom</th>
-                              <th trim order-by="subject" style="text-align:center">Sujet</th>
-                              <th trim order-by="status" style="text-align:center">Statuts</th>
-                              <th trim order-by="created" style="text-align:center">Créé</th>
-                              <th trim order-by="lastResponse" style="text-align:center">Réponse par</th>
-                              <th trim order-by="created" style="text-align:center">J+</th>
-                              <th trim order-by="{{key}}"
-                                  data-ng-repeat="(key, field) in vm.module.ticketFields"
-                                  style="text-align:center">{{field.name}}</th>
-                          </tr>
-                          </thead>
+                        <thead md-order="vm.query.order" md-trigger="onOrderChange">
+                        <tr>
+                            <th style="text-align:center" ng-click="orderByField='id'; reverseSort=!reverseSort">#</th>
+                            <th style="text-align:center" ng-click="orderByField='user.name'; reverseSort=!reverseSort">Nom</th>
+                            <th style="text-align:center" ng-click="orderByField='subject'; reverseSort=!reverseSort">Sujet</th>
+                            <th style="text-align:center" ng-click="orderByField='status'; reverseSort=!reverseSort">Statut</th>
+                            <th style="text-align:center" ng-click="orderByField='created'; reverseSort=!reverseSort">Créé</th>
+                            <th style="text-align:center" ng-click="orderByField='lastResponse'; reverseSort=!reverseSort">Réponse par</th>
+                            <th style="text-align:center" ng-click="orderByField='created'; reverseSort=!reverseSort">J+</th>
+                            <th ng-click="orderByField='{{key}}'; reverseSort=!reverseSort"
+                                data-ng-repeat="(key, field) in vm.module.ticketFields"
+                                style="text-align:center">{{field.name}}</th>
+                        </tr>
+                        </thead>
                           <tbody>
                           <tr ng-repeat="ticket in vm.tickets | orderBy:vm.query.order | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)"
                               data-ng-click="vm.openTicketView($event, ticket.$id)">
