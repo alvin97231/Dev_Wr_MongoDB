@@ -13,6 +13,7 @@
                 <md-button class="md-accent" data-ui-sref="main.modulesStats({id: vm.module.$id})">
                     {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
                 </md-button>
+                <div><input data-ng-model="vm.selectedLocale" value="vm.selectedLocale"></input></div>
                 <div flex></div>
                 <md-button data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
                   <md-icon>forum</md-icon>
@@ -22,12 +23,16 @@
                   <md-icon>messenger</md-icon>
                   <span>{{vm.ticketsNotRead.length}}</span>
                 </md-button>
+                <md-button data-ng-if= "vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
+                  <md-icon>messenger</md-icon>
+                  <span>{{vm.ticketsAll.length}}</span>
+                </md-button>
             </md-data-table-toolbar>
             <md-tabs md-dynamic-height aria-label="select status" >
               <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Escalade injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
                 <md-tab-body><br/>
                   <md-data-table-container>
-                      <table md-data-table id='testTable' md-progress="deferred">
+                      <table md-data-table id='testTable'>
                           <thead md-order="vm.query.order" md-trigger="onOrderChange">
                           <tr>
                               <th style="text-align:center" ng-click="orderByField='id'; reverseSort=!reverseSort">#</th>

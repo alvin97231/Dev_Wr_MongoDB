@@ -65,7 +65,5 @@ angular.module('workingRoom')
         function changeLocale() {
             $translate.use(vm.selectedLocale);
             amMoment.changeLocale(vm.selectedLocale);
-            //$scope.lang = vm.selectedLocale;
-            //console.log($scope.lang);
         }
     });

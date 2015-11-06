@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin ) {
+    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin) {
         var vm = this;
 
         var authData = Ref.getAuth();
@@ -15,12 +15,12 @@ angular.module('workingRoom')
         vm.filterByStatusTickets = filterByStatusTickets;
         vm.filterTicketList = filterTicketList;
         vm.admin = admin;
+        vm.ticketsAll = Ref.child('tickets/'+Module);
         vm.userName = Ref.child('users').child(authData.uid).child('name');
         vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
-        vm.getLocale = getLocale;
         vm.orderByField = 'id';
         vm.reverseSort = false;
 
@@ -69,19 +69,19 @@ angular.module('workingRoom')
 
         function filterAllTickets()
         {
-          vm.currentFilter = {};
+          vm.currentFilter = {lang: moment.locale()};
           filterTicketList();
         }
 
         function filterToDealTickets()
         {
-          vm.currentFilter = {status: defaultStatus};
+          vm.currentFilter = {status: defaultStatus, lang: moment.locale()};
           filterTicketList();
         }
 
         function filterNotReadTickets()
         {
-          vm.currentFilter = {lastResponse: '!'};
+          vm.currentFilter = {lastResponse: '!', lang: moment.locale()};
           filterTicketList();
         }
 
@@ -91,13 +91,13 @@ angular.module('workingRoom')
 
             if (vm.admin || vm.super && !vm.user)
             {
-              vm.currentFilter = {status : statusName};
+              vm.currentFilter = {status : statusName, lang: moment.locale()};
               filterTicketList();
             }
 
             else if (vm.user)
             {
-              vm.currentFilter = {status : statusName, user: {name: vm.filterName}};
+              vm.currentFilter = {status : statusName, user: {name: vm.filterName}, lang: moment.locale()};
               filterTicketList();
             }
           }
@@ -157,12 +157,6 @@ angular.module('workingRoom')
             }
             return 'Tous les tickets';
         }
-
-        function getLocale(){
-          var L = document.getElementById('langue');
-          var lang = L.options[L.selectedIndex].text;
-          return lang;
-          }
 
         function statusDuration()
         {

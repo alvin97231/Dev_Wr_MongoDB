@@ -5,13 +5,13 @@ angular.module('workingRoom')
         var vm = this;
 
         var defaultStatus = getDefaultStatus();
-
+        vm.getLocale = getLocale;
         vm.ticket = {
             user: {
                 id: User.$id,
                 name: User.name
             },
-            //lang : $rootScope.lang,
+            lang : getLocale(),
             status: defaultStatus
         };
         vm.module = Module;
@@ -58,6 +58,11 @@ angular.module('workingRoom')
             Toasts.simple('Fichier supprimé');
         }
 
+        function getLocale()
+        {
+          var lang = moment.locale();
+          return lang;
+        }
         /*function upload(files) {
         $scope.files = files;
         angular.forEach(files, function(file) {

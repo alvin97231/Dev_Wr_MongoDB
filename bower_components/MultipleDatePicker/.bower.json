@@ -1,6 +1,6 @@
 {
   "name": "MultipleDatePicker",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "authors": [
     "mgohin <mgohin@arca-computing.fr>"
   ],
@@ -30,11 +30,11 @@
     "moment": "~2.10.2"
   },
   "homepage": "https://github.com/arca-computing/MultipleDatePicker",
-  "_release": "1.2.0",
+  "_release": "1.2.1",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.0",
-    "commit": "5c830baddc551dd4333f829042fc52a850765bfb"
+    "tag": "1.2.1",
+    "commit": "0052ee56dc401c4955797fb9eb0b2307f641af01"
   },
   "_source": "git://github.com/arca-computing/MultipleDatePicker.git",
   "_target": "~1.2.0",
