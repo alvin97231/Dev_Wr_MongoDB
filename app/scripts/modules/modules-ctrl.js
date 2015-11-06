@@ -15,7 +15,8 @@ angular.module('workingRoom')
         vm.filterByStatusTickets = filterByStatusTickets;
         vm.filterTicketList = filterTicketList;
         vm.admin = admin;
-        vm.ticketsAll = Ref.child('tickets/'+Module);
+        vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');
+        vm.ticketsCount = vm.ticketsAll.once('value', function(snap){vm.ticketsTotal = snap.numChildren();});
         vm.userName = Ref.child('users').child(authData.uid).child('name');
         vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
         vm.user = User.type === "user";
