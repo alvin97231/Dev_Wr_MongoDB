@@ -1,13 +1,12 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesStatsCtrl', function ($scope, Module, TicketsList) {
+    .controller('ModulesStatsCtrl', function ($scope, Module, TicketsList, Ref, UsersList) {
         var vm = this;
-
-        $scope.startDate = new Date();
-        console.log($scope.startDate);
-        $scope.endDate = new Date();
+        vm.users = UsersList;
         vm.tickets = null;
+        vm.myDate = new Date();
+        
         TicketsList.$loaded().then(function () {
             vm.tickets = TicketsList;
             vm.ticketsToDeal = TicketsList.filter(function (ticket) {

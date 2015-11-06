@@ -14,19 +14,23 @@
                     {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
                 </md-button>
                 <div flex></div>
-                <md-button data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
-                  <md-icon>forum</md-icon>
+                <md-button class="md-fab md-primary" data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
+                  <md-icon>chat</md-icon>
                   <span>{{vm.ticketsCurrent.length}}</span>
                 </md-button>
-                <md-button data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})" disabled="true">
-                  <md-icon>messenger</md-icon>
+                <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
+                  <md-icon>announcement</md-icon>
                   <span>{{vm.ticketsNotRead.length}}</span>
+                </md-button>
+                <md-button data-ng-show= "vm.admin" aria-label="Tous les tickets" data-ui-sref="main.modulesAll({id: vm.module.$id})">
+                  <md-icon>messenger</md-icon>
+                  <span>{{vm.ticketsTotal}}</span>
                 </md-button>
             </md-data-table-toolbar>
 
             <md-tabs md-dynamic-height aria-label="select status" >
           <md-tab class="md-accent" label="Tickets Non Lus" md-on-select = "vm.filterNotReadTickets()">
-            <md-tab-body>
+            <md-tab-body><br/>
               <md-data-table-container>
                   <table md-data-table id='testTable'>
                     <thead md-order="vm.query.order" md-trigger="onOrderChange">
