@@ -36,29 +36,29 @@
 
 <div  layout-margin data-ng-show="vm.tickets">
 
-  <md-card flex="50" flex-order="1" style="background-color: #F36A3E;" layout-padding>
+  <md-card flex="50" flex-order="1" style="background-color:grey" layout-padding>
     <h2 id="h2Stats"><br/>Tickets Créés<br/>{{vm.tickets.length}}<br/></h2>
 
     <div layout="row">
-      <md-card flex flex-order="3" style="background-color: #FF0000;" layout-padding>
+      <md-card flex flex-order="3" style="background-color: #BE25CC;" layout-padding>
         <h2 id="h2Stats"><br/>Tickets non lus<br/>{{vm.ticketsNotRead.length}}<br/></h2><br/>
       </md-card>
-      <md-card flex flex-order="2" style="background-color: #fff513;" layout-padding>
+      <md-card flex flex-order="2" style="background-color: #924A99;" layout-padding>
         <h2 id="h2Stats"><br/>Tickets à traiter<br/>{{vm.ticketsToDeal.length}}<br/></h2>
       </md-card>
     </div>
 
     <div layout="row">
-      <md-card flex="50" flex-order="3" style="background-color: #3EC7F3;" layout-padding>
-        <h2 id="h2Stats"><br/>Tickets en cours<br/>{{vm.ticketsCurrent.length}}<br/></h2>
+      <md-card flex="50" flex-order="3" style="background-color: #002D40;" layout-padding>
+        <h2 id="h2Stats"><br/>Tickets en cours<br/>{{vm.ticketsCurrent.length + vm.ticketsCurrentCC.length +vm.ticketsCurrentCPM.length}}<br/></h2>
 
         <div layout="row">
 
-          <md-card flex flex-order="2" style="background-color: #c34034;" layout-padding>
+          <md-card flex flex-order="2" style="background-color: #005B7F;" layout-padding>
             <h2 id="h2Stats"><br/>En cours:Attente conseiller<br/>{{vm.ticketsCurrentCC.length}}<br/></h2>
           </md-card>
 
-          <md-card flex flex-order="1" style="background-color: #fcd209;" layout-padding>
+          <md-card flex flex-order="1" style="background-color: #0D8EFF;" layout-padding>
             <h2 id="h2Stats"><br/>En cours:Attente CPM<br/>{{vm.ticketsCurrentCPM.length}}<br/></h2>
           </md-card>
 
@@ -66,15 +66,15 @@
 
       </md-card>
 
-      <md-card flex flex-order="3" style="background-color: violet;" layout-padding>
+      <md-card flex flex-order="3" style="background-color: #402405;" layout-padding>
         <h2 id="h2Stats"><br/>Tickets traités<br/>{{vm.ticketsDCYes.length + vm.ticketsDCNo.length}}<br/></h2>
 
         <div layout="row">
-        <md-card flex flex-order="2" style="background-color: #790CE8;" layout-padding>
+        <md-card flex flex-order="2" style="background-color: #FF9215;" layout-padding>
           <h2 id="h2Stats"><br/>Traité avec résolution DC<br/>{{vm.ticketsDCYes.length}}<br/></h2>
         </md-card>
 
-        <md-card flex flex-order="1" style="background-color: #0D8EFF;" layout-padding>
+        <md-card flex flex-order="1" style="background-color: #7F490A;" layout-padding>
           <h2 id="h2Stats"><br/>Traité sans résolution DC<br/>{{vm.ticketsDCNo.length}}<br/></h2>
         </md-card>
         </div>
@@ -87,13 +87,13 @@
 
       <div layout = "row">
 
-        <md-card flex style="background-color: #e8870C;" layout-padding>
+        <md-card flex style="background-color: #FF0000;" layout-padding>
           <h2 id="h2Stats"><br/>Hors procédure CPM<br/>{{vm.ticketsNoCPM.length}}<br/></h2>
         </md-card>
-        <md-card  flex style="background-color: #FF0000;" layout-padding>
+        <md-card  flex style="background-color: #6C15FF;" layout-padding>
           <h2 id="h2Stats"><br/>A relancer<br/>{{vm.ticketsReminder.length}}<br/></h2>
         </md-card>
-        <md-card flex style="background-color: #fff513;" layout-padding>
+        <md-card flex style="background-color:#CCA325;" layout-padding>
           <h2 id="h2Stats"><br/>Tickets escaladé<br/>{{vm.ticketsClimb.length}}<br/></h2>
         </md-card>
 
@@ -104,10 +104,10 @@
         <md-card flex style="background-color: orange;" layout-padding>
           <h2 id="h2Stats"><br/>A solder: En attente de recontact client<br/>{{vm.ticketsClientNeedCtc.length}}<br/></h2>
         </md-card>
-        <md-card flex style="background-color: grey;" layout-padding>
+        <md-card flex style="background-color:#68FF1B ;" layout-padding>
           <h2 id="h2Stats"><br/>Soldé : Recontact client effectué<br/>{{vm.ticketsClientCtc.length}}<br/></h2>
         </md-card>
-        <md-card flex style="background-color: grey" layout-padding>
+        <md-card flex style="background-color: #98CC25" layout-padding>
           <h2 id="h2Stats"><br/>Doublons<br/>{{vm.ticketsDouble.length}}<br/></h2>
         </md-card>
 

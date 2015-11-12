@@ -17,7 +17,7 @@
                 <div flex></div>
                 <md-button class="md-fab md-primary" data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
                   <md-icon>chat</md-icon>
-                  <span>{{vm.ticketsCurrent.length}}</span>
+                  <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM + vm.ticketsCurrentCC}}</span>
                 </md-button>
                 <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
                   <md-icon>announcement</md-icon>

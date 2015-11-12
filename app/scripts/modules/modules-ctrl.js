@@ -61,6 +61,12 @@ angular.module('workingRoom')
         vm.ticketsCurrent = TicketsList.filter(function (ticket) {
             return ticket.status === 'En cours';
         });
+        vm.ticketsCurrentCC = TicketsList.filter(function (ticket) {
+            return ticket.status === 'En cours : Attente conseiller';
+        });
+        vm.ticketsCurrentCPM = TicketsList.filter(function (ticket) {
+            return ticket.status === 'En cours : Attente CPM';
+        });
 
         function filterTicketList() {
              $timeout(function () {
