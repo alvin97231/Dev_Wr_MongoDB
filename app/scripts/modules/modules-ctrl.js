@@ -63,6 +63,7 @@ angular.module('workingRoom')
         });
         vm.ticketsCurrentCC = TicketsList.filter(function (ticket) {
             return ticket.status === 'En cours : Attente conseiller';
+            console.log(ticket.user.name);
         });
         vm.ticketsCurrentCPM = TicketsList.filter(function (ticket) {
             return ticket.status === 'En cours : Attente CPM';

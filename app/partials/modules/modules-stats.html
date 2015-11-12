@@ -1,38 +1,43 @@
-<!--<div layout="column">
-  <md-content layout-padding>
+<form name="userForm">
+  <div flex layout="row">
 
-    <!--<form name="userForm">
-      <div layout layout-sm="column">
-
-          <md-input-container flex ng-model= "startDate">
-            <label>Selectionner la période</label>
-            <input type="date" onclick="showPicker($event)">
-          </md-input-container>
-
-          <md-select flex md-on-open="loadUsers()" ng-model="vm.users">
-            <md-option  ng-value="user" data-ng-repeat="user in vm.users">{{ user.name }}</md-option>
-          </md-select>
-        <md-button flex class="md-warn" ng-click="vm.periodFilter()">Lancer</md-button>
-      </div>
-    <!--</form>
-  </md-content>
-</div>-->
-
-<div flex layout="column">
-  <form name="userForm">
-    <div flex="10">
-      <md-select flex="50" ng-model="userSelected" md-placeholder="Choisir un utilisateur">
-        <md-option ng-repeat="user in vm.users | orderBy:'name' " value="{{user.name}}">{{user.name}}</md-option>
-      </md-select>
+    <div flex layout-margin>
+        <md-autocomplete
+          ng-disabled="vm.isDisabled"
+          md-no-cache="vm.noCache"
+          md-selected-item="vm.selectedItem"
+          md-search-text-change="vm.searchTextChange(vm.user.name)"
+          md-search-text="vm.user.name"
+          md-selected-item-change="vm.selectedItemChange(user)"
+          md-items="user in vm.querySearch(vm.user.name)"
+          md-item-text="user.name"
+          md-min-length="0"
+          placeholder="Choisir un utilisateur">
+        <md-item-template>
+          <span md-highlight-text="vm.user.name" md-highlight-flags="^i">{{user.name}}</span>
+        </md-item-template>
+        <md-not-found>
+          Pas d'utilisateurs portant le nom "{{user.name}}".
+        </md-not-found>
+      </md-autocomplete>
     </div>
 
+    <md-input-container flex >
+      <label>Date de début</label>
+      <input ng-model= "vm.startDate" type="date">
+    </md-input-container>
+
+    <md-input-container flex>
+      <label>Date de fin</label>
+      <input ng-model= "vm.endDate" type="date">
+    </md-input-container>
+    <pre></pre>
     <div flex></div>
 
-    <div flex="10">
-      <md-datepicker flex="50" ng-model="vm.myDate" md-placeholder="Enter date"></md-datepicker>
-    </div>
-  </form>
-</div>
+    <md-button class="md-primary" ng-click="vm.filter()">Filtrer</md-button>
+
+  </div>
+</form>
 
 <div  layout-margin data-ng-show="vm.tickets">
 
