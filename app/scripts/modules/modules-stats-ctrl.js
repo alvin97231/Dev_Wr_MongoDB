@@ -4,8 +4,12 @@ angular.module('workingRoom')
     .controller('ModulesStatsCtrl', function ($scope, $timeout, $log, $q,  Module, TicketsList, Ref, UsersList) {
         var vm = this;
         vm.users = UsersList;
-        vm.tickets = null;
+        vm.tickets = TicketsList;
         vm.startDate = new Date();
+        var jour = vm.startDate.getDay();
+        var mois = vm.startDate.getMonth();
+        var annee = vm.startDate.getFullYear();
+        vm.startDate= new Date(annee, mois, jour);
         vm.endDate = new Date();
         vm.ticketsAll = Ref.child('tickets/'+Module.$id);
         vm.simulateQuery = false;
@@ -16,17 +20,67 @@ angular.module('workingRoom')
         vm.filter = filter;
 
     function filter(){
+      if (vm.startDate && vm.endDate) {
+        vm.startTime = vm.startDate.getTime();
+        vm.endTime = vm.endDate.getTime();
+        vm.periodQuery = vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
 
-      $log.info(vm.startDate);
-      $log.info(vm.endDate);
-      $log.info(vm.ticketsAll);
-      vm.startTime = vm.startDate.getTime();
-      vm.endTime = vm.endDate.getTime();
-      $log.info(vm.startTime);
-      $log.info(vm.endTime);
-      vm.periodQuery = vm.ticketsAll.startAt(vm.startTime).endAt(vm.endTime).once('value', show);
-      function show(snap){
-        $('pre').text(JSON.stringify(snap.val(),null, 2));
+        function show(snap){
+          vm.ticketsFiltered = snap.numChildren();
+          vm.test = snap.val();
+
+          if(vm.test){
+            vm.tickets = [];
+            snap.forEach(function (childSnap){
+              var child = childSnap.val();
+              vm.tickets.push(child);
+            });
+
+          $log.info(vm.tickets);
+        }
+
+        else if(!vm.test){
+          vm.tickets = [];
+        }
+       }
+      }
+
+      else{
+        vm.tickets = TicketsList;
+      }
+
+      if(vm.user.name){
+        vm.ticketsUser = vm.tickets.filter(function (ticket) {return ticket.user.name===vm.user.name;});
+        vm.ticketsToDeal = vm.tickets.filter(function (ticket) {return ticket.status === 'A traiter' && ticket.user.name===vm.user.name;});
+        vm.ticketsDouble = vm.tickets.filter(function (ticket) {return ticket.status === 'Doublon' && ticket.user.name===vm.user.name;});
+        vm.ticketsCurrent = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours' && ticket.user.name===vm.user.name;});
+        vm.ticketsClimb = vm.tickets.filter(function (ticket) {return ticket.status === 'Escaladé' && ticket.user.name===vm.user.name;});
+        vm.ticketsDCNo = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité sans résolution DC' && ticket.user.name===vm.user.name;});
+        vm.ticketsDCYes = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité avec résolution DC' && ticket.user.name===vm.user.name;});
+        vm.ticketsNoCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'Demande hors procédure CPM' && ticket.user.name===vm.user.name;});
+        vm.ticketsNotRead = vm.tickets.filter(function (ticket) {return !ticket.lastResponse && ticket.user.name===vm.user.name;});
+        vm.ticketsClientNeedCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'A solder : En attente de recontact client' && ticket.user.name===vm.user.name;});
+        vm.ticketsClientCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'Soldé : Recontact client effectué' && ticket.user.name===vm.user.name;});
+        vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller' && ticket.user.name===vm.user.name;});
+        vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM' && ticket.user.name===vm.user.name;});
+        vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer' && ticket.user.name===vm.user.name;});
+      }
+
+      else if (vm.user.name === null) {
+      vm.ticketsUser = vm.tickets.filter(function (ticket) {return ticket;});
+      vm.ticketsToDeal = vm.tickets.filter(function (ticket) {return ticket.status === 'A traiter';});
+      vm.ticketsDouble = vm.tickets.filter(function (ticket) {return ticket.status === 'Doublon';});
+      vm.ticketsCurrent = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours';});
+      vm.ticketsClimb = vm.tickets.filter(function (ticket) {return ticket.status === 'Escaladé';});
+      vm.ticketsDCNo = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité sans résolution DC';});
+      vm.ticketsDCYes = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité avec résolution DC';});
+      vm.ticketsNoCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'Demande hors procédure CPM';});
+      vm.ticketsNotRead = vm.tickets.filter(function (ticket) {return !ticket.lastResponse;});
+      vm.ticketsClientNeedCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'A solder : En attente de recontact client';});
+      vm.ticketsClientCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'Soldé : Recontact client effectué';});
+      vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller';});
+      vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM';});
+      vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer';});
       }
     }
 
@@ -65,46 +119,19 @@ angular.module('workingRoom')
     }
 
         TicketsList.$loaded().then(function () {
-            vm.tickets = TicketsList;
-            vm.ticketsToDeal = TicketsList.filter(function (ticket) {
-                return ticket.status === 'A traiter';
-            });
-            vm.ticketsDouble = TicketsList.filter(function (ticket) {
-                return ticket.status === 'Doublon';
-            });
-            vm.ticketsCurrent = TicketsList.filter(function (ticket) {
-                return ticket.status === 'En cours';
-            });
-            vm.ticketsClimb = TicketsList.filter(function (ticket) {
-                return ticket.status === 'Escaladé';
-            });
-            vm.ticketsDCNo = TicketsList.filter(function (ticket) {
-                return ticket.status === 'Traité sans résolution DC';
-            });
-            vm.ticketsDCYes = TicketsList.filter(function (ticket) {
-                return ticket.status === 'Traité avec résolution DC';
-            });
-            vm.ticketsNoCPM = TicketsList.filter(function (ticket) {
-                return ticket.status === 'Demande hors procédure CPM';
-            });
-            vm.ticketsNotRead = TicketsList.filter(function (ticket) {
-                return !ticket.lastResponse;
-            });
-            vm.ticketsClientNeedCtc = TicketsList.filter(function (ticket) {
-                return ticket.status === 'A solder : En attente de recontact client';
-            });
-            vm.ticketsClientCtc = TicketsList.filter(function (ticket) {
-                return ticket.status === 'Soldé : Recontact client effectué';
-            });
-            vm.ticketsCurrentCC = TicketsList.filter(function (ticket) {
-                return ticket.status === 'En cours : Attente conseiller';
-            });
-            vm.ticketsCurrentCPM = TicketsList.filter(function (ticket) {
-                return ticket.status === 'En cours : Attente CPM';
-            });
-            vm.ticketsReminder = TicketsList.filter(function (ticket) {
-                return ticket.status === 'A relancer';
-            });
+            vm.ticketsUser = vm.tickets.filter(function (ticket) {return ticket;});
+            vm.ticketsToDeal = vm.tickets.filter(function (ticket) {return ticket.status === 'A traiter';});
+            vm.ticketsDouble = vm.tickets.filter(function (ticket) {return ticket.status === 'Doublon';});
+            vm.ticketsCurrent = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours';});
+            vm.ticketsClimb = vm.tickets.filter(function (ticket) {return ticket.status === 'Escaladé';});
+            vm.ticketsDCNo = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité sans résolution DC';});
+            vm.ticketsDCYes = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité avec résolution DC';});
+            vm.ticketsNoCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'Demande hors procédure CPM';});
+            vm.ticketsNotRead = vm.tickets.filter(function (ticket) {return !ticket.lastResponse;});
+            vm.ticketsClientNeedCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'A solder : En attente de recontact client';});
+            vm.ticketsClientCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'Soldé : Recontact client effectué';});
+            vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller';});
+            vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM';});
+            vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer';});
         });
-        //vm.module = Module;
     });

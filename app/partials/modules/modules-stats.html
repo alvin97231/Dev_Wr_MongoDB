@@ -31,7 +31,6 @@
       <label>Date de fin</label>
       <input ng-model= "vm.endDate" type="date">
     </md-input-container>
-    <pre></pre>
     <div flex></div>
 
     <md-button class="md-primary" ng-click="vm.filter()">Filtrer</md-button>
@@ -42,7 +41,7 @@
 <div  layout-margin data-ng-show="vm.tickets">
 
   <md-card flex="50" flex-order="1" style="background-color:grey" layout-padding>
-    <h2 id="h2Stats"><br/>Tickets Créés<br/>{{vm.tickets.length}}<br/></h2>
+    <h2 id="h2Stats"><br/>Tickets Créés<br/>{{vm.ticketsUser.length}}<br/></h2>
 
     <div layout="row">
       <md-card flex flex-order="3" style="background-color: #BE25CC;" layout-padding>
