@@ -36,8 +36,8 @@
                   <table md-data-table id='testTable'>
                     <thead md-order="vm.query.order" md-trigger="onOrderChange">
                     <tr>
-                        <th style="text-align:center" ng-click="orderByField='id'; reverseSort=!reverseSort">#</th>
-                        <th style="text-align:center" ng-click="orderByField='user.name'; reverseSort=!reverseSort">Nom</th>
+                        <th style="text-align:center" ng-click="orderByField='id'; reverseSort=!reverseSort" name="#"></th>
+                        <th style="text-align:center" ng-click="orderByField='user.name'; reverseSort=!reverseSort" name="Nom"></th>
                         <th style="text-align:center" ng-click="orderByField='subject'; reverseSort=!reverseSort">Sujet</th>
                         <th style="text-align:center" ng-click="orderByField='status'; reverseSort=!reverseSort">Statut</th>
                         <th style="text-align:center" ng-click="orderByField='created'; reverseSort=!reverseSort">Créé</th>
@@ -48,8 +48,22 @@
                             style="text-align:center">{{field.name}}</th>
                     </tr>
                     </thead>
-                      <tbody>
-                      <tr ng-repeat="ticket in vm.tickets | orderBy:orderByField:reverseSort | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)"
+                    <tfoot>
+                      <tr>
+                        <td><input placeholder="#" size="10" ng-model="filters['id']"></td>
+                        <td><input placeholder="Nom" size="10" ng-model="filters['name']"></td>
+                        <td><input placeholder="Sujet" size="10" ng-model="filters['sujet']"></td>
+                        <td><input placeholder="Statut" size="10" ng-model="filters['status']"></td>
+                        <td><input placeholder="Créé" size="10" ng-model="filters['created']"></td>
+                        <td><input placeholder="Réponse par" size="10" ng-model="filters['response']"></td>
+                        <td><input placeholder="J+" size="10" ng-model="filters['name']"></td>
+                        <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center"><input placeholder="{{field.name}}" size="10"></td>
+                      </tr>
+                    </tfoot>
+                    <tbody>
+                      <tr ng-repeat="ticket in vm.tickets | orderBy:orderByField:reverseSort | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)
+                      | filter:{id:filters.id} | filter:{user:{name:filters.name}} |filter:{subject:filters.sujet}|filter:{status:filters.status}
+                      |filter:{created:filters.created} | filter:{lastResponse:filters.response}"
                           data-ng-click="vm.openTicketView($event, ticket.$id)">
                           <td style="text-align:center" id="id">{{ticket.id}}</td>
                           <td style="text-align:center" id="user">{{ticket.user.name}}</td>
@@ -67,7 +81,7 @@
                               </div>
                           </td>
                       </tr>
-                      </tbody>
+                    </tbody>
                   </table>
               </md-data-table-container>
               <md-data-table-toolbar layout-align="end">
