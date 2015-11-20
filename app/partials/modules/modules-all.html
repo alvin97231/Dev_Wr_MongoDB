@@ -1,7 +1,7 @@
-<div layout="row" layout-wrap style="margin-right: 80px;">
+<div layout="row" layout-wrap>
     <ui-view flex="100"></ui-view>
     <div flex="100" data-ng-show="vm.tickets">
-        <md-card>
+        <md-card flex>
             <md-data-table-toolbar>
                 <!---->
                 <md-button class="md-accent" data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ng-click="vm.openCreateTicket($event)">
@@ -33,57 +33,56 @@
           <md-tab class="md-accent" label="Tous les tickets" md-on-select = "vm.filterAllTickets()">
             <md-tab-body><br/>
               <md-data-table-container>
-                  <table md-data-table id='testTable'>
+                <table>
                     <thead md-order="vm.query.order" md-trigger="onOrderChange">
-                    <tr>
-                        <th style="text-align:center" ng-click="orderByField='id'; reverseSort=!reverseSort" name="#"></th>
-                        <th style="text-align:center" ng-click="orderByField='user.name'; reverseSort=!reverseSort" name="Nom"></th>
-                        <th style="text-align:center" ng-click="orderByField='subject'; reverseSort=!reverseSort">Sujet</th>
-                        <th style="text-align:center" ng-click="orderByField='status'; reverseSort=!reverseSort">Statut</th>
-                        <th style="text-align:center" ng-click="orderByField='created'; reverseSort=!reverseSort">Créé</th>
-                        <th style="text-align:center" ng-click="orderByField='lastResponse'; reverseSort=!reverseSort">Réponse par</th>
-                        <th style="text-align:center" ng-click="orderByField='created'; reverseSort=!reverseSort">J+</th>
-                        <th ng-click="orderByField='{{key}}'; reverseSort=!reverseSort"
-                            data-ng-repeat="(key, field) in vm.module.ticketFields"
-                            style="text-align:center">{{field.name}}</th>
-                    </tr>
-                    </thead>
-                    <tfoot>
                       <tr>
-                        <td><input placeholder="#" size="10" ng-model="filters['id']"></td>
-                        <td><input placeholder="Nom" size="10" ng-model="filters['name']"></td>
-                        <td><input placeholder="Sujet" size="10" ng-model="filters['sujet']"></td>
-                        <td><input placeholder="Statut" size="10" ng-model="filters['status']"></td>
-                        <td><input placeholder="Créé" size="10" ng-model="filters['created']"></td>
-                        <td><input placeholder="Réponse par" size="10" ng-model="filters['response']"></td>
-                        <td><input placeholder="J+" size="10" ng-model="filters['name']"></td>
-                        <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center"><input placeholder="{{field.name}}" size="10"></td>
+                        <td class="tableHeader"><input placeholder="#" size="5" ng-model="filters['id']"></td>
+                        <td class="tableHeader"><input placeholder="Nom" size="10" ng-model="filters['name']"></td>
+                        <td class="tableHeader"><input placeholder="Sujet" size="10" ng-model="filters['sujet']"></td>
+                        <td class="tableHeader"><input placeholder="Statut" size="10" ng-model="filters['status']"></td>
+                        <td class="tableHeader"><input placeholder="Créé" size="5" ng-model="filters['created']"></td>
+                        <td class="tableHeader"><input placeholder="Réponse par" size="10" ng-model="filters['response']"></td>
+                        <td class="tableHeader"><input placeholder="J+" size="5" ng-model="vm.searchNbJ"></td>
+                        <td class="tableHeader" data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center"><input placeholder="{{field.name}}" size="10"></td>
                       </tr>
-                    </tfoot>
-                    <tbody>
-                      <tr ng-repeat="ticket in vm.tickets | orderBy:orderByField:reverseSort | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)
-                      | filter:{id:filters.id} | filter:{user:{name:filters.name}} |filter:{subject:filters.sujet}|filter:{status:filters.status}
-                      |filter:{created:filters.created} | filter:{lastResponse:filters.response}"
-                          data-ng-click="vm.openTicketView($event, ticket.$id)">
-                          <td style="text-align:center" id="id">{{ticket.id}}</td>
-                          <td style="text-align:center" id="user">{{ticket.user.name}}</td>
-                          <td style="text-align:center" id="subject">{{ticket.subject}}</td>
-                          <td style="text-align:center" id="status">{{ticket.status}}</td>
-                          <td style="text-align:center" id="date">{{ticket.created | amCalendar}}</td>
-                          <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
-                          <td style="text-align:center" id="nbjours">{{ticket.created | amDifference: null : 'days' | amDurationFormat : 'day'}}</td>
-                          <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">
-                              <div data-ng-if="field.type !== 'dropdouble'">
-                                  {{ticket[key]}}
-                              </div>
-                              <div data-ng-if="field.type === 'dropdouble'">
-                                  {{ticket[key].first + ' - ' + ticket[key].second}}
-                              </div>
-                          </td>
+                      <tr>
+                          <th class="tableHeader" ng-click="orderByField='id'; reverseSort=!reverseSort" name="#">#</th>
+                          <th class="tableHeader" ng-click="orderByField='user.name'; reverseSort=!reverseSort" name="Nom">Nom</th>
+                          <th class="tableHeader" ng-click="orderByField='subject'; reverseSort=!reverseSort" name="Sujet">Sujet</th>
+                          <th class="tableHeader" ng-click="orderByField='status'; reverseSort=!reverseSort" name="Statut">Statut</th>
+                          <th class="tableHeader" ng-click="orderByField='created'; reverseSort=!reverseSort" name="Créé">Créé</th>
+                          <th class="tableHeader" ng-click="orderByField='lastResponse'; reverseSort=!reverseSort" name="Réponse par">Réponse par</th>
+                          <th class="tableHeader" ng-click="orderByField='created'; reverseSort=!reverseSort" name="J+">J+</th>
+                          <th class="tableHeader" ng-click="orderByField='{{key}}'; reverseSort=!reverseSort"
+                              data-ng-repeat="(key, field) in vm.module.ticketFields" name="{{field.name}}">{{field.name}}</th>
                       </tr>
-                    </tbody>
-                  </table>
-              </md-data-table-container>
+                    </thead>
+                </md-data-table-container>
+                <md-data-table-container>
+                        <tbody>
+                          <tr ng-repeat="ticket in vm.tickets | orderBy:orderByField:reverseSort | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)
+                          | filter:{id:filters.id} | filter:{user:{name:filters.name}} |filter:{subject:filters.sujet}|filter:{status:filters.status}
+                          |filter:{created:filters.created} | filter:{lastResponse:filters.response} | filter:vm.searchNbJ"
+                              data-ng-click="vm.openTicketView($event, ticket.$id)">
+                              <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
+                              <td style="text-align:center" id="user">{{ticket.user.name}}</td>
+                              <td style="text-align:center" id="subject">{{ticket.subject}}</td>
+                              <td style="text-align:center" id="status">{{ticket.status}}</td>
+                              <td style="text-align:center" id="date">{{ticket.created | date : 'dd-MM-yyyy'}}<br/>{{ticket.created | date : 'HH:mm:ss'}}</td>
+                              <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
+                              <td style="text-align:center" id="nbjours">{{ticket.created | amDifference: null : 'days' | amDurationFormat : 'day'}}</td>
+                              <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">
+                                  <div data-ng-if="field.type !== 'dropdouble'">
+                                      {{ticket[key]}}
+                                  </div>
+                                  <div data-ng-if="field.type === 'dropdouble'">
+                                      {{ticket[key].first + ' - ' + ticket[key].second}}
+                                  </div>
+                              </td>
+                          </tr>
+                        </tbody>
+                    </table>
+                </md-data-table-container>
               <md-data-table-toolbar layout-align="end">
                   <md-data-table-pagination md-label="vm.label" md-limit="vm.query.limit" md-page="vm.query.page"
                                             md-row-select="vm.query.rowSelect" md-total="{{vm.tickets.length}}">

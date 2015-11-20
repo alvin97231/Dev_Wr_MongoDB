@@ -24,18 +24,12 @@ angular.module('workingRoom')
         vm.statusDuration = statusDuration;
         vm.orderByField = 'id';
         vm.reverseSort = false;
+        vm.searchNbJ='';
 
         var defaultStatus = getDefaultStatus();
         vm.currentFilter = {status: defaultStatus};
         vm.status = defaultStatus;
         vm.filter = 'Tickets par statut';
-        vm.filters = [
-            'Tickets à traiter',
-            'Tickets Non Lus',
-            'Tickets par statut',
-            'Tous les tickets'
-        ];
-
         vm.label = {
             text: 'Tickets par page',
             of: 'sur'
