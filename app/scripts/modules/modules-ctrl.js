@@ -22,9 +22,11 @@ angular.module('workingRoom')
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
+        vm.takeLate = takeLate;
         vm.orderByField = 'id';
         vm.reverseSort = false;
         vm.searchNbJ='';
+        vm.dataTable = dataTable;
 
         var defaultStatus = getDefaultStatus();
         vm.currentFilter = {status: defaultStatus};
@@ -72,18 +74,21 @@ angular.module('workingRoom')
         {
           vm.currentFilter = {lang: moment.locale()};
           filterTicketList();
+          vm.dataTable();
         }
 
         function filterToDealTickets()
         {
           vm.currentFilter = {status: defaultStatus, lang: moment.locale()};
           filterTicketList();
+          vm.dataTable();
         }
 
         function filterNotReadTickets()
         {
           vm.currentFilter = {lastResponse: '!', lang: moment.locale()};
           filterTicketList();
+          vm.dataTable();
         }
 
         function filterByStatusTickets(status)
@@ -101,6 +106,7 @@ angular.module('workingRoom')
               vm.currentFilter = {status : statusName, user: {name: vm.filterName}, lang: moment.locale()};
               filterTicketList();
             }
+            vm.dataTable();
           }
 
         function openTicketView(event, id) {
@@ -159,26 +165,85 @@ angular.module('workingRoom')
             return 'Tous les tickets';
         }
 
+        function takeLate(ticket){
+          if(ticket.messages.length === 1){
+            var id = 0;
+          }
+          else{
+            var id = ticket.messages.length - 1;
+          }
+          var dateStatusChange = ticket.messages[id].date;
+          var currentDate = Date.now();
+          vm.diff = currentDate - dateStatusChange;
+          if(vm.diff >= 172800000)
+          {
+            console.log('Notif Necessaire');
+          }
+          else
+          {
+            console.log('Notif Non Necessaire');
+          }
+        }
+
         function statusDuration()
         {
-          var nbLigne = document.getElementById('testTable').rows;
+          vm.ticketsAll.on('value', show);
+          function show(snap){
 
-          for (var i = 1; i < nbLigne.length; i++)
-          {
-            var statusTable = document.getElementsByTagName('table')[1].getElementsByTagName('tr')[i].cells[3].innerHTML;
-            var nbJours = document.getElementsByTagName('table')[0].getElementsByTagName('tr')[i].cells[6].innerHTML;
-            var nb = String(nbJours);
-            var jours = nb.charAt(0);
-            var parsed = parseInt(jours);
-            var nan = isNaN(parsed);
+            vm.test = snap.val();
+            var i=0;
+            var status = [];
 
-            if (nan == false)
-            {
-              if(statusTable == 'En cours' && parsed >= 2)
-              {
-                vm.nbCurrent= i;
+              snap.forEach(function (childSnap){
+              var child = childSnap.val();
+
+              switch(child.status){
+                case 'A solder : En attente de recontact client':
+                  vm.takeLate(child);
+                  i ++;
+                  status[0] = i;
+                break;
+
+                case 'En cours':
+                  vm.takeLate(child);
+                  i ++;
+                  status[1]=i;
+                break;
+
+                case 'En cours : Attente conseiller':
+                  vm.takeLate(child);
+                  i ++;
+                  status[2]=i;
+                break;
+
+                case 'En cours : Attente CPM':
+                  vm.takeLate(child);
+                  i ++;
+                  status[3]=i;
+                break;
+              }
+          });
+          for ( var x=0; x < status.length; x++){
+            if(status[x] > 0){
+              switch (x) {
+                case 0:
+                    alert('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');
+                break;
+                case 1:
+                    alert('Il y a '+ status[1] +' ticket En cours depuis plus de 48H');
+                break;
+                case 2:
+                    alert('Il y a '+ status[2] +' ticket En cours: Attente conseiller depuis plus de 48H');
+                break;
+                case 3:
+                    alert('Il y a '+ status[3] +' ticket En cours: Attente CPM depuis plus de 48H');
+                break;
               }
             }
           }
         }
+      }
+    function dataTable(){
+      $('#table_id').DataTable();
+    }
     });

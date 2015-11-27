@@ -27,13 +27,16 @@
                   <md-icon>messenger</md-icon>
                   <span>{{vm.ticketsTotal}}</span>
                 </md-button>
+                <md-button ng-click = "vm.dataTable()">
+                  <span>TEST</span>
+                </md-button>
             </md-data-table-toolbar>
 
             <md-tabs md-dynamic-height aria-label="select status" >
-          <md-tab class="md-accent" label="Tous les tickets" md-on-select = "vm.filterAllTickets()">
+          <md-tab class="md-accent" label="Tous les tickets" md-on-select = "vm.filterAllTickets(); vm.statusDuration()">
             <md-tab-body><br/>
               <md-data-table-container>
-                <table>
+                <table id="table_id">
                     <thead md-order="vm.query.order" md-trigger="onOrderChange">
                       <tr>
                         <td class="tableHeader"><input placeholder="#" size="5" ng-model="filters['id']"></td>

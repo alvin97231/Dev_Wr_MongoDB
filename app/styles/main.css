@@ -53,14 +53,14 @@ tr:last-child td:last-child{
 }
 .tableHeader{
 
-	background-color:#e53689;
+	background-color:#e0e0e0;
 	border:0px solid #ffffff;
 	text-align:center;
 	border-width:0px 0px 1px 1px;
 	font-size:14px;
 	font-family:Arial;
 	font-weight:bold;
-	color:#ffffff;
+	color:#000000;
 }
 
 tr:first-child td:first-child{
