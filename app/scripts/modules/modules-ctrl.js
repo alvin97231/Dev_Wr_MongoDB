@@ -74,21 +74,21 @@ angular.module('workingRoom')
         {
           vm.currentFilter = {lang: moment.locale()};
           filterTicketList();
-          vm.dataTable();
+          setTimeout(function(){vm.dataTable();}, 1000);
         }
 
         function filterToDealTickets()
         {
           vm.currentFilter = {status: defaultStatus, lang: moment.locale()};
           filterTicketList();
-          vm.dataTable();
+          setTimeout(function(){vm.dataTable();}, 1000);
         }
 
         function filterNotReadTickets()
         {
           vm.currentFilter = {lastResponse: '!', lang: moment.locale()};
           filterTicketList();
-          vm.dataTable();
+          setTimeout(function(){vm.dataTable();}, 1000);
         }
 
         function filterByStatusTickets(status)
@@ -99,15 +99,16 @@ angular.module('workingRoom')
             {
               vm.currentFilter = {status : statusName, lang: moment.locale()};
               filterTicketList();
+              setTimeout(function(){vm.dataTable();}, 1000);
             }
 
             else if (vm.user)
             {
               vm.currentFilter = {status : statusName, user: {name: vm.filterName}, lang: moment.locale()};
               filterTicketList();
+              setTimeout(function(){vm.dataTable();}, 1000);
             }
-            vm.dataTable();
-          }
+        }
 
         function openTicketView(event, id) {
             $mdDialog.show({
@@ -244,6 +245,23 @@ angular.module('workingRoom')
         }
       }
     function dataTable(){
-      $('#table_id').DataTable();
+
+      function filterColumn ( i ) {
+        var table = $('#table_id').DataTable();
+        table.column( i ).search(
+            $('#col'+i+'_filter').val(),
+            $('#col'+i+'_regex').prop('checked'),
+            $('#col'+i+'_smart').prop('checked')
+        ).draw();
+      }
+
+      $(document).ready(function() {
+        var table = $('#table_id').DataTable();
+
+        $('input.column_filter').on( 'keyup click', function () {
+            filterColumn( $(this).parents('td').attr('data-column') );
+        } );
+      });
     }
-    });
+
+  });

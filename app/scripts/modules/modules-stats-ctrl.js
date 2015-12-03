@@ -33,7 +33,10 @@ angular.module('workingRoom')
             vm.tickets = [];
             snap.forEach(function (childSnap){
               var child = childSnap.val();
-              vm.tickets.push(child);
+              if(child){
+                vm.tickets.push(child);
+              }
+
             });
 
           $log.info(vm.tickets);

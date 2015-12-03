@@ -1,7 +1,7 @@
 <div layout="row" layout-wrap>
     <ui-view flex="100"></ui-view>
     <div flex="100" data-ng-show="vm.tickets">
-        <md-card>
+        <md-card flex>
             <md-data-table-toolbar>
                 <!---->
                 <md-button class="md-accent" data-ng-if="vm.user || vm.admin || vm.super || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ng-click="vm.openCreateTicket($event)">
@@ -31,17 +31,17 @@
               <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Escalade injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
                 <md-tab-body><br/>
                   <md-data-table-container>
-                    <table>
+                    <table id="table_id">
                         <thead md-order="vm.query.order" md-trigger="onOrderChange">
                           <tr>
-                            <td class="tableHeader"><input placeholder="#" size="5" ng-model="filters['id']"></td>
-                            <td class="tableHeader"><input placeholder="Nom" size="10" ng-model="filters['name']"></td>
-                            <td class="tableHeader"><input placeholder="Sujet" size="10" ng-model="filters['sujet']"></td>
-                            <td class="tableHeader"><input placeholder="Statut" size="10" ng-model="filters['status']"></td>
-                            <td class="tableHeader"><input placeholder="Créé" size="5" ng-model="filters['created']"></td>
-                            <td class="tableHeader"><input placeholder="Réponse par" size="10" ng-model="filters['response']"></td>
-                            <td class="tableHeader"><input placeholder="J+" size="5" ng-model="vm.searchNbJ"></td>
-                            <td class="tableHeader" data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center"><input placeholder="{{field.name}}" size="10"></td>
+                            <td class="tableHeader" id="filter_col1" data-column="0"><input class="column_filter" id="col0_filter" placeholder="#" size="5"></td>
+                            <td class="tableHeader" id="filter_col2" data-column="1"><input class="column_filter" id="col1_filter" placeholder="Nom" size="10"></td>
+                            <td class="tableHeader" id="filter_col3" data-column="2"><input class="column_filter" id="col2_filter" placeholder="Sujet" size="10"></td>
+                            <td class="tableHeader" id="filter_col4" data-column="3"><input class="column_filter" id="col3_filter" placeholder="Statut" size="10"></td>
+                            <td class="tableHeader" id="filter_col5" data-column="4"><input class="column_filter" id="col4_filter" placeholder="Créé" size="5"></td>
+                            <td class="tableHeader" id="filter_col6" data-column="5"><input class="column_filter" id="col5_filter" placeholder="Réponse par" size="10"></td>
+                            <td class="tableHeader" id="filter_col7" data-column="6"><input class="column_filter" id="col6_filter" placeholder="J+" size="5"></td>
+                            <td class="tableHeader" id="filter_col{{key+8}}" data-column="{{key+7}}" data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center"><input class="column_filter" id="col{{key+7}}_filter" placeholder="{{field.name}}" size="10"></td>
                           </tr>
                           <tr>
                               <th class="tableHeader" ng-click="orderByField='id'; reverseSort=!reverseSort" name="#">#</th>
@@ -58,7 +58,7 @@
                     </md-data-table-container>
                     <md-data-table-container>
                             <tbody>
-                              <tr ng-repeat="ticket in vm.tickets | orderBy:orderByField:reverseSort | limitTo:vm.query.limit:((vm.query.page - 1) * vm.query.limit)
+                              <tr ng-repeat="ticket in vm.tickets
                               | filter:{id:filters.id} | filter:{user:{name:filters.name}} |filter:{subject:filters.sujet}|filter:{status:filters.status}
                               |filter:{created:filters.created} | filter:{lastResponse:filters.response} | filter:vm.searchNbJ"
                                   data-ng-click="vm.openTicketView($event, ticket.$id)">
@@ -84,11 +84,6 @@
                   <div data-ng-show="!vm.tickets" layout-fill layout="row" layout-align="center">
                       <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
                   </div>
-                  <md-data-table-toolbar layout-align="end">
-                      <md-data-table-pagination md-label="vm.label" md-limit="vm.query.limit" md-page="vm.query.page"
-                                                md-row-select="vm.query.rowSelect" md-total="{{vm.tickets.length}}">
-                      </md-data-table-pagination>
-                  </md-data-table-toolbar>
                 </md-tab-body>
           </md-tab>
         </md-tabs>

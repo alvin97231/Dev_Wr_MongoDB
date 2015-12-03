@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('CreateTicketCtrl', function ($scope, $mdDialog, Module, User, Toasts, FileUploader) {
+    .controller('CreateTicketCtrl', function ($scope, $mdDialog, Module, User, Toasts, Upload, $timeout) {
         var vm = this;
 
         var defaultStatus = getDefaultStatus();
@@ -20,7 +20,6 @@ angular.module('workingRoom')
         vm.hide = $mdDialog.hide;
         vm.deleteFile = deleteFile;
         vm.getPattern = getPattern;
-        vm.upload = new FileUploader();
 
 
         vm.getSubCat = function (cat, subcats) {
@@ -83,12 +82,34 @@ angular.module('workingRoom')
     		}
         });
     }*/
+    vm.uploadFiles = function(files, errFiles) {
+      vm.files = files;
+      vm.errFiles = errFiles;
+      angular.forEach(files, function(file) {
+          file.upload = Upload.upload({
+              name: file.name,
+              data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
+          });
 
-        function getPattern(minSize) {
+          file.upload.then(function (response) {
+              $timeout(function () {
+                  file.result = response.data;
+              });
+          }, function (response) {
+              if (response.status > 0)
+                  $scope.errorMsg = response.status + ': ' + response.data;
+          }, function (evt) {
+              file.progress = Math.min(100, parseInt(100.0 *
+                                       evt.loaded / evt.total));
+          });
+      });
+  }
+
+  function getPattern(minSize) {
             if (minSize) {
                 return '.{' + minSize + ',}';
             } else {
                 return '.{0,}'
             }
-        }
-    });
+  }
+});

@@ -15,7 +15,8 @@ angular.module('workingRoom', [
     'pascalprecht.translate',
     'angularMoment',
     'ngFileUpload',
-    'angularFileUpload'
+    'angularFileUpload',
+    'ngOnload'
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
     $mdThemingProvider.definePalette('workingRoomPrimary', {
