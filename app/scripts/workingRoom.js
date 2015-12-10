@@ -16,7 +16,8 @@ angular.module('workingRoom', [
     'angularMoment',
     'ngFileUpload',
     'angularFileUpload',
-    'ngOnload'
+    'ngOnload',
+    'ngTable'
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
     $mdThemingProvider.definePalette('workingRoomPrimary', {

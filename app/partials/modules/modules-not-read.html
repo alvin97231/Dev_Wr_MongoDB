@@ -33,7 +33,7 @@
             <md-tab-body><br/>
               <md-data-table-container>
                 <table id="table_id">
-                    <thead md-order="vm.query.order" md-trigger="onOrderChange">
+                    <thead>
                       <tr>
                         <td class="tableHeader" id="filter_col1" data-column="0"><input class="column_filter" id="col0_filter" placeholder="#" size="5"></td>
                         <td class="tableHeader" id="filter_col2" data-column="1"><input class="column_filter" id="col1_filter" placeholder="Nom" size="10"></td>
@@ -59,10 +59,7 @@
                 </md-data-table-container>
                 <md-data-table-container>
                         <tbody>
-                          <tr ng-repeat="ticket in vm.tickets
-                          | filter:{id:filters.id} | filter:{user:{name:filters.name}} |filter:{subject:filters.sujet}|filter:{status:filters.status}
-                          |filter:{created:filters.created} | filter:{lastResponse:filters.response} | filter:vm.searchNbJ"
-                              data-ng-click="vm.openTicketView($event, ticket.$id)">
+                          <tr ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
                               <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                               <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                               <td style="text-align:center" id="subject">{{ticket.subject}}</td>

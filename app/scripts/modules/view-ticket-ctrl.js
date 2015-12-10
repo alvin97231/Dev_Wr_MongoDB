@@ -27,10 +27,10 @@ angular.module('workingRoom')
                   ticket.status = 'En cours';
                 }
                 else if (vm.newStatus === 'A solder : En attente de recontact client'){
-                  vm.dateRecontact = Date.now();
                   ticket.status = vm.newStatus;
                 }
                 else if (vm.newStatus !== 'Escalde injustifié'){
+                  vm.dateChangeState = Date.now();
                   ticket.status = vm.newStatus;
                 }
                 if (vm.recontact){
@@ -47,7 +47,6 @@ angular.module('workingRoom')
                     recontact : vm.recontact,
                     file: vm.newFile
                 });
-                ticket.dateRecontact = vm.dateRecontact;
                 ticket.lastResponse = User.name;
                 Tickets.save($stateParams.id, ticket);
                 vm.newMessage = '';

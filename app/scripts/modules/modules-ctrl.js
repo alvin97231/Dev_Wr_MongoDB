@@ -183,6 +183,7 @@ angular.module('workingRoom')
           else
           {
             console.log('Notif Non Necessaire');
+            console.log(vm.diff);
           }
         }
 
@@ -222,10 +223,23 @@ angular.module('workingRoom')
                   i ++;
                   status[3]=i;
                 break;
+
+                case 'Soldé : Recontact client effectué':console.log(child);
+                break;
+
+                case 'Clos':console.log(child);
+                break;
+
+                case 'Traité avec résolution DC':console.log(child);
+                break;
+                
+                case 'Traité sans résolution DC':console.log(child);
+                break;
+
               }
           });
           for ( var x=0; x < status.length; x++){
-            if(status[x] > 0){
+            if(status[x] >= 0){
               switch (x) {
                 case 0:
                     alert('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');

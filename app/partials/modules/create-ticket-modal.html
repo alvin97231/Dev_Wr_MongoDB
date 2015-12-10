@@ -70,22 +70,17 @@
                 <textarea data-ng-model="vm.ticket.message" type="text"
                           columns="1" required title="message"></textarea>
             </md-input-container>
-            <md-button class="md-raised" data-ng-model="$files" ngf-multiple="true" type="button" data-ng-if="!vm.newFile" ngf-select="uploadFiles($files, $invalidFiles)">Fichier</md-button>
-            <md-button class="md-raised" type="button" data-ng-if="vm.newFile" data-ng-click="vm.deleteFile()">Supprimer</md-button>
+            <md-button class="md-raised" type="button" data-ng-if="!vm.ticket.file" ngf-select ngf-change="vm.upload($files)" ngf-multiple="true">Fichier</md-button>
+            <md-button class="md-raised" type="button" data-ng-if="vm.ticket.file" data-ng-click="vm.deleteFile()">Supprimer</md-button>
             <md-button class="md-raised md-accent" type="submit" data-ng-disabled="ticketForm.$invalid">
                 {{'BUTTON_CREATE_MODULE' | translate}}
             </md-button>
-            <ul>
-              <li ng-repeat="f in $files" style="font:smaller">{{f.name}} {{f.$errorParam}}
-                <span class="progress" ng-show="f.progress >= 0">
-                  <div style="width:{{f.progress}}%"
-                      ng-bind="f.progress + '%'"></div>
-                </span>
-              </li>
-              <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
-              </li>
-            </ul>
         </md-dialog-content>
+        <div>
+          <ul>
+            <li data-ng-if="vm.ticket.file" data-ng-repeat="file in vm.ticket.file">{{vm.ticket.file.name}}</li>
+          </ul>
+        </div>
         </div>
     </form>
 </md-dialog>

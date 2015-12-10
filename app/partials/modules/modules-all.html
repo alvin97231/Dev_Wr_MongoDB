@@ -63,10 +63,7 @@
                 </md-data-table-container>
                 <md-data-table-container>
                         <tbody>
-                          <tr ng-repeat="ticket in vm.tickets
-                          | filter:{id:filters.id} | filter:{user:{name:filters.name}} |filter:{subject:filters.sujet}|filter:{status:filters.status}
-                          |filter:{created:filters.created} | filter:{lastResponse:filters.response} | filter:vm.searchNbJ"
-                              data-ng-click="vm.openTicketView($event, ticket.$id)">
+                          <tr ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
                               <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                               <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                               <td style="text-align:center" id="subject">{{ticket.subject}}</td>

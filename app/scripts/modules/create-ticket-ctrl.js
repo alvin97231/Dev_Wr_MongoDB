@@ -20,6 +20,7 @@ angular.module('workingRoom')
         vm.hide = $mdDialog.hide;
         vm.deleteFile = deleteFile;
         vm.getPattern = getPattern;
+        vm.upload = upload;
 
 
         vm.getSubCat = function (cat, subcats) {
@@ -53,8 +54,8 @@ angular.module('workingRoom')
         }
 
         function deleteFile() {
-            vm.ticket.file = null;
-            Toasts.simple('Fichier supprimé');
+          Toasts.simple('Fichier ' + vm.ticket.file.name+ ' supprimé');
+          vm.ticket.file = null;
         }
 
         function getLocale()
@@ -62,48 +63,20 @@ angular.module('workingRoom')
           var lang = moment.locale();
           return lang;
         }
-        /*function upload(files) {
-        $scope.files = files;
-        angular.forEach(files, function(file) {
-            if (file && !file.$error) {
-                  var reader = new FileReader();
 
-                  reader.onload = function(readerEvt) {
-                      var binaryString = readerEvt.target.result;
-                      vm.newFile = {
-                          name: file.name,
-                          data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
-                      };
-                      Toasts.simple('Fichier ajouté');
-                  };
-
-                  reader.readAsDataURL(file);
-
-    		}
-        });
-    }*/
-    vm.uploadFiles = function(files, errFiles) {
-      vm.files = files;
-      vm.errFiles = errFiles;
-      angular.forEach(files, function(file) {
-          file.upload = Upload.upload({
-              name: file.name,
-              data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
-          });
-
-          file.upload.then(function (response) {
-              $timeout(function () {
-                  file.result = response.data;
-              });
-          }, function (response) {
-              if (response.status > 0)
-                  $scope.errorMsg = response.status + ': ' + response.data;
-          }, function (evt) {
-              file.progress = Math.min(100, parseInt(100.0 *
-                                       evt.loaded / evt.total));
-          });
-      });
-  }
+        function upload(files) {
+          console.log(files);
+              for (var i = 0, f; f = files[i]; i++) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                  var binaryString = e.target.result;
+                  if(f){
+                    vm.ticket.file.push(f);
+                  }
+                };
+                reader.readAsDataURL(f);
+              }
+        }
 
   function getPattern(minSize) {
             if (minSize) {
