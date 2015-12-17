@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="bower_components/MultipleDatePicker/dist/multiple-date-picker.css" />
     <link rel="stylesheet" href="bower_components/mdPickers/dist/mdPickers.min.css" />
     <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
+    <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
+    <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.css" />
+    <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="bower_components/lumx/dist/lumx.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -32,6 +36,9 @@
     <!-- endbuild -->
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script src="//code.highcharts.com/highcharts.js"></script>
+    <script src="//code.highcharts.com/highcharts-3d.js"></script>
+    <script src="//code.highcharts.com/modules/exporting.js"></script>
 </head>
 
 <body layout="row">
@@ -56,6 +63,7 @@
 </div>
 <!-- build:js(app) scripts/vendor.min.js -->
 <!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -80,6 +88,12 @@
 <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
 <script src="bower_components/ng-onload/release/ng-onload.min.js"></script>
 <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
+<script src="bower_components/Chart.js/Chart.js"></script>
+<script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+<script src="bower_components/velocity/velocity.js"></script>
+<script src="bower_components/velocity/velocity.ui.js"></script>
+<script src="bower_components/lumx/dist/lumx.js"></script>
+<script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
 <!-- endbower -->
 <script src="bower_components/moment/locale/fr.js"></script>
 <script src="bower_components/moment/locale/es.js"></script>
@@ -120,12 +134,12 @@
 <script src="scripts/modules/edit-ticket-field-ctrl.js"></script>
 <script src="scripts/modules/edit-modules-ctrl.js"></script>
 <script src="scripts/modules/create-ticket-ctrl.js"></script>
-<script src="scripts/login/reset-password-ctrl.js"></script>
-<script src="scripts/login/login-ctrl.js"></script>
 <script src="scripts/main/main-ctrl.js"></script>
 <script src="scripts/firebase/ref.js"></script>
 <script src="scripts/firebase/config.js"></script>
 <script src="scripts/firebase/auth.js"></script>
+<script src="scripts/login/reset-password-ctrl.js"></script>
+<script src="scripts/login/login-ctrl.js"></script>
 <script src="scripts/admin/edit-group-ctrl.js"></script>
 <script src="scripts/admin/create-user-ctrl.js"></script>
 <script src="scripts/admin/create-module-ctrl.js"></script>
@@ -136,7 +150,6 @@
 
 <!-- partials:js -->
 <!-- endinject -->
-
 </body>
 
 </html>

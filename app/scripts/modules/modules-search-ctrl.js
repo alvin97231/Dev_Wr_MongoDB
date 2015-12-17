@@ -41,12 +41,13 @@ angular.module('workingRoom')
 
                                 return function (table, name)
                                 {
-                                  if (!table.nodeType) table = document.getElementById(table)
+                                  if (!table.nodeType) table = document.getElementById('table_id')
                                   var ctx =
                                   {
                                     worksheet: name || 'Worksheet',
                                     table: table.innerHTML
                                   }
+
                                   window.location.href = uri + base64(format(template, ctx))
                                 }
                               })();

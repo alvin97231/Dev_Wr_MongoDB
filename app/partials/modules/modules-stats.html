@@ -1,124 +1,55 @@
-<form name="userForm">
-  <div flex layout="row">
-
-    <div flex layout-margin>
-        <md-autocomplete
-          ng-disabled="vm.isDisabled"
-          md-no-cache="vm.noCache"
-          md-selected-item="vm.selectedItem"
-          md-search-text-change="vm.searchTextChange(vm.user.name)"
-          md-search-text="vm.user.name"
-          md-selected-item-change="vm.selectedItemChange(user)"
-          md-items="user in vm.querySearch(vm.user.name)"
-          md-item-text="user.name"
-          md-min-length="0"
-          placeholder="Choisir un utilisateur">
-        <md-item-template>
-          <span md-highlight-text="vm.user.name" md-highlight-flags="^i">{{user.name}}</span>
-        </md-item-template>
-        <md-not-found>
-          Pas d'utilisateurs portant le nom "{{user.name}}".
-        </md-not-found>
-      </md-autocomplete>
-    </div>
-
-    <md-input-container flex >
-      <label>Date de début</label>
-      <input ng-model= "vm.startDate" type="date">
-    </md-input-container>
-
-    <md-input-container flex>
-      <label>Date de fin</label>
-      <input ng-model= "vm.endDate" type="date">
-    </md-input-container>
-    <div flex></div>
-
-    <md-button class="md-primary" ng-click="vm.filter()">Filtrer</md-button>
-
-  </div>
-</form>
-
 <div  layout-margin data-ng-show="vm.tickets">
 
-  <md-card flex="50" flex-order="1" style="background-color:grey" layout-padding>
-    <h2 id="h2Stats"><br/>Tickets Créés<br/>{{vm.ticketsUser.length}}<br/></h2>
+  <form name="userForm">
+    <div flex layout="row">
 
-    <div layout="row">
-      <md-card flex flex-order="3" style="background-color: #BE25CC;" layout-padding>
-        <h2 id="h2Stats"><br/>Tickets non lus<br/>{{vm.ticketsNotRead.length}}<br/></h2><br/>
-      </md-card>
-      <md-card flex flex-order="2" style="background-color: #924A99;" layout-padding>
-        <h2 id="h2Stats"><br/>Tickets à traiter<br/>{{vm.ticketsToDeal.length}}<br/></h2>
-      </md-card>
+      <div flex layout-margin>
+        <md-input-container flex>
+          <label></label>
+          <md-autocomplete
+            ng-disabled="vm.isDisabled"
+            md-no-cache="vm.noCache"
+            md-selected-item="vm.selectedItem"
+            md-search-text-change="vm.searchTextChange(vm.user.name)"
+            md-search-text="vm.user.name"
+            md-selected-item-change="vm.selectedItemChange(user)"
+            md-items="user in vm.querySearchName(vm.user.name)"
+            md-item-text="user.name"
+            md-min-length="0"
+            placeholder="Choisir un utilisateur">
+          <md-item-template>
+            <span md-highlight-text="vm.user.name" md-highlight-flags="^i">{{user.name}}</span>
+          </md-item-template>
+          <md-not-found>
+            Pas d'utilisateurs portant le nom "{{user.name}}".
+          </md-not-found>
+        </md-autocomplete>
+      </md-input-container>
     </div>
 
-    <div layout="row">
-      <md-card flex="50" flex-order="3" style="background-color: #002D40;" layout-padding>
-        <h2 id="h2Stats"><br/>Tickets en cours<br/>{{vm.ticketsCurrent.length + vm.ticketsCurrentCC.length +vm.ticketsCurrentCPM.length}}<br/></h2>
 
-        <div layout="row">
+      <md-input-container flex>
+        <lx-date-picker id="date" model= "vm.startDate" type="date" label="Date début" icon="calendar" allow-clear="true" fixed-label="false"></lx-date-picker>
+      </md-input-container>
 
-          <md-card flex flex-order="2" style="background-color: #005B7F;" layout-padding>
-            <h2 id="h2Stats"><br/>En cours:Attente conseiller<br/>{{vm.ticketsCurrentCC.length}}<br/></h2>
-          </md-card>
+      <md-input-container flex>
+        <lx-date-picker id="date" model= "vm.endDate" type="date" label="Date début" icon="calendar" allow-clear="true"></lx-date-picker>
+      </md-input-container>
 
-          <md-card flex flex-order="1" style="background-color: #0D8EFF;" layout-padding>
-            <h2 id="h2Stats"><br/>En cours:Attente CPM<br/>{{vm.ticketsCurrentCPM.length}}<br/></h2>
-          </md-card>
+      <div flex></div>
 
-        </div>
-
-      </md-card>
-
-      <md-card flex flex-order="3" style="background-color: #402405;" layout-padding>
-        <h2 id="h2Stats"><br/>Tickets traités<br/>{{vm.ticketsDCYes.length + vm.ticketsDCNo.length}}<br/></h2>
-
-        <div layout="row">
-        <md-card flex flex-order="2" style="background-color: #FF9215;" layout-padding>
-          <h2 id="h2Stats"><br/>Traité avec résolution DC<br/>{{vm.ticketsDCYes.length}}<br/></h2>
-        </md-card>
-
-        <md-card flex flex-order="1" style="background-color: #7F490A;" layout-padding>
-          <h2 id="h2Stats"><br/>Traité sans résolution DC<br/>{{vm.ticketsDCNo.length}}<br/></h2>
-        </md-card>
-        </div>
-
-      </md-card>
+      <md-button class="md-primary" ng-click="vm.filter()">Filtrer</md-button>
 
     </div>
+  </form>
 
-    <div layout="column">
-
-      <div layout = "row">
-
-        <md-card flex style="background-color: #FF0000;" layout-padding>
-          <h2 id="h2Stats"><br/>Hors procédure CPM<br/>{{vm.ticketsNoCPM.length}}<br/></h2>
-        </md-card>
-        <md-card  flex style="background-color: #6C15FF;" layout-padding>
-          <h2 id="h2Stats"><br/>A relancer<br/>{{vm.ticketsReminder.length}}<br/></h2>
-        </md-card>
-        <md-card flex style="background-color:#CCA325;" layout-padding>
-          <h2 id="h2Stats"><br/>Tickets escaladé<br/>{{vm.ticketsClimb.length}}<br/></h2>
-        </md-card>
-
-      </div>
-
-      <div layout="row">
-
-        <md-card flex style="background-color: orange;" layout-padding>
-          <h2 id="h2Stats"><br/>A solder: En attente de recontact client<br/>{{vm.ticketsClientNeedCtc.length}}<br/></h2>
-        </md-card>
-        <md-card flex style="background-color:#68FF1B ;" layout-padding>
-          <h2 id="h2Stats"><br/>Soldé : Recontact client effectué<br/>{{vm.ticketsClientCtc.length}}<br/></h2>
-        </md-card>
-        <md-card flex style="background-color: #98CC25" layout-padding>
-          <h2 id="h2Stats"><br/>Doublons<br/>{{vm.ticketsDouble.length}}<br/></h2>
-        </md-card>
-
-      </div>
-
+  <md-card flex style="background-color:#eaeaea;" layout-padding>
+    <h2 id="h2Stats"><br/>{{vm.ticketsUser.length}} Tickets<br/></h2>
+    <div layout="row" flex>
+      <highchart id="container" config="vm.config1" style="width: 80%"></highchart>
+      <div flex></div>
+      <highchart id="container2" config="vm.config2" style="width: 80%"></highchart>
     </div>
-
   </md-card>
 
 </div>

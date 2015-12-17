@@ -166,7 +166,7 @@ angular.module('workingRoom')
             return 'Tous les tickets';
         }
 
-        function takeLate(ticket){
+        function takeLate(ticket, delais){
           if(ticket.messages.length === 1){
             var id = 0;
           }
@@ -176,14 +176,23 @@ angular.module('workingRoom')
           var dateStatusChange = ticket.messages[id].date;
           var currentDate = Date.now();
           vm.diff = currentDate - dateStatusChange;
+          console.log(vm.diff)
           if(vm.diff >= 172800000)
           {
             console.log('Notif Necessaire');
           }
-          else
+          else if(vm.diff < 604800000)
           {
-            console.log('Notif Non Necessaire');
-            console.log(vm.diff);
+            if (ticket.status === 'Soldé : Recontact client effectué' || 'Clos' || 'Traité avec résolution DC' || 'Traité sans résolution DC') {
+              console.log('Notif Non Necessaire');
+              vm.done = dateStatusChange - ticket.created;
+              vm.diffDisp = vm.done/3600000;
+              console.log(vm.diffDisp+' heures');
+              delais.push(vm.diffDisp);
+            }
+            else {
+              console.log('Tickets n° '+ticket.id+' trop vieux')
+            }
           }
         }
 
@@ -195,45 +204,54 @@ angular.module('workingRoom')
             vm.test = snap.val();
             var i=0;
             var status = [];
+            var delais = [];
 
               snap.forEach(function (childSnap){
               var child = childSnap.val();
 
               switch(child.status){
                 case 'A solder : En attente de recontact client':
-                  vm.takeLate(child);
+                  vm.takeLate(child,delais);
                   i ++;
                   status[0] = i;
                 break;
 
                 case 'En cours':
-                  vm.takeLate(child);
+                  vm.takeLate(child,delais);
                   i ++;
                   status[1]=i;
                 break;
 
                 case 'En cours : Attente conseiller':
-                  vm.takeLate(child);
+                  vm.takeLate(child,delais);
                   i ++;
                   status[2]=i;
                 break;
 
                 case 'En cours : Attente CPM':
-                  vm.takeLate(child);
+                  vm.takeLate(child,delais);
                   i ++;
                   status[3]=i;
                 break;
 
-                case 'Soldé : Recontact client effectué':console.log(child);
+                case 'Soldé : Recontact client effectué':
+                  vm.takeLate(child,delais);
+                  tableAvg(delais);
                 break;
 
-                case 'Clos':console.log(child);
+                case 'Clos':
+                  vm.takeLate(child,delais);
+                  tableAvg(delais);
                 break;
 
-                case 'Traité avec résolution DC':console.log(child);
+                case 'Traité avec résolution DC':
+                  vm.takeLate(child,delais);
+                  tableAvg(delais);
                 break;
-                
-                case 'Traité sans résolution DC':console.log(child);
+
+                case 'Traité sans résolution DC':
+                  vm.takeLate(child, delais);
+                  tableAvg(delais);
                 break;
 
               }
@@ -258,6 +276,15 @@ angular.module('workingRoom')
           }
         }
       }
+
+    function tableAvg(tableau){
+      var somme = 0 ;
+      for(var i=0; i<tableau.length; i++){
+        somme += tableau[i];
+      }
+      var avg = somme/tableau.length
+    }
+
     function dataTable(){
 
       function filterColumn ( i ) {

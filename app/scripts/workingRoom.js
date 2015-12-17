@@ -17,7 +17,11 @@ angular.module('workingRoom', [
     'ngFileUpload',
     'angularFileUpload',
     'ngOnload',
-    'ngTable'
+    'ngTable',
+    'chart.js',
+    'lumx',
+    'highcharts-ng'
+
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
     $mdThemingProvider.definePalette('workingRoomPrimary', {

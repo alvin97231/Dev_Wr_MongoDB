@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesStatsCtrl', function ($scope, $timeout, $log, $q,  Module, TicketsList, Ref, UsersList) {
+    .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $log, $q,  Module, TicketsList, Ref, UsersList) {
         var vm = this;
         vm.users = UsersList;
         vm.tickets = TicketsList;
@@ -12,12 +12,23 @@ angular.module('workingRoom')
         vm.startDate= new Date(annee, mois, jour);
         vm.endDate = new Date();
         vm.ticketsAll = Ref.child('tickets/'+Module.$id);
+        vm.categoriesQuery = Ref.child('modules/'+Module.$id+'/ticketField/1/data');
         vm.simulateQuery = false;
         vm.isDisabled    = false;
-        vm.querySearch   = querySearch;
+        vm.querySearchName   = querySearchName;
         vm.selectedItemChange = selectedItemChange;
         vm.searchTextChange   = searchTextChange;
         vm.filter = filter;
+        vm.firstChart = false;
+        vm.cancel = $mdDialog.hide;
+
+        function openStatView(event) {
+            $mdDialog.show({
+                controller: 'ViewTicketCtrl as vm',
+                templateUrl: 'partials/modules/view-stat-modal.html',
+                targetEvent: event,
+            });
+        }
 
     function filter(){
       if (vm.startDate && vm.endDate) {
@@ -33,10 +44,7 @@ angular.module('workingRoom')
             vm.tickets = [];
             snap.forEach(function (childSnap){
               var child = childSnap.val();
-              if(child){
-                vm.tickets.push(child);
-              }
-
+              vm.tickets.push(child);
             });
 
           $log.info(vm.tickets);
@@ -67,6 +75,19 @@ angular.module('workingRoom')
         vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller' && ticket.user.name===vm.user.name;});
         vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM' && ticket.user.name===vm.user.name;});
         vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer' && ticket.user.name===vm.user.name;});
+        vm.ticketsClos = vm.tickets.filter(function (ticket) {return ticket.status === 'Clos' && ticket.user.name===vm.user.name;});
+
+        vm.ticketMotif = vm.tickets.filter(function (ticket) {return ticket[1].first;});
+        vm.ticketsAccount = vm.tickets.filter(function (ticket) {return ticket[1].first === "Compte Membre";});
+        vm.ticketsCertif = vm.tickets.filter(function (ticket) {return ticket[1].first === "Demande de certificat d'authenticité";});
+        vm.ticketsNotice = vm.tickets.filter(function (ticket) {return ticket[1].first === "Demande de notice d'utilisation";});
+        vm.ticketsChange = vm.tickets.filter(function (ticket) {return ticket[1].first === "Echange/Envoi de produit";});
+        vm.ticketsBack = vm.tickets.filter(function (ticket) {return ticket[1].first === "Remboursement retours incomplets";});
+        vm.ticketsPresse = vm.tickets.filter(function (ticket) {return ticket[1].first === "Vente presse";});
+        vm.ticketsCoupons = vm.tickets.filter(function (ticket) {return ticket[1].first === "Ventes coupons";});
+        vm.ticketsSAV = vm.tickets.filter(function (ticket) {return ticket[1].first === "Procédure SAV";});
+        vm.ticketsProduit = vm.tickets.filter(function (ticket) {return ticket[1].first === "Informations produits";});
+
       }
 
       else if (vm.user.name === null) {
@@ -84,11 +105,108 @@ angular.module('workingRoom')
       vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller';});
       vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM';});
       vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer';});
+      vm.ticketsClos = vm.tickets.filter(function (ticket) {return ticket.status === 'Clos';});
+
+      vm.ticketMotif = vm.tickets.filter(function (ticket) {return ticket[1].first;});
+      vm.ticketsAccount = vm.tickets.filter(function (ticket) {return ticket[1].first === "Compte Membre";});
+      vm.ticketsCertif = vm.tickets.filter(function (ticket) {return ticket[1].first === "Demande de certificat d'authenticité";});
+      vm.ticketsNotice = vm.tickets.filter(function (ticket) {return ticket[1].first === "Demande de notice d'utilisation";});
+      vm.ticketsChange = vm.tickets.filter(function (ticket) {return ticket[1].first === "Echange/Envoi de produit";});
+      vm.ticketsBack = vm.tickets.filter(function (ticket) {return ticket[1].first === "Remboursement retours incomplets";});
+      vm.ticketsPresse = vm.tickets.filter(function (ticket) {return ticket[1].first === "Vente presse";});
+      vm.ticketsCoupons = vm.tickets.filter(function (ticket) {return ticket[1].first === "Ventes coupons";});
+      vm.ticketsSAV = vm.tickets.filter(function (ticket) {return ticket[1].first === "Procédure SAV";});
+      vm.ticketsProduit = vm.tickets.filter(function (ticket) {return ticket[1].first === "Informations produits";});
+
+      }
+      vm.config2 = {
+        options: {
+          chart: {
+            renderTo: 'container2',
+          type: 'pie',
+          options3d: {
+              enabled: true,
+              alpha: 45,
+              beta: 0
+          }
+      },
+      title: {
+          text: 'Catégories'
+      }
+      },
+      plotOptions: {
+          pie: {
+              innerSize: 100,
+              depth: 45
+          }
+      },
+        series: [{
+            colorByPoint: true,
+            data: [
+              {name:"Compte Membre",y:(vm.ticketsAccount.length/vm.ticketMotif.length)*100},
+              {name:"Demande de certificat d'authenticité",y:(vm.ticketsCertif.length/vm.ticketMotif.length)*100},
+              {name:"Demande de notice d'utilisation",y:(vm.ticketsNotice.length/vm.ticketMotif.length)*100},
+              {name:"Echange/Envoi de produit",y:(vm.ticketsChange.length/vm.ticketMotif.length)*100},
+              {name:"Remboursement retours incomplets",y:(vm.ticketsBack.length/vm.ticketMotif.length)*100},
+              {name:"Vente presse",y:(vm.ticketsPresse.length/vm.ticketMotif.length)*100},
+              {name:"Ventes coupons",y:(vm.ticketsCoupons.length/vm.ticketMotif.length)*100},
+              {name:"Procédure SAV",y:(vm.ticketsSAV.length/vm.ticketMotif.length)*100},
+              {name:"Informations produits",y:(vm.ticketsProduit.length/vm.ticketMotif.length)*100}]
+        }],
+      }
+
+      vm.config1 = {
+        options: {
+          chart: {
+          renderTo: 'container',
+          type: 'column',
+          margin: 75,
+          options3d: {
+              enabled: true,
+              alpha: 15,
+              beta: 30,
+              depth: 50,
+              viewDistance: 25
+          }
+      },
+      title: {
+          text: 'Statuts'
+      } },
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                }
+            }
+        },
+        "credits": {
+          "enabled": false
+        },
+        tooltip: {
+            valueSuffix: '%'
+        },
+        series: [{
+            colorByPoint: true,
+            data: [
+              {name:'A traiter',y:(vm.ticketsToDeal.length/vm.ticketsUser.length)*100},
+              {name:'Doublon',y:(vm.ticketsDouble.length/vm.ticketsUser.length)*100},
+              {name:'En cours',y:(vm.ticketsCurrent.length/vm.ticketsUser.length)*100},
+              {name:'Escaladé',y:(vm.ticketsClimb.length/vm.ticketsUser.length)*100},
+              {name:'Traité sans résolution DC',y:(vm.ticketsDCNo.length/vm.ticketsUser.length)*100},
+              {name:'Traité avec résolution DC',y:(vm.ticketsDCYes.length/vm.ticketsUser.length)*100},
+              {name:'Demande hors procédure CPM',y:(vm.ticketsNoCPM.length/vm.ticketsUser.length)*100},
+              {name:'A solder : En attente de recontact client',y:(vm.ticketsClientNeedCtc.length/vm.ticketsUser.length)*100},
+              {name:'Soldé : Recontact client effectué',y:(vm.ticketsClientCtc.length/vm.ticketsUser.length)*100},
+              {name:'En cours : Attente conseiller',y:(vm.ticketsCurrentCC.length/vm.ticketsUser.length)*100},
+              {name:'En cours : Attente CPM',y:(vm.ticketsCurrentCPM.length/vm.ticketsUser.length)*100},
+              {name:'A relancer',y:(vm.ticketsReminder.length/vm.ticketsUser.length)*100},
+              {name:'Clos',y:(vm.ticketsClos.length/vm.ticketsUser.length)*100}]
+        }],
       }
     }
 
 
-    function querySearch (query) {
+    function querySearchName (query) {
       var results = query ? vm.users.filter( createFilterFor(query) ) : vm.users,
           deferred;
       if (vm.simulateQuery) {
@@ -108,9 +226,6 @@ angular.module('workingRoom')
       $log.info('Item changed to ' + JSON.stringify(item));
     }
 
-    /**
-     * Create filter function for a query string
-     */
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
 
@@ -120,6 +235,8 @@ angular.module('workingRoom')
       };
 
     }
+
+
 
         TicketsList.$loaded().then(function () {
             vm.ticketsUser = vm.tickets.filter(function (ticket) {return ticket;});
@@ -136,5 +253,6 @@ angular.module('workingRoom')
             vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller';});
             vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM';});
             vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer';});
+
         });
     });
