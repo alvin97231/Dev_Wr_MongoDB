@@ -11,16 +11,15 @@ angular.module('workingRoom', [
     'ngMaterial',
     'ngLocale',
     'ui.router',
-    'md.data.table',
     'pascalprecht.translate',
     'angularMoment',
     'ngFileUpload',
     'angularFileUpload',
-    'ngOnload',
-    'ngTable',
-    'chart.js',
     'lumx',
-    'highcharts-ng'
+    'highcharts-ng',
+    'siTable',
+    'datatables',
+    'ngTable'
 
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
@@ -203,6 +202,12 @@ angular.module('workingRoom', [
             templateUrl: 'partials/modules/modules-stats.html',
             controller: 'ModulesStatsCtrl as vm',
             resolve: {
+                GroupsList: function (User, Groups) {
+                    return Groups.all(User);
+                },
+                ModulesList: function (User, Modules, GroupsList) {
+                    return Modules.all(User, GroupsList);
+                },
                 User: function (User) {
                     return User;
                 },

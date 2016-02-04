@@ -3,52 +3,117 @@
   <form name="userForm">
     <div flex layout="row">
 
-      <div flex layout-margin>
-        <md-input-container flex>
-          <label></label>
-          <md-autocomplete
-            ng-disabled="vm.isDisabled"
-            md-no-cache="vm.noCache"
-            md-selected-item="vm.selectedItem"
-            md-search-text-change="vm.searchTextChange(vm.user.name)"
-            md-search-text="vm.user.name"
-            md-selected-item-change="vm.selectedItemChange(user)"
-            md-items="user in vm.querySearchName(vm.user.name)"
-            md-item-text="user.name"
-            md-min-length="0"
-            placeholder="Choisir un utilisateur">
-          <md-item-template>
-            <span md-highlight-text="vm.user.name" md-highlight-flags="^i">{{user.name}}</span>
-          </md-item-template>
-          <md-not-found>
-            Pas d'utilisateurs portant le nom "{{user.name}}".
-          </md-not-found>
-        </md-autocomplete>
-      </md-input-container>
+      <div flex layout-margin layout="row">
+
+        <div layout-margin>
+          <div flex ng-if="!vm.closeLogin[0]">
+            <md-chips
+                ng-model="vm.openLogin"
+                md-autocomplete-snap
+                md-transform-chip="vm.transformChip($chip)">
+                <md-autocomplete
+                  ng-disabled="vm.isDisabled"
+                  md-no-cache="vm.noCache"
+                  md-selected-item="vm.openUser"
+                  md-search-text-change="vm.searchTextChange(vm.searchOpenUser)"
+                  md-search-text="vm.searchOpenUser"
+                  md-selected-item-change="vm.selectedItemChange(user.name)"
+                  md-items="user in vm.querySearchName(vm.searchOpenUser)"
+                  md-item-text="vm.openUser.name"
+                  placeholder="Login d'ouverture">
+                  <span md-highlight-text="vm.searchOpenUser" md-highlight-flags="^i">{{user.name}}</span>
+                </md-autocomplete>
+              <md-chip-template>
+                <span>
+                  {{$chip.name}}
+                </span>
+              </md-chip-template>
+            </md-chips>
+        </div>
+      </div>
+
+      <div layout-margin>
+        <div flex ng-if="!vm.openLogin[0]">
+          <md-chips
+              ng-model="vm.closeLogin"
+              md-autocomplete-snap
+              md-transform-chip="vm.transformChip($chip)">
+              <md-autocomplete
+                ng-disabled="vm.isDisabled"
+                md-no-cache="vm.noCache"
+                md-selected-item="vm.closeUser"
+                md-search-text-change="vm.searchTextChange(vm.searchCloseUser)"
+                md-search-text="vm.searchCloseUser"
+                md-selected-item-change="vm.selectedItemChange(user.name)"
+                md-items="user in vm.querySearchName(vm.searchCloseUser)"
+                md-item-text="vm.closeUser.name"
+                placeholder="Login de cloture">
+              <span md-highlight-text="vm.searchCloseUser" md-highlight-flags="^i">{{user.name}}</span>
+            </md-autocomplete>
+            <md-chip-template>
+              <span>
+                {{$chip.name}}
+              </span>
+            </md-chip-template>
+          </md-chips>
+      </div>
     </div>
 
+    <div layout-margin>
+      <div flex>
+        <md-autocomplete
+          ng-disabled="vm.isDisabled"
+          md-no-cache="vm.noCache"
+          md-selected-item="vm.selectedGroup"
+          md-search-text-change="vm.searchTextChange(vm.group.name)"
+          md-search-text="vm.group.name"
+          md-selected-item-change="vm.selectedItemChange(group.name)"
+          md-items="group in vm.querySearchGroup(vm.group.name)"
+          md-item-text="group.name"
+          placeholder="Choisir un groupe">
+        <md-item-template>
+          <span md-highlight-text="vm.group.name" md-highlight-flags="^i">{{group.name}}</span>
+        </md-item-template>
+        <md-not-found>
+          Pas d'utilisateurs portant le nom "{{group.name}}".
+        </md-not-found>
+        </md-autocomplete>
+      </div>
+    </div>
+
+    </div>
+    <div flex layout-margin></div>
+    <div flex></div>
 
       <md-input-container flex>
-        <lx-date-picker id="date" model= "vm.startDate" type="date" label="Date début" icon="calendar" allow-clear="true" fixed-label="false"></lx-date-picker>
+        <lx-date-picker id="date1" model= "vm.startDate" type="date" label="Date début" icon="calendar" allow-clear="true"></lx-date-picker>
       </md-input-container>
 
       <md-input-container flex>
-        <lx-date-picker id="date" model= "vm.endDate" type="date" label="Date début" icon="calendar" allow-clear="true"></lx-date-picker>
+        <lx-date-picker id="date2" model= "vm.endDate" type="date" label="Date fin" icon="calendar" allow-clear="true"></lx-date-picker>
       </md-input-container>
 
-      <div flex></div>
 
-      <md-button class="md-primary" ng-click="vm.filter()">Filtrer</md-button>
+
+      <md-button class="md-primary" ng-click="vm.filter(); vm.statusDuration()">Filtrer</md-button>
 
     </div>
   </form>
 
   <md-card flex style="background-color:#eaeaea;" layout-padding>
-    <h2 id="h2Stats"><br/>{{vm.ticketsUser.length}} Tickets<br/></h2>
-    <div layout="row" flex>
-      <highchart id="container" config="vm.config1" style="width: 80%"></highchart>
+    <h2 id="h2Stats">{{vm.ticketsUser.length}} Tickets</h2>
+    <h2 id="h2Stats" data-ng-if="vm.avg">Moyenne de traitement: {{vm.avg}} heures</h2><br/>
+    <div layout="column" flex>
+      <div flex>
+        <highchart id="container" config="vm.config1" style="height:400px; width:100%" ></highchart>
+      </div>
       <div flex></div>
-      <highchart id="container2" config="vm.config2" style="width: 80%"></highchart>
+      <div flex>
+        <div layout="row">
+          <highchart id="container2" config="vm.config2" style="height:400px; width:100%"></highchart>
+          <highchart id="container3" config="vm.config3" style="height:400px; width:100%"></highchart>
+        </div>
+      </div>
     </div>
   </md-card>
 

@@ -8,6 +8,7 @@ angular.module('workingRoom')
         vm.ticket = ticket;
         vm.admin = admin;
         vm.newMessage = '';
+        vm.ei = false;
         vm.newStatus = null;
         vm.recontact = false;
         vm.newFile = null;
@@ -22,9 +23,12 @@ angular.module('workingRoom')
             if (vm.newMessage.length > 0) {
                 if (vm.newStatus === 'Escalade injustifié' && ticket.status === 'Escaladé'){
                   ticket.status = 'A traiter';
+                  vm.ei = true;
+
                 }
                 else if (vm.newStatus === 'Escalade injustifié' && ticket.status !== 'Escaladé'){
                   ticket.status = 'En cours';
+                  vm.ei = true;
                 }
                 else if (vm.newStatus === 'A solder : En attente de recontact client'){
                   ticket.status = vm.newStatus;
@@ -41,6 +45,7 @@ angular.module('workingRoom')
                 }
                 if (!ticket.messages) ticket.messages = [];
                 ticket.messages.push({
+                    ei : vm.ei,
                     date: Date.now(),
                     author: {id: User.$id, name: User.name},
                     content: vm.newMessage,
@@ -69,7 +74,7 @@ angular.module('workingRoom')
                         name: file.name,
                         data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
                     };
-                    Toasts.simple('Fichier ajouté');
+                    Toasts.simple('Fichier '+ file.name+ ' ajouté');
                 };
 
                 reader.readAsDataURL(file);

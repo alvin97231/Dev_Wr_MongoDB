@@ -9,6 +9,8 @@
     <div class="lx-date__input-wrapper">
         <lx-text-field class="lx-date-input" label="{{ label }}" ng-click="openPicker()">
             <input type="text" ng-model="selected.model" ng-disabled="true">
+
+            <div class="lx-date-input__input-cover"></div>
         </lx-text-field>
 
         <a class="lx-date__clear" ng-click="clearDate()" ng-if="allowClear">

@@ -2,7 +2,7 @@
  * AngularJS file upload directives and services. Supoorts: file upload/drop/paste, resume, cancel/abort,
  * progress, resize, thumbnail, preview, validation and CORS
  * @author  Danial  <danial.farid@gmail.com>
- * @version 10.1.9
+ * @version 10.1.14
  */
 
 if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
@@ -23,7 +23,7 @@ if (window.XMLHttpRequest && !(window.FileAPI && FileAPI.shouldLoad)) {
 
 var ngFileUpload = angular.module('ngFileUpload', []);
 
-ngFileUpload.version = '10.1.9';
+ngFileUpload.version = '10.1.14';
 
 ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
   var upload = this;
@@ -482,7 +482,6 @@ ngFileUpload.service('Upload', ['$parse', '$timeout', '$compile', '$q', 'UploadE
 
       if (ngModel) {
         upload.applyModelValidation(ngModel, files);
-        ngModel.$ngfModelChange = true;
         ngModel.$setViewValue(isSingleModel ? file : files);
       }
 
@@ -1092,7 +1091,7 @@ ngFileUpload.service('UploadValidate', ['UploadDataUrl', '$q', '$timeout', funct
     return valid;
   };
 
-  upload.ratioToFloat = function(val) {
+  upload.ratioToFloat = function (val) {
     var r = val.toString(), xIndex = r.search(/[x:]/i);
     if (xIndex > -1) {
       r = parseFloat(r.substring(0, xIndex)) / parseFloat(r.substring(xIndex + 1));
@@ -1105,12 +1104,10 @@ ngFileUpload.service('UploadValidate', ['UploadDataUrl', '$q', '$timeout', funct
   upload.registerModelChangeValidator = function (ngModel, attr, scope) {
     if (ngModel) {
       ngModel.$formatters.push(function (files) {
-        if (!ngModel.$ngfModelChange) {
-          upload.validate(files, ngModel, attr, scope, function () {
+        if (ngModel.$dirty) {
+          upload.validate(files, ngModel, attr, scope).then(function () {
             upload.applyModelValidation(ngModel, files);
           });
-        } else {
-          ngModel.$ngfModelChange = false;
         }
       });
     }
@@ -1296,7 +1293,7 @@ ngFileUpload.service('UploadValidate', ['UploadDataUrl', '$q', '$timeout', funct
     }, /image/, this.imageDimensions, function (d, val) {
       return (d.width / d.height) - upload.ratioToFloat(val) < 0.0001;
     })));
-      promises.push(upload.happyPromise(validateAsync('minRatio', function (cons) {
+    promises.push(upload.happyPromise(validateAsync('minRatio', function (cons) {
       return cons.ratio;
     }, /image/, this.imageDimensions, function (d, val) {
       return (d.width / d.height) - upload.ratioToFloat(val) > -0.0001;
@@ -1695,7 +1692,8 @@ ngFileUpload.service('UploadResize', ['UploadValidate', '$q', function (UploadVa
       }
     }, false);
     elem[0].addEventListener('paste', function (evt) {
-      if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+      if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1 &&
+        attrGetter('ngfEnableFirefoxPaste', scope)) {
         evt.preventDefault();
       }
       if (isDisabled() || !upload.shouldUpdateOn('paste', attr, scope)) return;

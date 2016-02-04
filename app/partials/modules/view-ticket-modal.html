@@ -43,7 +43,7 @@
         </md-content>
         <md-divider></md-divider>
     </md-dialog-content>
-    <form layout="row" class="md-actions" ng-hide="vm.ticket.status === 'Clos'" data-ng-if="vm.admin || vm.super || vm.module.$rights === 'r' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+    <form class="md-actions" layout="row" ng-hide="vm.ticket.status === 'Clos'" data-ng-if="vm.admin || vm.super || vm.module.$rights === 'r' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
           name="responseForm" data-ng-submit="vm.sendMessage()">
         <div flex>
             <md-input-container>
@@ -57,14 +57,14 @@
               Recontacter Membre
             </md-ckeckbox>
         </div>
-        <md-input-container>
-            <label>Statut</label>
-            <md-select data-ng-model="vm.newStatus" required>
+        <div>
+            <md-select data-ng-model="vm.newStatus" required placeholder="Statut">
                 <md-option data-ng-repeat="status in vm.module.status" value="{{status.name}}">
                     {{status.name}}
                 </md-option>
             </md-select>
-        </md-input-container>
+        </div>
+
         <md-button class="md-raised" type="button" ng-model="files" data-ng-if="!vm.newFile" ngf-select="vm.uploadFiles($file)" ngf-change="vm.uploadFiles($file)" ngf-multiple="true">Fichier</md-button>
         <md-button class="md-raised" type="button" data-ng-if="vm.newFile" data-ng-click="vm.deleteFile()">Supprimer</md-button>
         <md-button class="md-accent md-raised" type="submit" data-ng-disabled="responseForm.$invalid">

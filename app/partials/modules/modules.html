@@ -1,64 +1,61 @@
 <div layout="row" layout-wrap>
     <ui-view flex="100"></ui-view>
     <div flex="100" data-ng-show="vm.tickets">
-        <md-card flex>
-            <md-data-table-toolbar>
-                <!---->
-                <md-button class="md-accent" data-ng-if="vm.user || vm.admin || vm.super || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ng-click="vm.openCreateTicket($event)">
-                    {{ 'TICKET_CREATE' | translate }}
-                </md-button>
-                <md-button class="md-accent" data-ng-if="vm.admin"  data-ui-sref="main.modulesAll({id: vm.module.$id})">
-                    {{ 'ALL_TICKETS' | translate }}
-                </md-button>
-                <md-button class="md-accent" data-ui-sref="main.modulesStats({id: vm.module.$id})">
-                    {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
-                </md-button>
-                <div flex></div>
-                <md-button class="md-fab md-primary" data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
-                  <md-icon>chat</md-icon>
-                  <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM.length + vm.ticketsCurrentCC.length}}</span>
-                </md-button>
-                <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
-                  <md-icon>announcement</md-icon>
-                  <span>{{vm.ticketsNotRead.length}}</span>
-                </md-button>
-                <md-button data-ng-show= "vm.admin" aria-label="Tous les tickets" data-ui-sref="main.modulesAll({id: vm.module.$id})">
-                  <md-icon>messenger</md-icon>
-                  <span>{{vm.ticketsTotal}}</span>
-                </md-button>
-            </md-data-table-toolbar>
+      <md-card flex layout="row">
+        <md-button class="md-accent" data-ng-if="vm.user || vm.admin || vm.super || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ng-click="vm.openCreateTicket($event)">
+            {{ 'TICKET_CREATE' | translate }}
+        </md-button>
+        <md-button class="md-accent" data-ng-if="vm.admin"  data-ui-sref="main.modulesAll({id: vm.module.$id})">
+            {{ 'ALL_TICKETS' | translate }}
+        </md-button>
+        <md-button class="md-accent" data-ng-if="vm.admin || vm.super || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ui-sref="main.modulesStats({id: vm.module.$id})">
+            {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
+        </md-button>
+        <div flex></div>
+        <md-button class="md-fab md-primary" data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
+          <md-icon>chat</md-icon>
+          <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM.length + vm.ticketsCurrentCC.length}}</span>
+        </md-button>
+        <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
+          <md-icon>announcement</md-icon>
+          <span>{{vm.ticketsNotRead.length}}</span>
+        </md-button>
+        <md-button data-ng-show= "vm.admin" aria-label="Tous les tickets" data-ui-sref="main.modulesAll({id: vm.module.$id})">
+          <md-icon>messenger</md-icon>
+          <span>{{vm.ticketsTotal}}</span>
+        </md-button>
+      </md-card>
+        <md-card>
+
             <md-tabs md-dynamic-height aria-label="select status" >
               <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Escalade injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
                 <md-tab-body><br/>
                   <md-data-table-container>
-                    <table id="table_id">
+                    <table id="table_id" si-table class="table">
                         <thead>
                           <tr>
-                            <td class="tableHeader" id="filter_col1" data-column="0"><input class="column_filter" id="col0_filter" placeholder="#" size="5"></td>
-                            <td class="tableHeader" id="filter_col2" data-column="1"><input class="column_filter" id="col1_filter" placeholder="Nom" size="10"></td>
-                            <td class="tableHeader" id="filter_col3" data-column="2"><input class="column_filter" id="col2_filter" placeholder="Sujet" size="10"></td>
-                            <td class="tableHeader" id="filter_col4" data-column="3"><input class="column_filter" id="col3_filter" placeholder="Statut" size="10"></td>
-                            <td class="tableHeader" id="filter_col5" data-column="4"><input class="column_filter" id="col4_filter" placeholder="Créé" size="5"></td>
-                            <td class="tableHeader" id="filter_col6" data-column="5"><input class="column_filter" id="col5_filter" placeholder="Réponse par" size="10"></td>
-                            <td class="tableHeader" id="filter_col7" data-column="6"><input class="column_filter" id="col6_filter" placeholder="J+" size="5"></td>
-                            <td class="tableHeader" id="filter_col{{key+8}}" data-column="{{key+7}}" data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center"><input class="column_filter" id="col{{key+7}}_filter" placeholder="{{field.name}}" size="10"></td>
+                              <th sort-by="id" sort-init="desc" style="text-align:center">#</th>
+                              <th sort-by="user.name" style="text-align:center">Nom</th>
+                              <th sort-by="subject" style="text-align:center">Sujet</th>
+                              <th sort-by="status" style="text-align:center">Statut</th>
+                              <th sort-by="created" style="text-align:center">Créé</th>
+                              <th sort-by="lastResponse" style="text-align:center">Réponse par</th>
+                              <th sort-by="created" style="text-align:center">J+</th>
+                              <th sort-by="{{key}}" style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
                           </tr>
                           <tr>
-                              <th class="tableHeader" ng-click="orderByField='id'; reverseSort=!reverseSort" name="#">#</th>
-                              <th class="tableHeader" ng-click="orderByField='user.name'; reverseSort=!reverseSort" name="Nom">Nom</th>
-                              <th class="tableHeader" ng-click="orderByField='subject'; reverseSort=!reverseSort" name="Sujet">Sujet</th>
-                              <th class="tableHeader" ng-click="orderByField='status'; reverseSort=!reverseSort" name="Statut">Statut</th>
-                              <th class="tableHeader" ng-click="orderByField='created'; reverseSort=!reverseSort" name="Créé">Créé</th>
-                              <th class="tableHeader" ng-click="orderByField='lastResponse'; reverseSort=!reverseSort" name="Réponse par">Réponse par</th>
-                              <th class="tableHeader" ng-click="orderByField='created'; reverseSort=!reverseSort" name="J+">J+</th>
-                              <th class="tableHeader" ng-click="orderByField='{{key}}'; reverseSort=!reverseSort"
-                                  data-ng-repeat="(key, field) in vm.module.ticketFields" name="{{field.name}}">{{field.name}}</th>
+                            <th><input  placeholder="#" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="Nom" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="Sujet" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="Statut" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="Créé" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="Réponse par" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="J+" class="input-sm form-control" type="search"/></th>
+                            <th data-ng-repeat="(key, field) in vm.module.ticketFields"><input  placeholder="{{field.name}}" class="input-sm form-control" type="search"/></th>
                           </tr>
                         </thead>
-                    </md-data-table-container>
-                    <md-data-table-container>
                             <tbody>
-                              <tr ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
+                              <tr si-sortable ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
                                   <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                                   <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                                   <td style="text-align:center" id="subject">{{ticket.subject}}</td>
@@ -76,8 +73,14 @@
                                   </td>
                               </tr>
                             </tbody>
+                            <tfoot>
+                              <tr>
+                                  <td colspan="14">
+                                    <si-table-pagination limit="10"  first-text="First page"  last-text="Last page"  previous-text="«"  next-text="»" />
+                                  </td>
+                              </tr>
+                          </tfoot>
                         </table>
-                    </md-data-table-container>
                   <div data-ng-show="!vm.tickets" layout-fill layout="row" layout-align="center">
                       <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
                   </div>

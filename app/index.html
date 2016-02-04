@@ -4,27 +4,21 @@
 <head>
     <meta charset="utf-8">
     <title>WorkingRoom</title>
-    <meta name="description"
-          content="">
-    <meta name="viewport"
-          content="width=device-width">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="favicon.ico?v=2" />
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!-- build:css(app) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-date-picker/angular-date-picker.css" />
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
-    <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.min.css" />
-    <link rel="stylesheet" href="bower_components/MultipleDatePicker/dist/multiple-date-picker.css" />
-    <link rel="stylesheet" href="bower_components/mdPickers/dist/mdPickers.min.css" />
-    <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
-    <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
     <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.css" />
     <link rel="stylesheet" href="bower_components/mdi/css/materialdesignicons.min.css" />
     <link rel="stylesheet" href="bower_components/lumx/dist/lumx.css" />
+    <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.min.css" />
+    <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -34,11 +28,16 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endinject -->
     <!-- endbuild -->
+    <link data-require="bootstrap-css@3.2.0" data-semver="3.2.0" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
     <script src="//code.highcharts.com/highcharts.js"></script>
     <script src="//code.highcharts.com/highcharts-3d.js"></script>
     <script src="//code.highcharts.com/modules/exporting.js"></script>
+    <script src="//code.highcharts.com/modules/data.js"></script>
+    <script src="//code.highcharts.com/modules/drilldown.js"></script>
+    <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+    <script src="http://highcharts.github.io/export-csv/export-csv.js"></script>
+
 </head>
 
 <body layout="row">
@@ -67,10 +66,8 @@
 <script src="bower_components/angular/angular.js"></script>
 <script src="bower_components/angular-animate/angular-animate.js"></script>
 <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-<script src="bower_components/angular-date-picker/angular-date-picker.js"></script>
 <script src="bower_components/angular-aria/angular-aria.js"></script>
 <script src="bower_components/angular-material/angular-material.js"></script>
-<script src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
 <script src="bower_components/angular-messages/angular-messages.js"></script>
 <script src="bower_components/moment/moment.js"></script>
 <script src="bower_components/angular-moment/angular-moment.js"></script>
@@ -83,17 +80,27 @@
 <script src="bower_components/angularfire/dist/angularfire.js"></script>
 <script src="bower_components/file-saver.js/FileSaver.js"></script>
 <script src="bower_components/ng-file-upload/ng-file-upload.js"></script>
-<script src="bower_components/MultipleDatePicker/dist/multipleDatePicker.min.js"></script>
-<script src="bower_components/mdPickers/dist/mdPickers.min.js"></script>
 <script src="bower_components/angular-file-upload/dist/angular-file-upload.min.js"></script>
-<script src="bower_components/ng-onload/release/ng-onload.min.js"></script>
-<script src="bower_components/ng-table/dist/ng-table.min.js"></script>
-<script src="bower_components/Chart.js/Chart.js"></script>
-<script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
 <script src="bower_components/velocity/velocity.js"></script>
 <script src="bower_components/velocity/velocity.ui.js"></script>
 <script src="bower_components/lumx/dist/lumx.js"></script>
 <script src="bower_components/highcharts-ng/dist/highcharts-ng.js"></script>
+<script src="bower_components/si-table/dist/si-table.js"></script>
+<script src="bower_components/angular-material-data-table/dist/md-data-table.min.js"></script>
+<script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
+<script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/bootstrap/angular-datatables.bootstrap.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/colreorder/angular-datatables.colreorder.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/columnfilter/angular-datatables.columnfilter.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/light-columnfilter/angular-datatables.light-columnfilter.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/colvis/angular-datatables.colvis.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/fixedcolumns/angular-datatables.fixedcolumns.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/fixedheader/angular-datatables.fixedheader.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/scroller/angular-datatables.scroller.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/tabletools/angular-datatables.tabletools.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/buttons/angular-datatables.buttons.js"></script>
+<script src="bower_components/angular-datatables/dist/plugins/select/angular-datatables.select.js"></script>
+<script src="bower_components/ng-table/dist/ng-table.min.js"></script>
 <!-- endbower -->
 <script src="bower_components/moment/locale/fr.js"></script>
 <script src="bower_components/moment/locale/es.js"></script>
@@ -135,11 +142,11 @@
 <script src="scripts/modules/edit-modules-ctrl.js"></script>
 <script src="scripts/modules/create-ticket-ctrl.js"></script>
 <script src="scripts/main/main-ctrl.js"></script>
+<script src="scripts/login/reset-password-ctrl.js"></script>
+<script src="scripts/login/login-ctrl.js"></script>
 <script src="scripts/firebase/ref.js"></script>
 <script src="scripts/firebase/config.js"></script>
 <script src="scripts/firebase/auth.js"></script>
-<script src="scripts/login/reset-password-ctrl.js"></script>
-<script src="scripts/login/login-ctrl.js"></script>
 <script src="scripts/admin/edit-group-ctrl.js"></script>
 <script src="scripts/admin/create-user-ctrl.js"></script>
 <script src="scripts/admin/create-module-ctrl.js"></script>

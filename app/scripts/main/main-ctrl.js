@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('MainCtrl', function ($rootScope, $state, $mdSidenav, $translate, amMoment, Auth, User, ModulesList, Modules) {
+    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate, amMoment, Auth, User, ModulesList, Modules) {
         var vm = this;
 
         vm.unauth = Auth.saveDisconnect;
@@ -10,7 +10,7 @@ angular.module('workingRoom')
         vm.modules = ModulesList;
         vm.user = User;
         vm.showModulesGrid = true;
-        vm.selectedLocale = 'fr';
+        $scope.selectedLocale = 'fr';
         vm.changeLocale = changeLocale;
 
 
@@ -63,7 +63,8 @@ angular.module('workingRoom')
         }
 
         function changeLocale() {
-            $translate.use(vm.selectedLocale);
-            amMoment.changeLocale(vm.selectedLocale);
+            $translate.use($scope.selectedLocale);
+            amMoment.changeLocale($scope.selectedLocale);
         }
+
     });

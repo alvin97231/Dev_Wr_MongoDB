@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.4
+ * v0.10.1
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -64,29 +64,17 @@ mdListDirective.$inject = ["$mdTheming"];
  * @description
  * The `<md-list-item>` directive is a container intended for row items in a `<md-list>` container.
  *
- * ## CSS
- * `.md-avatar` - class for image avatars
- *
- * `.md-avatar-icon` - class for icon avatars
- *
- * `.md-offset` - on content without an avatar
- *
  * @usage
  * <hljs lang="html">
  *  <md-list>
  *    <md-list-item>
- *      <img class="md-avatar" ng-src="path/to/img"/>
- *      <span>Item content in list</span>
- *    </md-list-item>
- *    <md-list-item>
- *      <md-icon class="md-avatar-icon" md-svg-icon="communication:phone"></md-icon>
- *      <span>Item content in list</span>
+ *            Item content in list
  *    </md-list-item>
  *  </md-list>
  * </hljs>
  *
  */
-function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
+function mdListItemDirective($mdAria, $mdConstant, $timeout) {
   var proxiedTypes = ['md-checkbox', 'md-switch'];
   return {
     restrict: 'E',
@@ -249,8 +237,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
 
         if (proxies.length && firstChild) {
           $element.children().eq(0).on('click', function(e) {
-            var parentButton = $mdUtil.getClosest(e.target, 'BUTTON');
-            if (!parentButton && firstChild.contains(e.target)) {
+            if (firstChild.contains(e.target)) {
               angular.forEach(proxies, function(proxy) {
                 if (e.target !== proxy && !proxy.contains(e.target)) {
                   angular.element(proxy).triggerHandler('click');
@@ -263,7 +250,7 @@ function mdListItemDirective($mdAria, $mdConstant, $mdUtil, $timeout) {
     }
   };
 }
-mdListItemDirective.$inject = ["$mdAria", "$mdConstant", "$mdUtil", "$timeout"];
+mdListItemDirective.$inject = ["$mdAria", "$mdConstant", "$timeout"];
 
 /*
  * @private

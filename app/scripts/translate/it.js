@@ -61,6 +61,7 @@ angular.module('workingRoom')
     TICKET_TABLE_CREATED: 'Data di creazione',
     TICKET_TABLE_LAST_REPLY: 'Ultima risposta',
     TICKET_CREATE: 'Creare un ticket',
+    TICKET_BY_STATUS: 'Tickets per status',
     TICKET_BUTTON_SEARCH: "Ricercare un ticket",
     TICKET_BUTTON_EDIT: "Modificare un modulo",
     MODAL_EDIT_PROFILE_INFOS: 'Informazioni',

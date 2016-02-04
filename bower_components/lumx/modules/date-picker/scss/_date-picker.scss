@@ -71,6 +71,10 @@
     }
 }
 
+.lx-date-input__input-cover {
+    @include position(absolute, 0 0 0 0);
+}
+
 .lx-date__clear {
     display: block;
     @include position(absolute, null 0 $base-spacing-unit null);

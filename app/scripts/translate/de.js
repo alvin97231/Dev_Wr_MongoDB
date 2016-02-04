@@ -62,6 +62,7 @@ angular.module('workingRoom')
     TICKET_TABLE_LAST_REPLY: 'Letzte Antwort von',
     TICKET_CREATE: 'Ein Ticket erstellen',
     TICKET_BUTTON_SEARCH: 'Ein Ticket suchen',
+    TICKET_BY_STATUS: 'Tickets pro status',
     TICKET_BUTTON_EDIT: "Das Modul bearbeiten",
     MODAL_EDIT_PROFILE_INFOS: 'Informationen',
     CHANGE_MAIL_MODAL_NEW: 'Neue email',

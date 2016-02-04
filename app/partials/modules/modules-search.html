@@ -1,5 +1,5 @@
 <md-card layout-padding>
-    <md-content layout-padding layout="row" layout-wrap="" layout-sm="column">
+    <md-content layout-padding layout="row" layout-wrap="" layout-sm="column" data-ng-if="vm.hide">
         <div flex="33">
             <md-input-container>
                 <label>Sujet</label>
@@ -78,6 +78,10 @@
     </md-content>
     <md-divider></md-divider>
     <div class="md-actions" layout="row" layout-align="end center">
+        <div flex></div>
+        <md-button data-ng-if="vm.hide" data-ng-click="vm.hide = false" class="md-accent"><md-icon>keyboard_arrow_up</md-icon></md-button>
+        <md-button data-ng-if="!vm.hide" data-ng-click="vm.hide = true"class="md-accent"><md-icon>keyboard_arrow_down</md-icon></md-button>
+        <div flex></div>
         <md-button class="md-accent" data-ng-click="vm.exportExcel('testTable','Export')">Export Excel</md-button>
         <md-button class="md-accent" data-ng-click="vm.back()">{{'SEARCH_TICKETS_CLOSE' | translate}}</md-button>
         <md-button class="md-accent md-raised" data-ng-click="vm.searchTickets()">{{'SEARCH_TICKETS' | translate}}</md-button>

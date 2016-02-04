@@ -9,7 +9,8 @@ angular.module('workingRoom')
         vm.ticket = {
             user: {
                 id: User.$id,
-                name: User.name
+                name: User.name,
+                group : User.groups
             },
             lang : getLocale(),
             status: defaultStatus
@@ -64,20 +65,22 @@ angular.module('workingRoom')
           return lang;
         }
 
-        function upload(files) {
-          console.log(files);
-              for (var i = 0, f; f = files[i]; i++) {
+        function upload(file) {
+            if (file) {
                 var reader = new FileReader();
-                reader.onload = function (e) {
-                  var binaryString = e.target.result;
-                  if(f){
-                    vm.ticket.file.push(f);
-                  }
-                };
-                reader.readAsDataURL(f);
-              }
-        }
 
+                reader.onload = function(readerEvt) {
+                    var binaryString = readerEvt.target.result;
+                    vm.newFile = {
+                        name: file.name,
+                        data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
+                    };
+                    Toasts.simple('Fichier '+ file.name+ ' ajouté');
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
   function getPattern(minSize) {
             if (minSize) {
                 return '.{' + minSize + ',}';

@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.4
+ * v0.10.1
  */
 goog.provide('ng.material.components.icon');
 goog.require('ng.material.core');
@@ -14,11 +14,8 @@ goog.require('ng.material.core');
  */
 angular.module('material.components.icon', [
     'material.core'
-  ]);
-
-angular
-  .module('material.components.icon')
-  .directive('mdIcon', ['$mdIcon', '$mdTheming', '$mdAria', mdIconDirective]);
+  ])
+  .directive('mdIcon', mdIconDirective);
 
 /**
  * @ngdoc directive
@@ -118,8 +115,7 @@ angular
  * nor a label on the parent element, a warning will be logged to the console.
  * @param {string=} alt Labels icon for accessibility. If an empty string is provided, icon
  * will be hidden from accessibility layer with `aria-hidden="true"`. If there's no alt on the icon
- * nor a label on the parent element, a warning will be logged to the console.
- *
+ * nor a label on the parent element, a warning will be logged to the console. *
  * @usage
  * When using SVGs:
  * <hljs lang="html">
@@ -249,16 +245,30 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
       return false;
     }
 
-    function prepareForFontIcon() {
+    function prepareForFontIcon () {
       if (!scope.svgIcon && !scope.svgSrc) {
+
         if (scope.fontIcon) {
           element.addClass('md-font ' + scope.fontIcon);
         }
-        element.addClass($mdIcon.fontSet(scope.fontSet));
+
+        if (scope.fontSet) {
+          element.addClass($mdIcon.fontSet(scope.fontSet));
+        }
+
+        if (shouldUseDefaultFontSet()) {
+          element.addClass($mdIcon.fontSet());
+        }
+
+      }
+
+      function shouldUseDefaultFontSet() {
+        return !scope.fontIcon && !scope.fontSet && !attr.hasOwnProperty('class');
       }
     }
   }
 }
+mdIconDirective.$inject = ["$mdIcon", "$mdTheming", "$mdAria"];
 
   angular
     .module('material.components.icon' )
@@ -274,7 +284,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     * icons and icon sets to be pre-registered and associated with source URLs **before** the `<md-icon />`
     * directives are compiled.
     *
-    * If using font-icons, the developer is responsible for loading the fonts.
+    * If using font-icons, the developer is repsonsible for loading the fonts.
     *
     * If using SVGs, loading of the actual svg files are deferred to on-demand requests and are loaded
     * internally by the `$mdIcon` service using the `$http` service. When an SVG is requested by name/ID,
@@ -563,11 +573,6 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
          id:  'md-toggle-arrow',
          url: 'md-toggle-arrow-svg',
          svg: '<svg version="1.1" x="0px" y="0px" viewBox="0 0 48 48"><path d="M24 16l-12 12 2.83 2.83 9.17-9.17 9.17 9.17 2.83-2.83z"/><path d="M0 0h48v48h-48z" fill="none"/></svg>'
-       },
-       {
-         id:  'md-calendar',
-         url: 'md-calendar.svg',
-         svg: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>'
        }
      ];
 
@@ -633,8 +638,6 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
   * NOTE: The `<md-icon />  ` directive internally uses the `$mdIcon` service to query, loaded, and instantiate
   * SVG DOM elements.
   */
-
-  /* ngInject */
  function MdIconService(config, $http, $q, $log, $templateCache) {
    var iconCache = {};
    var urlRegex = /[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/i;
@@ -658,8 +661,10 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
      if ( urlRegex.test(id)     ) return loadByURL(id).then( cacheIcon(id) );
      if ( id.indexOf(':') == -1 ) id = '$default:' + id;
 
-     var load = config[id] ? loadByID : loadFromIconSet;
-     return load(id)
+     return loadByID(id)
+         .catch(loadFromIconSet)
+         .catch(announceIdNotFound)
+         .catch(announceNotFound)
          .then( cacheIcon(id) );
    }
 
@@ -697,8 +702,9 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     *
     */
    function loadByID(id) {
-    var iconConfig = config[id];
-     return loadByURL(iconConfig.url).then(function(icon) {
+     var iconConfig = config[id];
+
+     return !iconConfig ? $q.reject(id) : loadByURL(iconConfig.url).then(function(icon) {
        return new Icon(icon, iconConfig);
      });
    }
@@ -711,19 +717,12 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
      var setName = id.substring(0, id.lastIndexOf(':')) || '$default';
      var iconSetConfig = config[setName];
 
-     return !iconSetConfig ? announceIdNotFound(id) : loadByURL(iconSetConfig.url).then(extractFromSet);
+     return !iconSetConfig ? $q.reject(id) : loadByURL(iconSetConfig.url).then(extractFromSet);
 
      function extractFromSet(set) {
        var iconName = id.slice(id.lastIndexOf(':') + 1);
        var icon = set.querySelector('#' + iconName);
-       return !icon ? announceIdNotFound(id) : new Icon(icon, iconSetConfig);
-     }
-
-     function announceIdNotFound(id) {
-       var msg = 'icon ' + id + ' not found';
-      $log.warn(msg);
-
-       return $q.reject(msg || id);
+       return !icon ? $q.reject(id) : new Icon(icon, iconSetConfig);
      }
    }
 
@@ -736,7 +735,22 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
        .get(url, { cache: $templateCache })
        .then(function(response) {
          return angular.element('<div>').append(response.data).find('svg')[0];
-       }).catch(announceNotFound);
+       });
+   }
+
+   /**
+    * User did not specify a URL and the ID has not been registered with the $mdIcon
+    * registry
+    */
+   function announceIdNotFound(id) {
+     var msg;
+
+     if (angular.isString(id)) {
+       msg = 'icon ' + id + ' not found';
+       $log.warn(msg);
+     }
+
+     return $q.reject(msg || id);
    }
 
    /**
@@ -760,7 +774,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     *  Define the Icon class
     */
    function Icon(el, config) {
-     if (el && el.tagName != 'svg') {
+     if (el.tagName != 'svg') {
        el = angular.element('<svg xmlns="http://www.w3.org/2000/svg">').append(el)[0];
      }
 
@@ -806,6 +820,5 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
    }
 
  }
- MdIconService.$inject = ["config", "$http", "$q", "$log", "$templateCache"];
 
 ng.material.components.icon = angular.module("material.components.icon");

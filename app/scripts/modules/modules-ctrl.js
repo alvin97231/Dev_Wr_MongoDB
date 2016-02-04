@@ -26,24 +26,10 @@ angular.module('workingRoom')
         vm.orderByField = 'id';
         vm.reverseSort = false;
         vm.searchNbJ='';
-        vm.dataTable = dataTable;
-
         var defaultStatus = getDefaultStatus();
         vm.currentFilter = {status: defaultStatus};
         vm.status = defaultStatus;
         vm.filter = 'Tickets par statut';
-        vm.label = {
-            text: 'Tickets par page',
-            of: 'sur'
-        };
-
-        vm.query = {
-            filter: '',
-            order: '-id',
-            limit: 10,
-            page: 1,
-            rowSelect: [10, 20, 50, 100, 200, 500]
-        };
 
         vm.tickets = null;
         TicketsList.$loaded().then(function () {
@@ -74,21 +60,18 @@ angular.module('workingRoom')
         {
           vm.currentFilter = {lang: moment.locale()};
           filterTicketList();
-          setTimeout(function(){vm.dataTable();}, 1000);
         }
 
         function filterToDealTickets()
         {
           vm.currentFilter = {status: defaultStatus, lang: moment.locale()};
           filterTicketList();
-          setTimeout(function(){vm.dataTable();}, 1000);
         }
 
         function filterNotReadTickets()
         {
           vm.currentFilter = {lastResponse: '!', lang: moment.locale()};
           filterTicketList();
-          setTimeout(function(){vm.dataTable();}, 1000);
         }
 
         function filterByStatusTickets(status)
@@ -99,14 +82,12 @@ angular.module('workingRoom')
             {
               vm.currentFilter = {status : statusName, lang: moment.locale()};
               filterTicketList();
-              setTimeout(function(){vm.dataTable();}, 1000);
             }
 
             else if (vm.user)
             {
               vm.currentFilter = {status : statusName, user: {name: vm.filterName}, lang: moment.locale()};
               filterTicketList();
-              setTimeout(function(){vm.dataTable();}, 1000);
             }
         }
 
@@ -189,6 +170,7 @@ angular.module('workingRoom')
               vm.diffDisp = vm.done/3600000;
               console.log(vm.diffDisp+' heures');
               delais.push(vm.diffDisp);
+              console.log(delais);
             }
             else {
               console.log('Tickets n° '+ticket.id+' trop vieux')
@@ -253,7 +235,6 @@ angular.module('workingRoom')
                   vm.takeLate(child, delais);
                   tableAvg(delais);
                 break;
-
               }
           });
           for ( var x=0; x < status.length; x++){
@@ -283,26 +264,10 @@ angular.module('workingRoom')
         somme += tableau[i];
       }
       var avg = somme/tableau.length
+      console.log(tableau);
+      console.log(avg);
     }
 
-    function dataTable(){
-
-      function filterColumn ( i ) {
-        var table = $('#table_id').DataTable();
-        table.column( i ).search(
-            $('#col'+i+'_filter').val(),
-            $('#col'+i+'_regex').prop('checked'),
-            $('#col'+i+'_smart').prop('checked')
-        ).draw();
-      }
-
-      $(document).ready(function() {
-        var table = $('#table_id').DataTable();
-
-        $('input.column_filter').on( 'keyup click', function () {
-            filterColumn( $(this).parents('td').attr('data-column') );
-        } );
-      });
-    }
+    statusDuration;
 
   });

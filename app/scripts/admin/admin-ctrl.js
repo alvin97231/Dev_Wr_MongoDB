@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('AdminCtrl', function ($mdDialog, $state, Modules, Groups, Users, Tickets, ModulesList, GroupsList, UsersList, Toasts) {
+    .controller('AdminCtrl', function ($mdDialog, $state,$scope,$resource, $firebaseObject, Modules, Groups, Users, Tickets,  Ref,ModulesList, GroupsList, UsersList, Toasts, NgTableParams) {
         var vm = this;
 
         vm.modules = ModulesList;
@@ -14,7 +14,34 @@ angular.module('workingRoom')
         vm.openDeleteGroup = openDeleteGroup;
         vm.openCreateUser = openCreateUser;
         vm.goToModule = goToModule;
-        
+        vm.usersQuery = Ref.child('users');
+        vm.usersList = $firebaseObject(vm.usersQuery);
+
+        function dataTable(){
+
+              function filterColumn ( i ) {
+                var table = $('#user').DataTable();
+                table.column( i ).search( $('#col'+i+'_filter').val()).draw();
+              }
+              $('input.column_filter').on('keyup click', function () {
+                    filterColumn( $(this).parents('td').attr('data-column') );
+                } );
+                alert( 'There are'+table.data().length+' row(s) of data in this table' );
+
+            }
+
+        vm.usersList.$loaded().then(function () {
+          dataTable();
+        });
+        vm.usersList.$watch(function() {
+          console.log("data changed!");
+        });
+
+        $scope.usersa = vm.usersList;
+
+
+
+
         vm.label = {
             text: 'Utilisateurs par page',
             of: 'sur'
