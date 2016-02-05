@@ -270,4 +270,8 @@ angular.module('workingRoom')
 
     statusDuration;
 
+  }).filter('fromNow', function() {
+    return function(dateString) {
+      return moment(dateString).fromNow()
+    };
   });

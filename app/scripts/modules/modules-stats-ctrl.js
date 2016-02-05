@@ -37,6 +37,16 @@ angular.module('workingRoom')
           }
         }
 
+        function encode_utf8( s )
+        {
+          return unescape( encodeURIComponent( s ) );
+        }
+
+        function decode_utf8( s )
+        {
+          return decodeURIComponent( escape( s ) );
+        }
+
         function filter(){
 
           if (vm.startDate && vm.endDate) {
@@ -78,6 +88,7 @@ angular.module('workingRoom')
                 vm.tickets = [];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
+                  if(child.user.group){console.log(child.user.group[0].name);}
                   vm.tickets.push(child);
                 });
 
@@ -90,7 +101,7 @@ angular.module('workingRoom')
            }
             vm.periodQuery = vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
             //vm.tickets = vm.test;
-            console.log(vm.tickets);
+            //console.log(vm.tickets);
           }
           //console.log(vm.openLogin.length);
           if(vm.openLogin.length===0 && vm.closeLogin.length===0){
@@ -229,19 +240,19 @@ angular.module('workingRoom')
                 name : 'Nombre de tickets',
                 colorByPoint: true,
                 data: [
-                  {name:'A traiter',y:vm.ticketsToDeal.length},
-                  {name:'Doublon',y:vm.ticketsDouble.length},
-                  {name:'En cours',y:vm.ticketsCurrent.length},
-                  {name:'Escaladé',y:vm.ticketsClimb.length},
-                  {name:'Traité sans résolution DC',y:vm.ticketsDCNo.length},
-                  {name:'Traité avec résolution DC',y:vm.ticketsDCYes.length},
-                  {name:'Demande hors procédure CPM',y:vm.ticketsNoCPM.length},
-                  {name:'A solder : En attente de recontact client',y:vm.ticketsClientNeedCtc.length},
-                  {name:'Soldé : Recontact client effectué',y:vm.ticketsClientCtc.length},
-                  {name:'En cours : Attente conseiller',y:vm.ticketsCurrentCC.length},
-                  {name:'En cours : Attente CPM',y:vm.ticketsCurrentCPM.length},
-                  {name:'A relancer',y:vm.ticketsReminder.length},
-                  {name:'Clos',y:vm.ticketsClos.length}]
+                  {name:"A traiter",y:vm.ticketsToDeal.length},
+                  {name:"Doublon",y:vm.ticketsDouble.length},
+                  {name:"En cours",y:vm.ticketsCurrent.length},
+                  {name:"Escaladé",y:vm.ticketsClimb.length},
+                  {name:"Traité sans résolution DC",y:vm.ticketsDCNo.length},
+                  {name:"Traité avec résolution DC",y:vm.ticketsDCYes.length},
+                  {name:"Demande hors procédure CPM",y:vm.ticketsNoCPM.length},
+                  {name:"A solder : En attente de recontact client",y:vm.ticketsClientNeedCtc.length},
+                  {name:"Soldé : Recontact client effectué",y:vm.ticketsClientCtc.length},
+                  {name:"En cours : Attente conseiller",y:vm.ticketsCurrentCC.length},
+                  {name:"En cours : Attente CPM",y:vm.ticketsCurrentCPM.length},
+                  {name:"A relancer",y:vm.ticketsReminder.length},
+                  {name:"Clos",y:vm.ticketsClos.length}]
             }],
           }
 
@@ -255,7 +266,7 @@ angular.module('workingRoom')
                   text: 'Catégories'
               },
               xAxis:{
-                type: 'category'
+                type: 'Statuts'
               }
           },
           tooltip: {
@@ -297,7 +308,7 @@ angular.module('workingRoom')
                 type: 'pie'
               },
               title: {
-                  text: 'Catégories'
+                  text: 'Avant/Après Vente'
               },
               xAxis:{
                 type: 'category'
@@ -480,6 +491,7 @@ angular.module('workingRoom')
                 somme += tableau[i];
               }
               vm.avg = somme/tableau.length;
+              vm.avg = Math.round(vm.avg);
               //vm.allDuration =[];
         }
 

@@ -5,7 +5,7 @@
                 <label>{{'MODAL_EDIT_GROUP_NAME' | translate}}</label>
                 <input autofocus data-ng-model="vm.group.name" type="text" required title="nom"/>
             </md-input-container>
-            <md-list data-ng-if="vm.group.modules.length > 0">
+            <md-list>
                 <div layout="row" layout-align="space-between center">
                     <md-subheader class="md-no-sticky">Modules sélectionnés</md-subheader>
                     <md-input-container>
@@ -15,7 +15,7 @@
                         </md-select>
                     </md-input-container>
                 </div>
-                <div layout="row" data-ng-repeat="module in vm.group.modules">
+                <div layout="row" data-ng-if="vm.group.modules.length != 0" data-ng-repeat="module in vm.group.modules">
                     <md-list-item flex>
                         <p> {{ module.name }} </p>
                         <md-button class="md-icon-button" data-ng-click="vm.removeModule($index)">

@@ -2,28 +2,48 @@
     <ui-view flex="100"></ui-view>
     <div flex="100" data-ng-show="vm.tickets">
       <md-card flex layout="row">
-              <!---->
-              <md-button class="md-accent" data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'" data-ng-click="vm.openCreateTicket($event)">
-                  {{ 'TICKET_CREATE' | translate }}
+              <md-button aria-label="group-settings"
+                          data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+                          data-ng-click="vm.openCreateTicket($event)"
+                          class="md-fab md-raised">
+                  <md-tooltip data-md-direction="down">
+                      {{ 'TICKET_CREATE' | translate }}
+                  </md-tooltip>
+                  <md-icon style="color: #808080;">add</md-icon>
               </md-button>
-              <md-button class="md-accent" data-ui-sref="main.modules({id: vm.module.$id})">
-                  {{ 'TICKET_BY_STATUS' | translate }}
+
+              <md-button class="md-fab md-raised"
+                         data-ui-sref="main.modules({id: vm.module.$id})">
+                  <md-tooltip data-md-direction="down">
+                      {{ 'TICKET_BY_STATUS' | translate }}
+                  </md-tooltip>
+                  <md-icon style="color: #808080;">list</md-icon>
               </md-button>
-              <md-button class="md-accent" data-ui-sref="main.modulesStats({id: vm.module.$id})">
-                  {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
-              </md-button>
+
               <div flex></div>
+
               <md-button class="md-fab md-primary" data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
                 <md-icon>chat</md-icon>
                 <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM.length + vm.ticketsCurrentCC.length}}</span>
+                <md-tooltip data-md-direction="down">
+                    Tickets En Cours
+                </md-tooltip>
               </md-button>
               <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
                 <md-icon>announcement</md-icon>
                 <span>{{vm.ticketsNotRead.length}}</span>
+                <md-tooltip data-md-direction="down">
+                    Tickets Non Lus
+                </md-tooltip>
               </md-button>
-              <md-button class="md-fab md-primary" data-ng-show= "vm.admin" aria-label="Tous les tickets" data-ui-sref="main.modulesAll({id: vm.module.$id})">
-                <md-icon>messenger</md-icon>
-                <span>{{vm.ticketsTotal}}</span>
+              <md-button aria-label="group-settings"
+                          data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+                          data-ui-sref="main.modulesStats({id: vm.module.$id})"
+                          class=" md-fab md-raised">
+                  <md-tooltip data-md-direction="down">
+                      {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
+                  </md-tooltip>
+                  <md-icon style="color: #808080;">equalizer</md-icon>
               </md-button>
       </md-card>
       <md-card>
@@ -47,7 +67,7 @@
                           <th><input  placeholder="#" class="input-sm form-control" type="search"/></th>
                           <th><input  placeholder="Nom" class="input-sm form-control" type="search"/></th>
                           <th><input  placeholder="Sujet" class="input-sm form-control" type="search"/></th>
-                          <th><input  placeholder="Statut" class="input-sm form-control" type="search"/></th>
+                          <th><select class="input-sm form-control" ng-model="filters['status']"><option></option><option ng-repeat="status in vm.module.status | filter: {name: 'En cours'}">{{status.name}}</option></select></th>
                           <th><input  placeholder="Créé" class="input-sm form-control" type="search"/></th>
                           <th><input  placeholder="Réponse par" class="input-sm form-control" type="search"/></th>
                           <th><input  placeholder="J+" class="input-sm form-control" type="search"/></th>
@@ -62,7 +82,7 @@
                                 <td style="text-align:center" id="status">{{ticket.status}}</td>
                                 <td style="text-align:center" id="date">{{ticket.created | date : 'dd-MM-yyyy'}}<br/>{{ticket.created | date : 'HH:mm:ss'}}</td>
                                 <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
-                                <td style="text-align:center" id="nbjours">{{ticket.created | amDifference: null : 'days' | amDurationFormat : 'day'}}</td>
+                                <td style="text-align:center" id="nbjours">{{ticket.created | amDifference : null : 'minute' | amDurationFormat : 'minute'}}</td>
                                 <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">
                                     <div data-ng-if="field.type !== 'dropdouble'">
                                         {{ticket[key]}}

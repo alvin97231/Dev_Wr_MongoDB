@@ -8,7 +8,7 @@ angular.module('workingRoom')
         vm.moduleId = Module.$id;
         vm.module = Module;
         vm.searchTickets = searchTickets;
-        vm.hide = false;
+        vm.hide = true;
         searchTickets();
 
         vm.getSubCat = function (cat, subcats) {

@@ -67,39 +67,41 @@
                     </md-button>
                 </div>
             </md-toolbar>
-            <md-data-table-container>
+
                 <table id="user" si-table class="table">
-                  <thead md-order="vm.query.order">
+                  <thead>
                     <tr>
-                        <td id="filter_col1" data-column="0"><input class="input-sm form-control" id="col0_filter" placeholder="#" size="5"></td>
-                        <td id="filter_col2" data-column="1"><input class="column_filter" id="col1_filter" placeholder="Nom" size="10"></td>
-                        <td id="filter_col3" data-column="2"><input class="column_filter" id="col2_filter" placeholder="Email" size="10"></td>
-                        <td id="filter_col4" data-column="3"><input class="column_filter" id="col3_filter" placeholder="Type" size="10"></td>
+                        <td><input class="input-sm form-control" placeholder="#" size="5" ng-model="filters['id']"></td>
+                        <td><input class="input-sm form-control" placeholder="Nom" size="10" ng-model="filters['name']"></td>
+                        <td><input class="input-sm form-control" placeholder="Email" size="10" ng-model="filters['email']"></td>
+                        <td><select class="input-sm form-control" ng-model="filters['type']"><option placeholder="Type" data-ng-repeat="type in vm.types">{{type}}</option></select></td>
                     </tr>
                     <tr>
-                        <th order-by="id" name="">#</th>
-                        <th order-by="name" name="">Nom</th>
-                        <th order-by="email" name="">Email</th>
-                        <th order-by="type" name="">Type</th>
+                        <th sort-by="id" sort-init="desc">#</th>
+                        <th sort-by="name">Nom</th>
+                        <th sort-by="email">Email</th>
+                        <th sort-by="type">Type</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="user in vm.users "
-                        data-ui-sref="main.users({id: user.$id})">
+                    <tr ng-repeat="user in vm.users | filter:{id:filters.id} | filter:{name:filters.name} | filter:{email:filters.email} | filter:{type:filters.type}"
+                        data-ui-sref="main.users({id: user.$id})"
+                        si-sortable>
                         <td>{{user.id}}</td>
                         <td>{{user.name}}</td>
                         <td>{{user.email}}</td>
                         <td>{{user.type}}</td>
                     </tr>
                   </tbody>
+                  <tfoot>
+                    <tr>
+                        <td colspan="4">
+                          <si-table-pagination limit="50"  first-text="First page"  last-text="Last page"  previous-text="«"  next-text="»" />
+                        </td>
+                    </tr>
+                  </tfoot>
                 </table>
-            </md-data-table-container>
 
-            <md-data-table-toolbar layout-align="end" fix-bottom update-func="vm">
-                <md-data-table-pagination md-label="vm.label" md-limit="vm.query.limit" md-page="vm.query.page"
-                                          md-row-select="vm.query.rowSelect" md-total="{{vm.users.length}}">
-                </md-data-table-pagination>
-            </md-data-table-toolbar>
         </md-card>
     </div>
 </div>

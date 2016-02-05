@@ -60,7 +60,7 @@
     </div>
 
     <div layout-margin>
-      <div flex>
+      <div flex ng-if="!vm.openLogin[0]">
         <md-autocomplete
           ng-disabled="vm.isDisabled"
           md-no-cache="vm.noCache"
@@ -93,8 +93,6 @@
         <lx-date-picker id="date2" model= "vm.endDate" type="date" label="Date fin" icon="calendar" allow-clear="true"></lx-date-picker>
       </md-input-container>
 
-
-
       <md-button class="md-primary" ng-click="vm.filter(); vm.statusDuration()">Filtrer</md-button>
 
     </div>
@@ -107,7 +105,6 @@
       <div flex>
         <highchart id="container" config="vm.config1" style="height:400px; width:100%" ></highchart>
       </div>
-      <div flex></div>
       <div flex>
         <div layout="row">
           <highchart id="container2" config="vm.config2" style="height:400px; width:100%"></highchart>
