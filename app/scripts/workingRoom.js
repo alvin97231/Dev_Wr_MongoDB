@@ -19,7 +19,8 @@ angular.module('workingRoom', [
     'highcharts-ng',
     'siTable',
     'datatables',
-    'ngTable'
+    'ngTable',
+    'angularLoad'
 
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
@@ -219,6 +220,9 @@ angular.module('workingRoom', [
                 },
                 TicketsList: function (Tickets, $stateParams) {
                     return Tickets.get($stateParams.id);
+                },
+                simpleObj:  function(){
+                  return {value: 'simple!'};
                 }
             }
         })
