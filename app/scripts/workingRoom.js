@@ -220,9 +220,6 @@ angular.module('workingRoom', [
                 },
                 TicketsList: function (Tickets, $stateParams) {
                     return Tickets.get($stateParams.id);
-                },
-                simpleObj:  function(){
-                  return {value: 'simple!'};
                 }
             }
         })

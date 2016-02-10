@@ -31,7 +31,7 @@ angular.module('workingRoom')
 
           vm.categoriesQuery1 = Ref.child('modules').child(Module.$id).child('ticketFields').child(1).child('data');
           vm.categoriesQuery2 = Ref.child('modules').child(Module.$id).child('ticketFields').child(5).child('data');
-
+          vm.dataQuery = Ref.child('modules').child(Module.$id).child('ticketFields').child(0).child('data');
           vm.statusQuery = Ref.child('modules').child(Module.$id).child('status');
 
           if (vm.startDate && vm.endDate) {
@@ -97,6 +97,17 @@ angular.module('workingRoom')
               });
             }
 
+            function takeStatsData(snap){
+              vm.statsData=[];
+              vm.dat=[];
+              snap.forEach(function (childSnap){
+                var child = childSnap.val();
+                vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name;});
+                vm.statsData.push(vm.test);
+                vm.dat.push(child);
+              });
+            }
+
             function takeStatsCat1(snap){
               vm.statsCat=[];
               vm.cat=[];
@@ -115,19 +126,23 @@ angular.module('workingRoom')
 
               snap.forEach(function (childSnap){
                 var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket[5].first === child.name;});
+                vm.test = vm.tickets.filter(function (ticket){
+                  if(ticket[5].first){
+                    return ticket[5].first === child.name;
+                  }
+                  else if (!ticket[5].first) {
+                    return ticket[5] === child.name;
+                  }
+                });
                 vm.statsCat.push(vm.test);
                 vm.cat.push(child);
               });
             }
 
             vm.statusQuery.once('value',takeStatsStatus);
-            if(Module.name === 'CPM'){
-              vm.categoriesQuery1.once('value', takeStatsCat1);
-            }
-            else{
-              vm.categoriesQuery2.once('value', takeStatsCat2);
-            }
+            vm.dataQuery.once('value', takeStatsData);
+            if(Module.name === 'CPM'){vm.categoriesQuery1.once('value', takeStatsCat1);}
+            else{vm.categoriesQuery2.once('value', takeStatsCat2);}
 
             var dataCat = [];
             for(var i = 0; i<vm.statsCat.length ; i++){
@@ -139,9 +154,10 @@ angular.module('workingRoom')
               dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
             }
 
-            vm.ticketSale = vm.tickets.filter(function (ticket) {return ticket;});
-            vm.ticketsBeforeSale = vm.tickets.filter(function (ticket) {return ticket[0] === "Avant vente";});
-            vm.ticketsAfterSale = vm.tickets.filter(function (ticket) {return ticket[0] === "Après vente";});
+            var dataData = [];
+            for(var i = 0; i<vm.statsData.length ; i++){
+              dataData.push({name: vm.dat[i].name, y:vm.statsData[i].length});
+            }
           }
 
           else if (vm.openLogin.length>0 ||vm.closeLogin.length>0 ) {
@@ -164,7 +180,7 @@ angular.module('workingRoom')
                 vm.cat=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.user.name===vm.name;;});
+                  vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.user.name===vm.name;});
                   vm.statsCat.push(vm.test);
                   vm.cat.push(child);
                 });
@@ -177,15 +193,31 @@ angular.module('workingRoom')
 
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket[5].first === child.name && ticket.user.name===vm.name;;});
+                  vm.test = vm.tickets.filter(function (ticket){
+                    if(ticket[5].first){
+                      return ticket[5].first === child.name && ticket.user.name===vm.name;
+                    }
+                    else if(!ticket[5].first){
+                      return ticket[5] === child.name && ticket.user.name===vm.name;
+                    }
+                  });
                   vm.statsCat.push(vm.test);
                   vm.cat.push(child);
                 });
               }
 
+              function takeStatsDataByOpenLogin(snap){
+                vm.statsData=[];
+                vm.dat=[];
+                snap.forEach(function (childSnap){
+                  var child = childSnap.val();
+                  vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name && ticket.user.name===vm.name;});
+                  vm.statsData.push(vm.test);
+                  vm.dat.push(child);
+                });
+              }
 
-              vm.ticketsBeforeSale = vm.tickets.filter(function (ticket) {return ticket[0] === "Avant vente" && ticket.user.name===vm.name;});
-              vm.ticketsAfterSale = vm.tickets.filter(function (ticket) {return ticket[0] === "Après vente" && ticket.user.name===vm.name;});
+              vm.dataQuery.once('value', takeStatsDataByOpenLogin);
 
               vm.statusQuery.once('value',takeStatsStatusByOpenLogin);
               if(Module.name === 'CPM'){
@@ -198,10 +230,13 @@ angular.module('workingRoom')
               for(var i = 0; i<vm.statsCat.length ; i++){
                 dataCat.push({name: vm.cat[i].name, y:vm.statsCat[i].length});
               }
-
               var dataStatus = [];
               for(var i = 0; i<vm.statsStatus.length ; i++){
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
+              }
+              var dataData = [];
+              for(var i = 0; i<vm.statsData.length ; i++){
+                dataData.push({name: vm.dat[i].name, y:vm.statsData[i].length});
               }
             }
 
@@ -237,14 +272,32 @@ angular.module('workingRoom')
 
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[5].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){
+                    if(ticket[5].first){
+                      return ticket[5].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;
+                    }
+                    else if (!ticket[5].first) {
+                      return ticket[5] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;
+                    }
+                  }
+                  });
                   vm.statsCat.push(vm.test);
                   vm.cat.push(child);
                 });
               }
 
-              vm.ticketsBeforeSale = vm.tickets.filter(function (ticket) {if(ticket.messages){return ticket[0] === "Avant vente" && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
-              vm.ticketsAfterSale = vm.tickets.filter(function (ticket) {if(ticket.messages){return ticket[0] === "Après vente" && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
+              function takeStatsDataByCloseLogin(snap){
+                vm.statsData=[];
+                vm.dat=[];
+                snap.forEach(function (childSnap){
+                  var child = childSnap.val();
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[0] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
+                  vm.statsData.push(vm.test);
+                  vm.dat.push(child);
+                });
+              }
+
+              vm.dataQuery.once('value', takeStatsDataByCloseLogin);
 
               vm.statusQuery.once('value',takeStatsStatusByCloseLogin);
               if(Module.name === 'CPM'){
@@ -252,6 +305,10 @@ angular.module('workingRoom')
               }
               else{
                 vm.categoriesQuery2.once('value', takeStatsCat2ByCloseLogin);
+              }
+              var dataData = [];
+              for(var i = 0; i<vm.statsData.length ; i++){
+                dataData.push({name: vm.dat[i].name, y:vm.statsData[i].length});
               }
               var dataCat = [];
               for(var i = 0; i<vm.statsCat.length ; i++){
@@ -344,7 +401,7 @@ angular.module('workingRoom')
                 type: 'pie'
               },
               title: {
-                  text: 'Avant/Après Vente'
+                  text: 'Source'
               },
               xAxis:{
                 type: 'category'
@@ -369,9 +426,7 @@ angular.module('workingRoom')
                 type: 'pie',
                 name : 'Nombre de tickets',
                 colorByPoint: true,
-                data: [
-                  {name:"Avant vente",y:vm.ticketsBeforeSale.length, drilldown :"Compte Membre"},
-                  {name:"Après vente",y:vm.ticketsAfterSale.length, drilldown :"Demande de certificat d'authenticité"}]
+                data: dataData
             }],
           }
 
