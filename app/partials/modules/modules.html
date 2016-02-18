@@ -67,18 +67,20 @@
                               <th sort-by="{{key}}" style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
                           </tr>
                           <tr>
-                            <th><input  placeholder="#" class="input-sm form-control" type="search"/></th>
-                            <th><input  placeholder="Nom" class="input-sm form-control" type="search"/></th>
-                            <th><input  placeholder="Sujet" class="input-sm form-control" type="search"/></th>
-                            <th><select class="input-sm form-control" ng-model="filters['status']" disabled><option></option><option ng-repeat="status in vm.module.status">{{status.name}}</option></select></th>
-                            <th><input  placeholder="Créé" class="input-sm form-control" type="search"/></th>
-                            <th><input  placeholder="Réponse par" class="input-sm form-control" type="search"/></th>
-                            <th><input  placeholder="J+" class="input-sm form-control" type="search"/></th>
-                            <th data-ng-repeat="(key, field) in vm.module.ticketFields"><input  placeholder="{{field.name}}" class="input-sm form-control" type="search"/></th>
+                            <th><input  placeholder="#" class="input-sm form-control" type="search" ng-model="filters['id']"/></th>
+                            <th><input  placeholder="Nom" class="input-sm form-control" type="search" ng-model="filters['name']"/></th>
+                            <th><input  placeholder="Sujet" class="input-sm form-control" type="search" ng-model="filters['subject']"/></th>
+                            <th><select class="input-sm form-control" disabled ng-model="filters['status']"><option></option><option ng-repeat="status in vm.module.status">{{status.name}}</option></select></th>
+                            <th><datepicker><input class="input-sm form-control" ng-model="filters['created']" type="text"/></datepicker></th>
+                            <th><input  placeholder="Réponse par" class="input-sm form-control" type="search" ng-model="filters['lastResponse']"/></th>
+                            <th><input  placeholder="J+" class="input-sm form-control" type="search" ng-model="filters['nbJours']"/></th>
+                            <th data-ng-repeat="(key, field) in vm.module.ticketFields"><input placeholder="{{field.name}}" class="input-sm form-control" type="search" /></th>
                           </tr>
                         </thead>
                             <tbody>
-                              <tr si-sortable ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
+                              <tr si-sortable ng-repeat="ticket in vm.tickets | searchDate:filters.created | filter:{id:filters.id} |
+                               filter:{subject:filters.subject} |filter:{user:{name:filters.name}} | filter:{status:filters.status} |
+                               filter:{lastResponse:filters.lastResponse} | filter:{created:filters.nbJours} | filter:searchText" data-ng-click="vm.openTicketView($event, ticket.$id)">
                                   <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                                   <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                                   <td style="text-align:center" id="subject">{{ticket.subject}}</td>

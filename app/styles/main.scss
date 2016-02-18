@@ -4,6 +4,9 @@ $grey: #ececec;
 $soft-grey: #f6f6f6;
 $dark-grey: #808080;
 
+input[type="date"] {
+  -moz-binding: url('chrome://global/content/bindings/datetimepicker.xml#datepicker-grid');
+}
 table{width:100%;}
 h3 {
   text-align: center;

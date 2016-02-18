@@ -1,3 +1,7 @@
+input[type="date"] {
+  -moz-binding: url('chrome://global/content/bindings/datetimepicker.xml#datepicker-grid');
+}
+
 h2 {
   text-align: center; }
 

@@ -25,7 +25,7 @@ angular.module('workingRoom')
         vm.takeLate = takeLate;
         vm.orderByField = 'id';
         vm.reverseSort = false;
-        vm.searchNbJ='';
+        $scope.searchNbJ='';
         var defaultStatus = getDefaultStatus();
         vm.currentFilter = {status: defaultStatus};
         vm.status = defaultStatus;
@@ -264,14 +264,21 @@ angular.module('workingRoom')
         somme += tableau[i];
       }
       var avg = somme/tableau.length
-      console.log(tableau);
-      console.log(avg);
     }
 
     statusDuration;
 
-  }).filter('fromNow', function() {
-    return function(dateString) {
-      return moment(dateString).fromNow()
-    };
-  });
+  }).filter('searchDate', function($filter){
+     return function(items, text){
+       if(!text || text.length == 0)
+       return items
+
+       if(text){
+         var start = moment(new Date(text)).startOf('day').toDate().getTime();
+         var end = moment(new Date(text)).endOf('day').toDate().getTime();
+         return items.filter(function (item) {
+           return item.created >= start && item.created <= end;
+         });
+       }
+     }
+});

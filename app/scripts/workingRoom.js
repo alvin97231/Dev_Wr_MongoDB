@@ -20,7 +20,8 @@ angular.module('workingRoom', [
     'siTable',
     'datatables',
     'ngTable',
-    'angularLoad'
+    'angularLoad',
+    '720kb.datepicker'
 
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);

@@ -1,3 +1,6 @@
+input[type="date"] {
+  -moz-binding: url("chrome://global/content/bindings/datetimepicker.xml#datepicker-grid"); }
+
 table {
   width: 100%; }
 
