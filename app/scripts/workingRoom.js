@@ -18,9 +18,6 @@ angular.module('workingRoom', [
     'lumx',
     'highcharts-ng',
     'siTable',
-    'datatables',
-    'ngTable',
-    'angularLoad',
     '720kb.datepicker'
 
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
