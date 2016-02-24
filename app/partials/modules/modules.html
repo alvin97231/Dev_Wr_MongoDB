@@ -54,7 +54,7 @@
               <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Escalade injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
                 <md-tab-body><br/>
                   <md-data-table-container>
-                    <table id="table_id" si-table class="table">
+                    <table id="table_{{$index+1}}" si-table class="table">
                         <thead>
                           <tr>
                               <th sort-by="id" sort-init="desc" style="text-align:center">#</th>
@@ -66,21 +66,11 @@
                               <th sort-by="created" style="text-align:center">J+</th>
                               <th sort-by="{{key}}" style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
                           </tr>
-                          <tr>
-                            <th><input  placeholder="#" class="input-sm form-control" type="search" ng-model="filters['id']"/></th>
-                            <th><input  placeholder="Nom" class="input-sm form-control" type="search" ng-model="filters['name']"/></th>
-                            <th><input  placeholder="Sujet" class="input-sm form-control" type="search" ng-model="filters['subject']"/></th>
-                            <th><select class="input-sm form-control" disabled ng-model="filters['status']"><option></option><option ng-repeat="status in vm.module.status">{{status.name}}</option></select></th>
-                            <th><datepicker><input class="input-sm form-control" ng-model="filters['created']" type="text"/></datepicker></th>
-                            <th><input  placeholder="Réponse par" class="input-sm form-control" type="search" ng-model="filters['lastResponse']"/></th>
-                            <th><input  placeholder="J+" class="input-sm form-control" type="search" ng-model="filters['nbJours']"/></th>
-                            <th data-ng-repeat="(key, field) in vm.module.ticketFields"><input placeholder="{{field.name}}" class="input-sm form-control" type="search" /></th>
-                          </tr>
                         </thead>
-                            <tbody>
+                        <tbody >
                               <tr si-sortable ng-repeat="ticket in vm.tickets | searchDate:filters.created | filter:{id:filters.id} |
                                filter:{subject:filters.subject} |filter:{user:{name:filters.name}} | filter:{status:filters.status} |
-                               filter:{lastResponse:filters.lastResponse} | filter:{created:filters.nbJours} | filter:searchText" data-ng-click="vm.openTicketView($event, ticket.$id)">
+                               filter:{lastResponse:filters.lastResponse} | filter:{created:filters.nbJours} " data-ng-click="vm.openTicketView($event, ticket.$id)">
                                   <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                                   <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                                   <td style="text-align:center" id="subject">{{ticket.subject}}</td>
@@ -88,7 +78,7 @@
                                   <td style="text-align:center" id="date">{{ticket.created | date : 'dd-MM-yyyy'}}<br/>{{ticket.created | date : 'HH:mm:ss'}}</td>
                                   <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
                                   <td style="text-align:center" id="nbjours">{{ticket.created | amDifference : null : 'minute' | amDurationFormat : 'minute'}}</td>
-                                  <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">
+                                  <td data-ng-repeat="(key, field) in vm.module.ticketFields " style="text-align:center" id="key">
                                       <div data-ng-if="field.type !== 'dropdouble'">
                                           {{ticket[key]}}
                                       </div>
@@ -137,3 +127,21 @@
         </md-button>
     </md-fab-actions>
 </md-fab-speed-dial>
+  <script ng-if="vm.tickets">
+  for (var i = 1; i < $('table').length; i++) {
+    var currentTable='#table_'+i+'';
+    console.log(currentTable);
+    $(currentTable).on('inview', function(event, isInView) {
+      if (isInView) {
+        setTimeout(function(){
+          var tf = new TableFilter(document.querySelector(currentTable), {
+          base_path: '/tablefilter/',
+          flts_row_css_class: "test",
+          flt_css_class: "input-sm form-control",
+          filters_row_index: 1
+          });
+          tf.init(); }, 1000);
+      }
+    });
+  }
+  </script>

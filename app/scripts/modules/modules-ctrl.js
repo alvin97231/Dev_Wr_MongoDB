@@ -268,7 +268,20 @@ angular.module('workingRoom')
 
     statusDuration;
 
-  }).filter('searchDate', function($filter){
+}).filter('simpleSearch', function($filter){
+  return function(items, search){
+
+    return items.filter(function (item) {
+        if(search){
+            var searchText = search;
+        }
+        console.log(search);
+        console.log(item[0]);
+        return (item[0].indexOf(search) != -1);
+    });
+
+  }
+}).filter('searchDate', function($filter){
      return function(items, text){
        if(!text || text.length == 0)
        return items

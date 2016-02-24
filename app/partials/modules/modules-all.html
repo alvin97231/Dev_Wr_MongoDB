@@ -25,15 +25,14 @@
                   <md-icon>chat</md-icon>
                   <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM.length + vm.ticketsCurrentCC.length}}</span>
                   <md-tooltip data-md-direction="down">
-                      Tickets En Cours
+                      {{'TICKET_CURRENT' | translate}}
                   </md-tooltip>
                 </md-button>
                 <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
                   <md-icon>announcement</md-icon>
                   <span>{{vm.ticketsNotRead.length}}</span>
                   <md-tooltip data-md-direction="down">
-                      Tickets Non Lus
-                  </md-tooltip>
+                      {{'TICKET_NOT_READ' | translate}}
                 </md-button>
                 <md-button aria-label="group-settings"
                             data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
