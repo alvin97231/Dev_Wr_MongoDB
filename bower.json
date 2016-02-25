@@ -22,10 +22,6 @@
     "lumx": "~0.3.96",
     "highcharts-ng": "~0.0.11",
     "si-table": "~0.2.3",
-    "angular-material-data-table": "~0.9.9",
-    "angular-datatables": "~0.5.3",
-    "ng-table": "~0.8.3",
-    "angular-load": "~0.4.1",
     "angularjs-datepicker": "~0.2.16"
   },
   "resolutions": {

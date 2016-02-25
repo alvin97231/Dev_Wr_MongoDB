@@ -52,33 +52,19 @@
           <md-tab class="md-accent" label="Tickets Non Lus" md-on-select = "vm.filterNotReadTickets()">
             <md-tab-body><br/>
               <md-data-table-container>
-                <table id="table_id" si-table class="table">
+                <table id="table_notread" class="table">
                     <thead>
-                      <tr>
-                          <th sort-by="id" sort-init="desc" style="text-align:center">#</th>
-                          <th sort-by="user.name" style="text-align:center">Nom</th>
-                          <th sort-by="subject" style="text-align:center">Sujet</th>
-                          <th sort-by="status" style="text-align:center">Statut</th>
-                          <th sort-by="created" style="text-align:center">Créé</th>
-                          <th sort-by="lastResponse" style="text-align:center">Réponse par</th>
-                          <th sort-by="created" style="text-align:center">J+</th>
-                          <th sort-by="{{key}}" style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
-                      </tr>
-                      <tr>
-                        <th><input  placeholder="#" class="input-sm form-control" type="search" ng-model="filters['id']"/></th>
-                        <th><input  placeholder="Nom" class="input-sm form-control" type="search" ng-model="filters['name']"/></th>
-                        <th><input  placeholder="Sujet" class="input-sm form-control" type="search" ng-model="filters['subject']"/></th>
-                        <th><select class="input-sm form-control" ng-model="filters['status']"><option></option><option ng-repeat="status in vm.module.status">{{status.name}}</option></select></th>
-                        <th><datepicker><input class="input-sm form-control" ng-model="filters['created']" type="text"/></datepicker></th>
-                        <th><input  placeholder="Réponse par" class="input-sm form-control" type="search" ng-model="filters['lastResponse']"/></th>
-                        <th><input  placeholder="J+" class="input-sm form-control" type="search" ng-model="filters['nbJours']"/></th>
-                        <th data-ng-repeat="(key, field) in vm.module.ticketFields"><input placeholder="{{field.name}}" class="input-sm form-control" type="search" /></th>
-                      </tr>
+                          <th  style="text-align:center">#</th>
+                          <th style="text-align:center">Nom</th>
+                          <th style="text-align:center">Sujet</th>
+                          <th style="text-align:center">Statut</th>
+                          <th style="text-align:center">Créé</th>
+                          <th style="text-align:center">Réponse par</th>
+                          <th style="text-align:center">J+</th>
+                          <th style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
                     </thead>
                         <tbody>
-                          <tr si-sortable ng-repeat="ticket in vm.tickets | searchDate:filters.created | filter:{id:filters.id} |
-                           filter:{subject:filters.subject} |filter:{user:{name:filters.name}} | filter:{status:filters.status} |
-                           filter:{lastResponse:filters.lastResponse} | filter:{created:filters.nbJours} | filter:searchText" data-ng-click="vm.openTicketView($event, ticket.$id)">
+                          <tr si-sortable ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
                               <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                               <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                               <td style="text-align:center" id="subject">{{ticket.subject}}</td>
@@ -96,13 +82,6 @@
                               </td>
                           </tr>
                         </tbody>
-                        <tfoot>
-                          <tr>
-                              <td colspan="14">
-                                <si-table-pagination limit="10"  first-text="First page"  last-text="Last page"  previous-text="«"  next-text="»" />
-                              </td>
-                          </tr>
-                      </tfoot>
                     </table>
             </md-tab-body>
       </md-tab>
@@ -132,3 +111,39 @@
         </md-button>
     </md-fab-actions>
 </md-fab-speed-dial>
+<script ng-if="vm.tickets">
+  $('#table_notread').on('inview', function(event, isInView) {
+      if (isInView) {
+        setTimeout(function(){
+            tfnotread = new TableFilter(document.querySelector('#table_notread'), {base_path: '/tablefilter/'
+                                                                          ,flts_row_css_class: "test",
+                                                                          flt_css_class: "input-sm form-control",
+                                                                          filters_row_index: 1,
+                                                                          col_3: 'select',
+                                                                          col_7: 'select',
+                                                                          paging: true,
+                                                                          results_per_page: ['Tickets par page: ', [10,25,50,100]],
+                                                                          remember_grid_values: true,
+                                                                          remember_page_number: true,
+                                                                          remember_page_length: true,
+                                                                          rows_counter: true,
+                                                                          loader: true,
+                                                                          alternate_rows: true,
+                                                                          extensions:[{
+                                                                            name: 'sort',
+                                                                            types: [
+                                                                            'number', 'string', 'string',
+                                                                            'string', 'string', 'string',
+                                                                            'string', 'string', 'string',
+                                                                            'number', 'number'
+                                                                            ]
+                                                                          }]
+                                                                        });
+            tfnotread.init();
+        }, 500);
+      }
+      else{
+        console.log('Error');
+      }
+  });
+</script>
