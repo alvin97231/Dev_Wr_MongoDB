@@ -15,10 +15,7 @@ angular.module('workingRoom', [
     'angularMoment',
     'ngFileUpload',
     'angularFileUpload',
-    'lumx',
-    'highcharts-ng',
-    'siTable',
-    '720kb.datepicker'
+    'highcharts-ng'
 
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);

@@ -585,8 +585,7 @@ angular.module('workingRoom')
               vm.avg = Math.round(vm.avg);
               //vm.allDuration =[];
         }
-
-
+    $('[type=date]').datepicker();
     statusDuration();
     filter();
 

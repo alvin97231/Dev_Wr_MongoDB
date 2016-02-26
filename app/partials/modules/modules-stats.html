@@ -59,7 +59,7 @@
       </div>
     </div>
 
-    <div layout-margin>
+<!--<div layout-margin>
       <div flex ng-if="!vm.openLogin[0]">
         <md-autocomplete
           ng-disabled="vm.isDisabled"
@@ -79,18 +79,20 @@
         </md-not-found>
         </md-autocomplete>
       </div>
-    </div>
+    </div>-->
 
     </div>
     <div flex layout-margin></div>
     <div flex></div>
 
       <md-input-container flex>
-        <lx-date-picker id="date1" model= "vm.startDate" type="date" label="Date début" icon="calendar" allow-clear="true"></lx-date-picker>
+        <label>Date de début</label>
+        <input type="date" ng-model="vm.startDate">
       </md-input-container>
 
       <md-input-container flex>
-        <lx-date-picker id="date2" model= "vm.endDate" type="date" label="Date fin" icon="calendar" allow-clear="true"></lx-date-picker>
+        <label>Date de fin</label>
+        <input type="date" ng-model="vm.endDate">
       </md-input-container>
 
       <md-button class="md-primary" ng-click="vm.filter(); vm.statusDuration()">Filtrer</md-button>
