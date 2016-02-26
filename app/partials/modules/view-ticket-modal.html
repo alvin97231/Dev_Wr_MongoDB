@@ -22,7 +22,7 @@
                     <span>Message :</span>
                     <h4 flex style="padding: 0 8px">{{ vm.ticket.message }}</h4>
                 </div>
-                <a data-ng-if="vm.ticket.file" data-ng-href="{{vm.ticket.file.data}}" download="{{vm.ticket.file.name}}">Fichier joint</a>
+                <a data-ng-if="vm.ticket.file" data-ng-href="{{vm.ticket.file[0].data}}" download="{{vm.ticket.file[0].name}}">{{vm.ticket.file[0].name}}</a>
             </div>
             <md-divider></md-divider>
             <div flex style="overflow-x: hidden;">
@@ -33,7 +33,7 @@
                             <h3>{{ message.author.name }} - {{message.date | amDateFormat:'dddd, Do MMMM YYYY, H:mm:ss'}} - {{message.recontact}}</h3>
 
                             <p style="white-space: pre;">{{ message.content }}</p>
-                            <a data-ng-if="message.file" data-ng-href="{{message.file.data}}" download="{{message.file.name}}">Fichier joint</a>
+                            <a  data-ng-if="message.file" data-ng-href="{{message.file[0].data}}" download="{{message.file[0].name}}">{{message.file[0].name}}</a>
                         </div>
                     </md-list-item>
                 </md-list>
@@ -64,8 +64,9 @@
                 </md-option>
             </md-select>
         </div>
-
-        <md-button class="md-raised" type="button" ng-model="files" data-ng-if="!vm.newFile" ngf-select="vm.uploadFiles($file)" ngf-change="vm.uploadFiles($file)" ngf-multiple="true">Fichier</md-button>
+        <div flex="5"></div>
+        <input type="file" id="file" multiple>
+        <md-button class="md-raised" type="button" data-ng-if="!vm.ticket.file" data-ng-click="vm.upload()">Upload</md-button>
         <md-button class="md-raised" type="button" data-ng-if="vm.newFile" data-ng-click="vm.deleteFile()">Supprimer</md-button>
         <md-button class="md-accent md-raised" type="submit" data-ng-disabled="responseForm.$invalid">
           {{'VIEW_TICKET_MODAL_SEND' | translate}}

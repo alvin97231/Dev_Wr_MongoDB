@@ -13,6 +13,7 @@ angular.module('workingRoom')
                 group : User.groups
             },
             lang : getLocale(),
+            file :vm.newFile,
             status: defaultStatus
         };
         vm.module = Module;
@@ -65,27 +66,33 @@ angular.module('workingRoom')
           return lang;
         }
 
-        function upload(file) {
-            if (file) {
-                var reader = new FileReader();
-
-                reader.onload = function(readerEvt) {
-                    var binaryString = readerEvt.target.result;
-                    vm.newFile = {
-                        name: file.name,
-                        data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
-                    };
-                    Toasts.simple('Fichier '+ file.name+ ' ajouté');
-                };
-
-                reader.readAsDataURL(file);
+        function upload() {
+          vm.newFile = [];
+          var files = document.getElementById('file').files;
+            if (files) {
+              for (var i = 0; i < files.length; i++) {
+                (function(file) {
+                  var reader = new FileReader();
+                  reader.onload = function(readerEvt) {
+                      var binaryString = readerEvt.target.result;
+                      vm.newFile.push({
+                          name: file.name,
+                          data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
+                      });
+                      console.log(vm.newFile);
+                      Toasts.simple('Fichier '+ file.name+ ' ajouté');
+                  };
+                  reader.readAsDataURL(file);
+                })(files[i]);
+              }
             }
         }
-  function getPattern(minSize) {
-            if (minSize) {
-                return '.{' + minSize + ',}';
-            } else {
-                return '.{0,}'
-            }
-  }
+
+        function getPattern(minSize) {
+                  if (minSize) {
+                      return '.{' + minSize + ',}';
+                  } else {
+                      return '.{0,}'
+                  }
+        }
 });
