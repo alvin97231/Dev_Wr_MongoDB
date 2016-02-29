@@ -124,6 +124,7 @@
             for (var i = 0; i < $('table').length; i++) {
               tf[i] = new TableFilter(document.querySelector('#table_'+i), {base_path: '/tablefilter/'
                                                                             ,flts_row_css_class: "test",
+                                                                            fixed_headers: true ,
                                                                             flt_css_class: "input-sm form-control",
                                                                             filters_row_index: 1,
                                                                             col_3: 'disabled',

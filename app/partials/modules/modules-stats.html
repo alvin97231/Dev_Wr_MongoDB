@@ -87,12 +87,12 @@
 
       <md-input-container flex>
         <label>Date de début</label>
-        <input type="date" ng-model="vm.startDate">
+        <input id="date1" ng-model="vm.startDate">
       </md-input-container>
 
       <md-input-container flex>
         <label>Date de fin</label>
-        <input type="date" ng-model="vm.endDate">
+        <input id="date2" ng-model="vm.endDate">
       </md-input-container>
 
       <md-button class="md-primary" ng-click="vm.filter(); vm.statusDuration()">Filtrer</md-button>

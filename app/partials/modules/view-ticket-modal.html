@@ -22,22 +22,26 @@
                     <span>Message :</span>
                     <h4 flex style="padding: 0 8px">{{ vm.ticket.message }}</h4>
                 </div>
-                <a data-ng-if="vm.ticket.file" data-ng-href="{{vm.ticket.file[0].data}}" download="{{vm.ticket.file[0].name}}">{{vm.ticket.file[0].name}}</a>
+                <div ng-repeat="file in vm.ticket.file">
+                  <a  data-ng-href="{{file.data}}" download="{{file.name}}">{{file.name}}</a>
+                </div>
             </div>
             <md-divider></md-divider>
-            <div flex style="overflow-x: hidden;">
-                <md-list data-ng-show="vm.ticket.messages.length > 0">
+            <div flex style="overflow-x: hidden;" layout-margin>
+                <md-list data-ng-show="vm.ticket.messages.length > 0" layout-padding layout-margin layout-fill>
                     <md-subheader class="md-no-sticky">{{ vm.ticket.messages.length }} réponse(s)</md-subheader>
                     <md-list-item class="md-3-line" ng-repeat="message in vm.ticket.messages" style="padding: 0; margin-left:16px;">
                         <div class="md-list-item-text ticket-response">
                             <h3>{{ message.author.name }} - {{message.date | amDateFormat:'dddd, Do MMMM YYYY, H:mm:ss'}} - {{message.recontact}}</h3>
 
                             <p style="white-space: pre;">{{ message.content }}</p>
-                            <a  data-ng-if="message.file" data-ng-href="{{message.file[0].data}}" download="{{message.file[0].name}}">{{message.file[0].name}}</a>
+                            <div ng-repeat="file in message.file">
+                              <a  data-ng-href="{{file.data}}" download="{{file.name}}">{{file.name}}</a>
+                            </div>
                         </div>
                     </md-list-item>
                 </md-list>
-                <div layout="row">
+                <div layout="row" layout-margin>
                 </div>
             </div>
         </md-content>

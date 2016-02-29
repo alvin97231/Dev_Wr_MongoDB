@@ -118,7 +118,9 @@
       if (isInView) {
         setTimeout(function(){
             tfall = new TableFilter(document.querySelector('#table_all'), {base_path: '/tablefilter/'
-                                                                          ,flts_row_css_class: "test",
+                                                                          ,
+                                                                          fixed_headers: true ,
+                                                                          flts_row_css_class: "test",
                                                                           flt_css_class: "input-sm form-control",
                                                                           filters_row_index: 1,
                                                                           col_3: 'select',

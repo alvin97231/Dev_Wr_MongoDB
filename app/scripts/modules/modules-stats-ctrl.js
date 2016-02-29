@@ -28,20 +28,20 @@ angular.module('workingRoom')
         }
 
         function filter(){
-
           vm.categoriesQuery1 = Ref.child('modules').child(Module.$id).child('ticketFields').child(1).child('data');
           vm.categoriesQuery2 = Ref.child('modules').child(Module.$id).child('ticketFields').child(5).child('data');
           vm.dataQuery = Ref.child('modules').child(Module.$id).child('ticketFields').child(0).child('data');
           vm.statusQuery = Ref.child('modules').child(Module.$id).child('status');
 
           if (vm.startDate && vm.endDate) {
-
-            var jour = vm.startDate.getDay();
-            var mois = vm.startDate.getMonth();
-            var annee = vm.startDate.getFullYear();
-            vm.startDate= new Date(annee, mois, jour);
-            vm.startTime = vm.startDate.getTime();
-            vm.endTime = vm.endDate.getTime();
+            vm.start = $('#date1').datepicker('getDate');
+            vm.end = $('#date2').datepicker('getDate');
+            var jour = vm.start.getDay();
+            var mois = vm.start.getMonth();
+            var annee = vm.start.getFullYear();
+            vm.start= new Date(annee, mois, jour);
+            vm.startTime = vm.start.getTime();
+            vm.endTime = vm.end.getTime();
 
             function show(snap){
               vm.ticketsFiltered = snap.numChildren();
@@ -538,8 +538,10 @@ angular.module('workingRoom')
 
             function show(snap){
                 if (vm.startDate && vm.endDate) {
-                  vm.startTime = vm.startDate.getTime();
-                  vm.endTime = vm.endDate.getTime();
+                  vm.start = $('#date1').datepicker('getDate');
+                  vm.end = $('#date2').datepicker('getDate');
+                  vm.startTime = vm.start.getTime();
+                  vm.endTime = vm.end.getTime();
                 }
                 else{
                   vm.startTime = 1438380000;
@@ -585,7 +587,8 @@ angular.module('workingRoom')
               vm.avg = Math.round(vm.avg);
               //vm.allDuration =[];
         }
-    $('[type=date]').datepicker();
+    $('#date1').datepicker({ dateFormat: "dd-mm-yy" });
+    $('#date2').datepicker({ dateFormat: "dd-mm-yy" });
     statusDuration();
     filter();
 
