@@ -40,7 +40,8 @@
         </div>
     </md-card>
 </div>
-<md-fab-speed-dial class="fab md-scale" data-md-direction="up">
+<div ng-controller="speedDialController as ctrl">
+  <md-fab-speed-dial class="fab md-scale" data-md-direction="up" md-open="ctrl.isOpen" ng-mouseenter="ctrl.isOpen=true" ng-mouseleave="ctrl.isOpen=false">
     <md-fab-trigger>
         <md-button aria-label="save edid" data-ng-click="vm.saveUser()" class="md-fab accent">
             <md-tooltip data-md-direction="left">{{'EDIT_PROFIL_SAVE' | translate}}</md-tooltip>
@@ -54,3 +55,4 @@
         </md-button>
     </md-fab-actions>
 </md-fab-speed-dial>
+</div>
