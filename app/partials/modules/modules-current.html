@@ -68,7 +68,7 @@
                                 <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                                 <td style="text-align:center" id="subject">{{ticket.subject}}</td>
                                 <td style="text-align:center" id="status">{{ticket.status}}</td>
-                                <td style="text-align:center" id="date">{{ticket.created | date : 'dd-MM-yyyy'}}<br/>{{ticket.created | date : 'HH:mm:ss'}}</td>
+                                <td style="text-align:center" id="date">{{ticket.created | date : 'dd-MM-yyyy'}} {{ticket.created | date : 'HH:mm:ss'}}</td>
                                 <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
                                 <td style="text-align:center" id="nbjours">{{ticket.created | amDifference : null : 'minute' | amDurationFormat : 'minute'}}</td>
                                 <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">

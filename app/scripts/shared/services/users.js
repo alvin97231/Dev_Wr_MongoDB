@@ -2,6 +2,8 @@
 
 angular.module('workingRoom')
     .factory('Users', function (Ref, $firebaseArray, $firebaseObject, $q, Toasts, Auth) {
+        var vm = this;
+
         var ref = Ref.child('users');
         var users = null;
         var usersList = {};
@@ -22,7 +24,6 @@ angular.module('workingRoom')
                 users = null;
             }
         }
-
 
         return {
             all: function (user) {
@@ -51,18 +52,24 @@ angular.module('workingRoom')
                             Toasts.error(error);
                             reject(error);
                         } else {
-                            ref.child(userData.uid).set({
-                                id: parseInt(document.getElementsByTagName('table')[0].getElementsByTagName('tr')[1].cells[0].innerHTML)+1,
-                                email: user.email,
-                                name: user.name,
-                                type: user.type
-                            }, function (err) {
-                                if (err) {
-                                    Toasts.error(err);
-                                    reject(err);
-                                } else {
-                                    resolve(ref.child(userData.uid));
-                                }
+                            var count = Ref.child('userCounter');
+                            count.once("value", function(snap) {
+                                vm.counter = snap.val();console.log(typeof vm.counter);
+                                ref.child(userData.uid).set({
+                                    id: parseInt(vm.counter+1, 10),
+                                    email: user.email,
+                                    name: user.name,
+                                    type: user.type
+                                },
+                                 function (err) {
+                                    if (err) {
+                                        Toasts.error(err);
+                                        reject(err);
+                                    } else {
+                                        resolve(ref.child(userData.uid));
+                                    }
+                                });
+                                Ref.child('userCounter').set(vm.counter+1);
                             });
 
                         }
