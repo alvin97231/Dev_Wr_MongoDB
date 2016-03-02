@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.11.1
+ * v1.0.5
  */
 (function( window, angular, undefined ){
 "use strict";
@@ -40,7 +40,7 @@ angular
  * your icons instead of text. Benefits include a straightforward way to bundle everything into a
  * single HTTP request, simple scaling, easy color changing, and more.
  *
- * `md-icon` let's you consume an icon font by letting you reference specific icons in that font
+ * `md-icon` lets you consume an icon font by letting you reference specific icons in that font
  * by name rather than character code.
  *
  * ### SVG
@@ -50,7 +50,7 @@ angular
  *
  * `md-icon` makes it easier to use SVG icons by *inlining* the SVG into an `<svg>` element in the
  * document. The most straightforward way of referencing an SVG icon is via URL, just like a
- * traditional `<img>`. `$mdIconProvider`, as a convenience, let's you _name_ an icon so you can
+ * traditional `<img>`. `$mdIconProvider`, as a convenience, lets you _name_ an icon so you can
  * reference it by name instead of URL throughout your templates.
  *
  * Additionally, you may not want to make separate HTTP requests for every icon, so you can bundle
@@ -119,7 +119,8 @@ angular
  * nor a label on the parent element, a warning will be logged to the console.
  * @param {string=} alt Labels icon for accessibility. If an empty string is provided, icon
  * will be hidden from accessibility layer with `aria-hidden="true"`. If there's no alt on the icon
- * nor a label on the parent element, a warning will be logged to the console. *
+ * nor a label on the parent element, a warning will be logged to the console.
+ *
  * @usage
  * When using SVGs:
  * <hljs lang="html">
@@ -230,9 +231,11 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
 
         element.empty();
         if (attrVal) {
-          $mdIcon(attrVal).then(function(svg) {
-            element.append(svg);
-          });
+          $mdIcon(attrVal)
+            .then(function(svg) {
+              element.empty();
+              element.append(svg);
+            });
         }
 
       });
@@ -249,25 +252,12 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
       return false;
     }
 
-    function prepareForFontIcon () {
+    function prepareForFontIcon() {
       if (!scope.svgIcon && !scope.svgSrc) {
-
         if (scope.fontIcon) {
           element.addClass('md-font ' + scope.fontIcon);
         }
-
-        if (scope.fontSet) {
-          element.addClass($mdIcon.fontSet(scope.fontSet));
-        }
-
-        if (shouldUseDefaultFontSet()) {
-          element.addClass($mdIcon.fontSet());
-        }
-
-      }
-
-      function shouldUseDefaultFontSet() {
-        return !scope.fontIcon && !scope.fontSet;
+        element.addClass($mdIcon.fontSet(scope.fontSet));
       }
     }
   }
@@ -287,7 +277,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     * icons and icon sets to be pre-registered and associated with source URLs **before** the `<md-icon />`
     * directives are compiled.
     *
-    * If using font-icons, the developer is repsonsible for loading the fonts.
+    * If using font-icons, the developer is responsible for loading the fonts.
     *
     * If using SVGs, loading of the actual svg files are deferred to on-demand requests and are loaded
     * internally by the `$mdIcon` service using the `$http` service. When an SVG is requested by name/ID,
@@ -773,7 +763,7 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
     *  Define the Icon class
     */
    function Icon(el, config) {
-     if (el.tagName != 'svg') {
+     if (el && el.tagName != 'svg') {
        el = angular.element('<svg xmlns="http://www.w3.org/2000/svg">').append(el)[0];
      }
 
@@ -802,19 +792,14 @@ function mdIconDirective($mdIcon, $mdTheming, $mdAria ) {
          }, function(val, attr) {
            this.element.setAttribute(attr, val);
          }, this);
-
-         angular.forEach({
-           'pointer-events' : 'none',
-           'display' : 'block'
-         }, function(val, style) {
-           this.element.style[style] = val;
-         }, this);
    }
 
    /**
     * Clone the Icon DOM element.
     */
    function cloneSVG(){
+     // If the element or any of its children have a style attribute, then a CSP policy without
+     // 'unsafe-inline' in the style-src directive, will result in a violation.
      return this.element.cloneNode(true);
    }
 

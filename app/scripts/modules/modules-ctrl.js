@@ -18,7 +18,10 @@ angular.module('workingRoom')
         vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');
         vm.ticketsCount = vm.ticketsAll.once('value', function(snap){vm.ticketsTotal = snap.numChildren();});
         vm.userName = Ref.child('users').child(authData.uid).child('name');
+        vm.groupQuery = Ref.child('users').child(authData.uid).child('groups');
         vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
+        vm.currentGroup = vm.groupQuery.once('value', function(snap){vm.groupName = snap.val();});
+        console.log(vm.groupName[0].name);
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
@@ -268,30 +271,6 @@ angular.module('workingRoom')
 
     statusDuration;
 
-}).filter('simpleSearch', function($filter){
-  return function(items, search){
-
-    return items.filter(function (item) {
-        if(search){
-            var searchText = search;
-        }
-        console.log(search);
-        console.log(item[0]);
-        return (item[0].indexOf(search) != -1);
-    });
-
-  }
-}).filter('searchDate', function($filter){
-     return function(items, text){
-       if(!text || text.length == 0)
-       return items
-
-       if(text){
-         var start = moment(new Date(text)).startOf('day').toDate().getTime();
-         var end = moment(new Date(text)).endOf('day').toDate().getTime();
-         return items.filter(function (item) {
-           return item.created >= start && item.created <= end;
-         });
-       }
-     }
+}).controller('speedDialController', function ($scope){
+  this.isOpen = false;
 });
