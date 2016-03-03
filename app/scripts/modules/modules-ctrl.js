@@ -41,16 +41,16 @@ angular.module('workingRoom')
         });
 
         vm.ticketsNotRead = TicketsList.filter(function (ticket) {
-            return !ticket.lastResponse;
+            return !ticket.lastResponse && ticket.lang == moment.locale();
         });
         vm.ticketsCurrent = TicketsList.filter(function (ticket) {
-            return ticket.status === 'En cours';
+            return ticket.status === 'En cours' && ticket.lang == moment.locale();
         });
         vm.ticketsCurrentCC = TicketsList.filter(function (ticket) {
-            return ticket.status === 'En cours : Attente conseiller';
+            return ticket.status === 'En cours : Attente conseiller' && ticket.lang == moment.locale();
         });
         vm.ticketsCurrentCPM = TicketsList.filter(function (ticket) {
-            return ticket.status === 'En cours : Attente CPM';
+            return ticket.status === 'En cours : Attente CPM' && ticket.lang == moment.locale();
         });
 
         function filterTicketList() {
