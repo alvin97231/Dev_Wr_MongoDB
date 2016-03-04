@@ -21,7 +21,6 @@ angular.module('workingRoom')
         vm.groupQuery = Ref.child('users').child(authData.uid).child('groups');
         vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
         vm.currentGroup = vm.groupQuery.once('value', function(snap){vm.groupName = snap.val();});
-        console.log(vm.groupName[0].name);
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
@@ -213,7 +212,7 @@ angular.module('workingRoom')
                   status[1] = status[1]+1;
                   console.log(status[1]);
                 break;
-                
+
                 case 'En cours : Attente conseiller':
                   vm.takeLate(child,delais);
                   status[1] = status[1]+1;
