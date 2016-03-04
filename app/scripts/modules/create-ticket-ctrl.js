@@ -13,7 +13,6 @@ angular.module('workingRoom')
                 group : User.groups
             },
             lang : getLocale(),
-            file :vm.newFile,
             status: defaultStatus
         };
         vm.module = Module;
@@ -85,6 +84,7 @@ angular.module('workingRoom')
                   reader.readAsDataURL(file);
                 })(files[i]);
               }
+              vm.ticket.file = vm.newFile;
             }
         }
 
