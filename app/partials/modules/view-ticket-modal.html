@@ -32,7 +32,7 @@
                     <md-subheader class="md-no-sticky">{{ vm.ticket.messages.length }} réponse(s)</md-subheader>
                     <md-list-item class="md-3-line" ng-repeat="message in vm.ticket.messages" style="padding: 0; margin-left:16px;">
                         <div class="md-list-item-text ticket-response">
-                            <h3>{{ message.author.name }} - {{message.date | amDateFormat:'dddd, Do MMMM YYYY, H:mm:ss'}} - {{message.recontact}}</h3>
+                            <h3>{{ message.author.name }} - {{message.date | amDateFormat:'dddd, Do MMMM YYYY, H:mm:ss'}} - {{message.recontact}} - <strong>{{message.status}}</strong></h3>
 
                             <p style="white-space: pre;">{{ message.content }}</p>
                             <div ng-repeat="file in message.file">
@@ -57,7 +57,7 @@
             </md-input-container>
         </div>
         <div flex="20">
-            <md-checkbox ng-model="vm.recontact">
+            <md-checkbox ng-model="vm.recontact" ng-init="vm.recontact=true">
               Recontacter Membre
             </md-ckeckbox>
         </div>

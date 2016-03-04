@@ -50,7 +50,8 @@ angular.module('workingRoom')
                     author: {id: User.$id, name: User.name},
                     content: vm.newMessage,
                     recontact : vm.recontact,
-                    file: vm.newFile
+                    file: vm.newFile,
+                    status: vm.newStatus
                 });
                 ticket.lastResponse = User.name;
                 Tickets.save($stateParams.id, ticket);

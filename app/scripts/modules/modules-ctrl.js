@@ -205,18 +205,19 @@ angular.module('workingRoom')
                   vm.takeLate(child,delais);
                   i ++;
                   status[1]=i;
-                break;
-
-                case 'En cours : Attente conseiller':
-                  vm.takeLate(child,delais);
-                  i ++;
-                  status[2]=i;
+                  console.log(status[1]);
                 break;
 
                 case 'En cours : Attente CPM':
                   vm.takeLate(child,delais);
-                  i ++;
-                  status[3]=i;
+                  status[1] = status[1]+1;
+                  console.log(status[1]);
+                break;
+                
+                case 'En cours : Attente conseiller':
+                  vm.takeLate(child,delais);
+                  status[1] = status[1]+1;
+                  console.log(status[1]);
                 break;
 
                 case 'Soldé : Recontact client effectué':
@@ -244,16 +245,13 @@ angular.module('workingRoom')
             if(status[x] >= 0){
               switch (x) {
                 case 0:
-                    alert('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');
+                    Toasts.simple('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');
+                    console.log('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');
                 break;
                 case 1:
-                    alert('Il y a '+ status[1] +' ticket En cours depuis plus de 48H');
-                break;
-                case 2:
-                    alert('Il y a '+ status[2] +' ticket En cours: Attente conseiller depuis plus de 48H');
-                break;
-                case 3:
-                    alert('Il y a '+ status[3] +' ticket En cours: Attente CPM depuis plus de 48H');
+                setTimeout(function(){
+                    Toasts.simple('Il y a '+ status[1] +' ticket En cours depuis plus de 48H');
+                    console.log('Il y a '+ status[1] +' ticket En cours depuis plus de 48H');}, 5000);
                 break;
               }
             }

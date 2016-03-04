@@ -16,8 +16,7 @@
                 <span>{{ 'SIDENAV_MODULES' | translate }}</span>
             </md-list-item>
             <md-list-item data-ng-repeat="module in vm.modules">
-                <md-button data-ui-sref="main.modules({id: module.$id})" data-ui-sref-active="active">{{module.name}}
-                </md-button>
+                <md-button data-ui-sref="main.modules({id: module.$id})" data-ui-sref-active="active">{{module.name}}</md-button>
             </md-list-item>
         </md-list>
 

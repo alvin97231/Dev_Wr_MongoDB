@@ -397,7 +397,6 @@ angular.module('workingRoom')
           vm.config3 = {
             options: {
               chart: {
-                renderTo: 'container2',
                 type: 'pie'
               },
               title: {
@@ -412,6 +411,14 @@ angular.module('workingRoom')
             pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
           },
           plotOptions: {
+                pie : {
+                  allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                },
                 series: {
                   dataLabels: {
                       enabled: true,
