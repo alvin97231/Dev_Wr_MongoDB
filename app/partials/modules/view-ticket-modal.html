@@ -47,7 +47,7 @@
         </md-content>
         <md-divider></md-divider>
     </md-dialog-content>
-    <form class="md-actions" layout="row" ng-hide="vm.ticket.status === 'Clos'" data-ng-if="vm.admin || vm.super || vm.module.$rights === 'r' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+    <form class="md-actions" layout="row" ng-hide="vm.ticket.status === 'Clos'"
           name="responseForm" data-ng-submit="vm.sendMessage()">
         <div flex>
             <md-input-container>
@@ -57,13 +57,16 @@
             </md-input-container>
         </div>
         <div flex="20">
-            <md-checkbox ng-model="vm.recontact" ng-init="vm.recontact=true">
+            <md-checkbox ng-model="vm.recontact" ng-init="vm.recontact=true"  data-ng-if="vm.admin">
               Recontacter Membre
             </md-ckeckbox>
         </div>
         <div>
             <md-select data-ng-model="vm.newStatus" required placeholder="Statut">
-                <md-option data-ng-repeat="status in vm.module.status" value="{{status.name}}">
+                <md-option data-ng-if="vm.user" data-ng-repeat="status in vm.module.status | filter: {name: '!Clos'} | filter: {name: '!Traité avec résolution DC'} | filter: {name: '!Traité sans résolution DC'} | filter: {name: '!Escalade injustifié'}" value="{{status.name}}">
+                    {{status.name}}
+                </md-option>
+                <md-option data-ng-if="vm.admin || vm.super" data-ng-repeat="status in vm.module.status" value="{{status.name}}">
                     {{status.name}}
                 </md-option>
             </md-select>

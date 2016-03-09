@@ -16,6 +16,8 @@ angular.module('workingRoom')
         vm.upload = upload;
         vm.deleteFile = deleteFile;
         vm.super = User.type === "super";
+        vm.user = User.type === "user";
+        console.log(vm.user, vm.super, vm.admin);
 
         vm.cancel = $mdDialog.hide;
 

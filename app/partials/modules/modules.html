@@ -4,7 +4,7 @@
       <md-card flex layout="row">
 
         <md-button aria-label="group-settings"
-                    data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+                    data-ng-if="vm.user ||vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
                     data-ng-click="vm.openCreateTicket($event)"
                     class="md-fab md-raised">
             <md-tooltip data-md-direction="down">
@@ -23,14 +23,14 @@
         </md-button>
 
         <div flex></div>
-        <md-button class="md-fab md-primary" data-ng-if= "vm.super || vm.admin" aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
+        <md-button class="md-fab md-primary"  aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
           <md-icon>chat</md-icon>
           <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM.length + vm.ticketsCurrentCC.length}}</span>
           <md-tooltip data-md-direction="down">
               Tickets En Cours
           </md-tooltip>
         </md-button>
-        <md-button class="md-fab" data-ng-if= "vm.super || vm.admin" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
+        <md-button class="md-fab" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
           <md-icon>announcement</md-icon>
           <span>{{vm.ticketsNotRead.length}}</span>
           <md-tooltip data-md-direction="down">
@@ -120,7 +120,7 @@
 </div>
   <script data-ng-if="vm.tickets">
     var tf = [];
-    $('#table_0').on('inview', function(event, isInView) {
+    $('#table_0 tbody').on('inview', function(event, isInView) {
         if (isInView) {
           setTimeout(function(){
             for (var i = 0; i < $('table').length; i++) {
@@ -153,7 +153,7 @@
           }, 200);
         }
         else{
-          console.log('Error');
+          console.log('TableFilter Error');
         }
     });
   </script>

@@ -114,7 +114,7 @@
   </md-fab-speed-dial>
 </div>
 <script data-ng-if="vm.tickets">
-  $('#table_notread').on('inview', function(event, isInView) {
+  $('#table_notread tbody').on('inview', function(event, isInView) {
       if (isInView) {
         setTimeout(function(){
             tfnotread = new TableFilter(document.querySelector('#table_notread'), {base_path: '/tablefilter/'

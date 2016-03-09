@@ -15,7 +15,7 @@
                     <md-radio-button value="super">Superviseur</md-radio-button>
                 </md-radio-group>
             </div>
-            <md-chips data-ng-if="vm.admin" readonly="!vm.admin" data-ng-model="vm.user.groups" data-md-autocomplete-snap data-md-require-match>
+            <md-chips readonly="!vm.admin" data-ng-model="vm.user.groups" data-md-autocomplete-snap data-md-require-match>
                 <md-autocomplete
                         data-md-search-text="vm.searchText"
                         data-md-items="item in vm.getMatches()"

@@ -117,7 +117,7 @@
   </md-fab-speed-dial>
 </div>
 <script data-ng-if="vm.tickets">
-  $('#table_current').on('inview', function(event, isInView) {
+  $('#table_current tbody').on('inview', function(event, isInView) {
       if (isInView) {
         setTimeout(function(){
             tfcurrent = new TableFilter(document.querySelector('#table_current'), {base_path: '/tablefilter/'
