@@ -20,11 +20,11 @@
                 <div data-ng-switch="field.type">
                     <md-input-container data-ng-switch-when="text">
                         <label>{{field.name}}</label>
-                        <input data-ng-if="field.name==='No. de Commande'" data-ng-model="vm.ticket[key]" type="text"
-                               required title="{{field.name}}" md-maxlength="field.minSize" maxlength="8"/>
-                        <input data-ng-if="field.name==='No. de Vente'" data-ng-model="vm.ticket[key]" type="text"
-                                      required title="{{field.name}}" md-maxlength="field.minSize" maxlength="5"/>
-                        <input data-ng-if="field.name==='Mail Client'" data-ng-model="vm.ticket[key]" type="text"
+                        <input data-ng-if="field.name==='No. de Commande'" data-ng-model="vm.ticket[key]" type="tel"
+                               required title="{{field.name}}" md-maxlength="field.minSize" maxlength="8" min="0" max="99999999"/>
+                        <input data-ng-if="field.name==='No. de Vente'" data-ng-model="vm.ticket[key]" type="tel"
+                                      required title="{{field.name}}" md-maxlength="field.minSize" maxlength="5" min="0" max="99999"/>
+                        <input data-ng-if="field.name==='Mail Client'" data-ng-model="vm.ticket[key]" type="mail"
                               title="{{field.name}}"/>
                         <input data-ng-if="field.name==='Ref. SRP'" data-ng-model="vm.ticket[key]" type="text"
                                       required title="{{field.name}}"/>

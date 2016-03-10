@@ -18,7 +18,7 @@
         <div flex="33">
             <md-input-container>
                 <label>N° de Ticket</label>
-                <input autofocus data-ng-model="vm.ticket.id" type="text" title="N°ticket"/>
+                <input autofocus data-ng-model="vm.ticket.id" type="number" title="N°ticket"/>
             </md-input-container>
         </div>
         <div flex="33">
@@ -32,8 +32,14 @@
             <div data-ng-switch="field.type">
                 <md-input-container data-ng-switch-when="text">
                     <label>{{field.name}}</label>
-                        <textarea data-ng-model="vm.ticket[key]" type="text"
-                                  columns="1" title="{{field.name}}"></textarea>
+                    <input data-ng-if="field.name==='No. de Commande'" data-ng-model="vm.ticket[key]" type="tel"
+                            title="{{field.name}}" md-maxlength="field.minSize" maxlength="8" min="0" max="99999999"/>
+                    <input data-ng-if="field.name==='No. de Vente'" data-ng-model="vm.ticket[key]" type="tel"
+                                  title="{{field.name}}" md-maxlength="field.minSize" maxlength="5" min="0" max="99999"/>
+                    <input data-ng-if="field.name==='Mail Client'" data-ng-model="vm.ticket[key]" type="mail"
+                          title="{{field.name}}"/>
+                    <input data-ng-if="field.name==='Ref. SRP'" data-ng-model="vm.ticket[key]" type="text"
+                                 title="{{field.name}}"/>
                 </md-input-container>
                 <md-input-container data-ng-switch-when="checkbox">
                     <md-checkbox ng-model="vm.ticket[key]" aria-label="{{field.name}}">
@@ -74,13 +80,38 @@
                   <md-icon data-ng-switch-when="dropdouble"  data-ng-click="vm.ticket[key].first = undefined">cancel</md-icon>
                 </div>
             </div>
+            <div flex="16">
+              <md-input-container flex>
+                <label>Date de début</label>
+                <input id="dateSearch1" ng-model="vm.startDate">
+              </md-input-container>
+            </div>
+            <div flex="16">
+              <md-input-container flex>
+                <label>Date de fin</label>
+                <input id="dateSearch2" ng-model="vm.endDate">
+              </md-input-container>
+            </div>
+        </div>
+    </md-content>
+    <md-content data-ng-if="!vm.hide">
+      <div flex data-ng-repeat="(key, field) in vm.module.ticketFields">
+          <div data-ng-switch="field.name">
+              <md-input-container data-ng-switch-when="No. de Commande">
+                  <label>{{field.name}}</label>
+                  <input data-ng-model="vm.ticket[key]" type="tel"
+                          title="{{field.name}}" md-maxlength="field.minSize" maxlength="8" min="0" max="99999999"/>
+              </md-input-container>
+          </div>
         </div>
     </md-content>
     <md-divider></md-divider>
     <div class="md-actions" layout="row" layout-align="end center">
         <div flex></div>
         <md-button data-ng-if="vm.hide" data-ng-click="vm.hide = false" class="md-accent"><md-icon>keyboard_arrow_up</md-icon></md-button>
-        <md-button data-ng-if="!vm.hide" data-ng-click="vm.hide = true"class="md-accent"><md-icon>keyboard_arrow_down</md-icon></md-button>
+        <md-button data-ng-if="!vm.hide" data-ng-click="vm.hide = true"class="md-accent"><md-icon>keyboard_arrow_down</md-icon><md-tooltip data-md-direction="down">
+            Recherche avancée
+        </md-tooltip></md-button>
         <div flex></div>
         <a download="export.xls" href="#" onclick="return ExcellentExport.excel(this, 'table_0', 'TicketExport');"><md-button class="md-accent">Export Excel</md-button></a>
         <md-button class="md-accent" data-ng-click="vm.back()">{{'SEARCH_TICKETS_CLOSE' | translate}}</md-button>

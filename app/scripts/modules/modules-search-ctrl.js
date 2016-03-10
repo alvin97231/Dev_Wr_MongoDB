@@ -8,8 +8,10 @@ angular.module('workingRoom')
         vm.moduleId = Module.$id;
         vm.module = Module;
         vm.searchTickets = searchTickets;
-        vm.hide = true;
+        vm.hide = false;
         vm.exportExcel = exportExcel;
+        $('#dateSearch1').datepicker({ dateFormat: "dd-mm-yy" });
+        $('#dateSearch2').datepicker({ dateFormat: "dd-mm-yy" });
         searchTickets();
 
         vm.getSubCat = function (cat, subcats) {
@@ -38,4 +40,20 @@ angular.module('workingRoom')
             $scope.$parent.vm.currentFilter = vm.ticket;
             $scope.$parent.vm.filterTicketList();
         }
-    });
+
+    }).filter('searchDate', function($filter){
+     return function(items){
+       var startDate = $('#date1').datepicker('getDate');
+       var endDate = $('#date2').datepicker('getDate');
+       if(!startDate && !endDate)
+       return items
+
+       if(startDate && endDate){
+         var start = startDate.getTime();
+         var end = endDate.getTime();
+         return items.filter(function (item) {
+           return item.created >= start && item.created <= end;
+         });
+       }
+     }
+});
