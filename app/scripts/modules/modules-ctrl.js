@@ -60,34 +60,49 @@ angular.module('workingRoom')
 
         function filterAllTickets()
         {
-          vm.currentFilter = {lang: moment.locale()};
-          filterTicketList();
+          if (vm.admin || vm.super && !vm.user){
+            vm.currentFilter = {lang: moment.locale()};
+            filterTicketList();
+          }
+          else if (vm.user){
+            vm.currentFilter = {lang: moment.locale(), user: {name: vm.filterName}};
+            filterTicketList();
+          }
         }
 
         function filterToDealTickets()
         {
-          vm.currentFilter = {status: defaultStatus, lang: moment.locale()};
-          filterTicketList();
+          if (vm.admin || vm.super && !vm.user){
+            vm.currentFilter = {status: defaultStatus, lang: moment.locale()};
+            filterTicketList();
+          }
+          else if (vm.user){
+            vm.currentFilter = {status: defaultStatus, lang: moment.locale(), user: {name: vm.filterName}};
+            filterTicketList();
+          }
         }
 
         function filterNotReadTickets()
         {
-          vm.currentFilter = {lastResponse: '!', lang: moment.locale()};
-          filterTicketList();
+          if (vm.admin || vm.super && !vm.user){
+            vm.currentFilter = {lastResponse: '!', lang: moment.locale()};
+            filterTicketList();
+          }
+          else if (vm.user){
+            vm.currentFilter = {lastResponse: '!', lang: moment.locale(), user: {name: vm.filterName}};
+            filterTicketList();
+          }
         }
 
         function filterByStatusTickets(status)
         {
           var statusName = status;
 
-            if (vm.admin || vm.super && !vm.user)
-            {
+            if (vm.admin || vm.super && !vm.user){
               vm.currentFilter = {status : statusName, lang: moment.locale()};
               filterTicketList();
             }
-
-            else if (vm.user)
-            {
+            else if (vm.user){
               vm.currentFilter = {status : statusName, user: {name: vm.filterName}, lang: moment.locale()};
               filterTicketList();
             }
