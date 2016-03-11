@@ -10,8 +10,8 @@ angular.module('workingRoom')
         vm.searchTickets = searchTickets;
         vm.hide = false;
         vm.exportExcel = exportExcel;
-        $('#dateSearch1').datepicker({ dateFormat: "dd-mm-yy" });
-        $('#dateSearch2').datepicker({ dateFormat: "dd-mm-yy" });
+        vm.largeSearch = largeSearch;
+
         searchTickets();
 
         vm.getSubCat = function (cat, subcats) {
@@ -28,7 +28,7 @@ angular.module('workingRoom')
         };
 
         function exportExcel(){
-          return ExcellentExport.excel(this, 'table_0', 'TicketExport');
+          return ExcellentExport.excel(this, 'table_export', 'TicketExport');
         }
 
         vm.back = function () {
@@ -41,11 +41,35 @@ angular.module('workingRoom')
             $scope.$parent.vm.filterTicketList();
         }
 
+        function largeSearch() {
+          vm.hide = true;
+          setTimeout(function(){
+            $('#dateSearch1').datepicker({ dateFormat: "dd-mm-yy" });
+            $('#dateSearch2').datepicker({ dateFormat: "dd-mm-yy" });
+          }, 200);
+        }
+
+        vm.searchDate= function(items){
+          var startDateT = $('#dateSearch1').datepicker('getDate');
+          var endDateT = $('#dateSearch2').datepicker('getDate');
+          console.log(startDateT);
+          if(!startDateT || !endDateT)
+          return items
+
+          if(startDateT && endDateT){
+            var start = startDateT.getTime();
+            var end = endDateT.getTime();
+            for (var i=0; i<items.length; i++){
+              console.log(items[i].created >= start && item[i].created <= end);
+            }
+          }
+        }
+
     }).filter('searchDate', function($filter){
-     return function(items){
-       var startDate = $('#date1').datepicker('getDate');
-       var endDate = $('#date2').datepicker('getDate');
-       if(!startDate && !endDate)
+     return function(items, start, end){
+       var startDate = $('#dateSearch1').datepicker('getDate');
+       var endDate = $('#dateSearch2').datepicker('getDate');
+       if(!startDate || !endDate)
        return items
 
        if(startDate && endDate){

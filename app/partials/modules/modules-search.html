@@ -83,13 +83,13 @@
             <div flex="16">
               <md-input-container flex>
                 <label>Date de début</label>
-                <input id="dateSearch1" ng-model="vm.startDate">
+                <input id="dateSearch1" ng-model="startDate">
               </md-input-container>
             </div>
             <div flex="16">
               <md-input-container flex>
                 <label>Date de fin</label>
-                <input id="dateSearch2" ng-model="vm.endDate">
+                <input id="dateSearch2" ng-model="endDate">
               </md-input-container>
             </div>
         </div>
@@ -109,11 +109,11 @@
     <div class="md-actions" layout="row" layout-align="end center">
         <div flex></div>
         <md-button data-ng-if="vm.hide" data-ng-click="vm.hide = false" class="md-accent"><md-icon>keyboard_arrow_up</md-icon></md-button>
-        <md-button data-ng-if="!vm.hide" data-ng-click="vm.hide = true"class="md-accent"><md-icon>keyboard_arrow_down</md-icon><md-tooltip data-md-direction="down">
+        <md-button data-ng-if="!vm.hide" data-ng-click="vm.largeSearch()" class="md-accent"><md-icon>keyboard_arrow_down</md-icon><md-tooltip data-md-direction="down">
             Recherche avancée
         </md-tooltip></md-button>
         <div flex></div>
-        <a download="export.xls" href="#" onclick="return ExcellentExport.excel(this, 'table_0', 'TicketExport');"><md-button class="md-accent">Export Excel</md-button></a>
+        <a download="export.xls" href="#" onclick="return ExcellentExport.excel(this, 'table_export', 'TicketExport');"><md-button class="md-accent">Export Excel</md-button></a>
         <md-button class="md-accent" data-ng-click="vm.back()">{{'SEARCH_TICKETS_CLOSE' | translate}}</md-button>
         <md-button class="md-accent md-raised" data-ng-click="vm.searchTickets()">{{'SEARCH_TICKETS' | translate}}</md-button>
     </div>

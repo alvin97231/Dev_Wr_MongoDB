@@ -65,8 +65,19 @@
                               <th style="text-align:center">J+</th>
                               <th style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
                         </thead>
-                        <tbody >
-                              <tr ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
+
+                        <tbody id="table_export">
+                              <tr>
+                                <th style="text-align:center" hidden>#</th>
+                                <th style="text-align:center" hidden>Nom</th>
+                                <th style="text-align:center" hidden>Sujet</th>
+                                <th style="text-align:center" hidden>Statut</th>
+                                <th style="text-align:center" hidden>Créé</th>
+                                <th style="text-align:center" hidden>Réponse par</th>
+                                <th style="text-align:center" hidden>J+</th>
+                                <th style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields" hidden>{{field.name}}</th>
+                              </tr>
+                              <tr ng-repeat="ticket in vm.tickets | filter:searchDate" data-ng-click="vm.openTicketView($event, ticket.$id)">
                                   <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                                   <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                                   <td style="text-align:center" id="subject">{{ticket.subject}}</td>
@@ -84,6 +95,7 @@
                                   </td>
                               </tr>
                             </tbody>
+
                         </table>
                   <div data-ng-show="!vm.tickets" layout-fill layout="row" layout-align="center">
                       <md-progress-circular class="md-accent" md-mode="indeterminate"></md-progress-circular>
