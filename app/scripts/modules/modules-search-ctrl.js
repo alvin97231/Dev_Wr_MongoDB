@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesSearchCtrl', function (Module, TicketsList, $filter, $scope, $state) {
+    .controller('ModulesSearchCtrl', function (Module, TicketsList, $filter, $scope, $state, $timeout) {
         var vm = this;
 
         vm.ticket = {};
@@ -39,6 +39,7 @@ angular.module('workingRoom')
         function searchTickets() {
             $scope.$parent.vm.currentFilter = vm.ticket;
             $scope.$parent.vm.filterTicketList();
+            $filter('searchDate')(TicketsList, parseDate(vm.dateFrom), parseDate(vm.dateTo));
         }
 
         function largeSearch() {
@@ -49,35 +50,29 @@ angular.module('workingRoom')
           }, 200);
         }
 
-        vm.searchDate= function(items){
-          var startDateT = $('#dateSearch1').datepicker('getDate');
-          var endDateT = $('#dateSearch2').datepicker('getDate');
-          console.log(startDateT);
-          if(!startDateT || !endDateT)
-          return items
-
-          if(startDateT && endDateT){
-            var start = startDateT.getTime();
-            var end = endDateT.getTime();
-            for (var i=0; i<items.length; i++){
-              console.log(items[i].created >= start && item[i].created <= end);
-            }
+        function parseDate(input) {
+          if(input){
+            var parts = input.split('-');
+            return new Date(parts[2], parts[1]-1, parts[0]);
           }
         }
 
     }).filter('searchDate', function($filter){
-     return function(items, start, end){
-       var startDate = $('#dateSearch1').datepicker('getDate');
-       var endDate = $('#dateSearch2').datepicker('getDate');
-       if(!startDate || !endDate)
-       return items
+      return function(items, from, to){
 
-       if(startDate && endDate){
-         var start = startDate.getTime();
-         var end = endDate.getTime();
-         return items.filter(function (item) {
-           return item.created >= start && item.created <= end;
+       if(from == 'undifined' || to == 'undifined' ){
+         return items
+       }
+
+       else if(from && to){
+
+         var start = moment(from).startOf('day').toDate().getTime();
+         var end = moment(to).endOf('day').toDate().getTime();
+
+         var filtered = items.filter(function (item) {
+            return item.created >= start && item.created <= end;
          });
+           console.log(filtered);
        }
      }
 });
