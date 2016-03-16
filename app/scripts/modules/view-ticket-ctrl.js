@@ -80,8 +80,6 @@ angular.module('workingRoom')
                           name: file.name,
                           data: 'data:' + file.type + ';base64,' + binaryString.substr(binaryString.indexOf('base64,') + 'base64,'.length)
                       });
-                      console.log(vm.newFile);
-                      Toasts.simple('Fichier '+ file.name+ ' ajouté');
                   };
                   reader.readAsDataURL(file);
                 })(files[i]);

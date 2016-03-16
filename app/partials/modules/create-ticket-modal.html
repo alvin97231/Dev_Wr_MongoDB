@@ -80,6 +80,7 @@
           </md-button>
         </div>
     </form>
+    <div class="md-actions" layout="row" data-ng-if="vm.newFile" data-ng-repeat="file in vm.newFile">
+      <md-checkbox ng-model="fileOk" ng-init="fileOk=true">Fichier {{file.name}} ajouté</md-ckeckbox>
+    </div>
 </md-dialog>
-<script>
-</script>
