@@ -6,7 +6,10 @@
                     <span>{{vm.ticket.id}} - {{ vm.ticket.subject }} - {{vm.ticket.status}}</span>
                 </h2>
                 <span flex></span>
-                <md-button type="button" aria-label="add" data-ng-click="vm.cancel()" class="md-icon-button">
+                <md-switch ng-model="vm.subscription" aria-label="Abonnement" class="md-primary" md-no-ink data-ng-change="vm.subscribe()">
+                  M'abonner
+                </md-switch>
+                <md-button type="button" aria-label="close" data-ng-click="vm.cancel()" class="md-icon-button">
                     <md-icon>close</md-icon>
                 </md-button>
             </div>

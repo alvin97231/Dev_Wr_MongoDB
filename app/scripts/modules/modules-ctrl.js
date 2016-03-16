@@ -64,10 +64,19 @@ angular.module('workingRoom')
             vm.currentFilter = {lang: moment.locale()};
             filterTicketList();
           }
-          else if (vm.user){
+
+          else if (!vm.admin && !vm.super && vm.user){
             vm.currentFilter = {lang: moment.locale(), user: {name: vm.filterName}};
             filterTicketList();
           }
+
+          /*else if (!vm.admin && vm.super && !vm.user) {
+             for (var i = 0; i < User.groups.length; i++) {
+               console.log(User.groups[i]);
+               vm.currentFilter = {lang: moment.locale(), user: {group: {name:User.groups[i].name}}};
+               console.log(vm.currentFilter);
+             }
+          }*/
         }
 
         function filterToDealTickets()

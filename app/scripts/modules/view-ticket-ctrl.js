@@ -17,9 +17,10 @@ angular.module('workingRoom')
         vm.deleteFile = deleteFile;
         vm.super = User.type === "super";
         vm.user = User.type === "user";
-        console.log(vm.user, vm.super, vm.admin);
+        vm.subscription = false;
 
         vm.cancel = $mdDialog.hide;
+        vm.subscribe = subscribe;
 
         function sendMessage() {
             if (vm.newMessage.length > 0) {
@@ -85,5 +86,49 @@ angular.module('workingRoom')
                 })(files[i]);
               }
             }
+        }
+
+        function subscribe(){
+          if(vm.subscription){
+
+            if (!ticket.subsUsers){
+              ticket.subsUsers = [];
+              ticket.subsUsers.push({
+                id: User.$id,
+                name: User.name
+              });
+            }
+            else if (ticket.subsUsers){
+              if(ticket.subsUsers.length > 0){
+                for (var i = 0; i < ticket.subsUsers.length; i++) {
+                  if(ticket.subsUsers[i].id == User.$id){
+                    console.log('Déjà abonné');
+                  }
+                  else {
+                    ticket.subsUsers.push({
+                      id: User.$id,
+                      name: User.name
+                    });
+                  }
+                }
+              }
+              else{
+                ticket.subsUsers.push({
+                  id: User.$id,
+                  name: User.name
+                });
+              }
+            }
+
+          }
+
+          else if (!vm.subscription){
+            for (var i = 0; i < ticket.subsUsers.length; i++) {
+              if(ticket.subsUsers[i].id == User.$id){
+                ticket.subsUsers.splice(i, 1);
+              }
+            }
+          }
+        Tickets.save($stateParams.id, ticket);  
         }
     });

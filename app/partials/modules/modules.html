@@ -4,7 +4,7 @@
       <md-card flex layout="row">
 
         <md-button aria-label="group-settings"
-                    data-ng-if="vm.user ||vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
+                    data-ng-if="vm.super ||vm.user ||vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
                     data-ng-click="vm.openCreateTicket($event)"
                     class="md-fab md-raised">
             <md-tooltip data-md-direction="down">
@@ -14,7 +14,7 @@
         </md-button>
 
         <md-button class="md-fab md-raised"
-                   data-ng-if="vm.admin"
+                   data-ng-if="vm.super || vm.admin"
                    data-ui-sref="main.modulesAll({id: vm.module.$id})">
             <md-tooltip data-md-direction="down">
                 {{ 'ALL_TICKETS' | translate }}

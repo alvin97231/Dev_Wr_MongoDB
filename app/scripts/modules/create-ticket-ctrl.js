@@ -6,15 +6,28 @@ angular.module('workingRoom')
 
         var defaultStatus = getDefaultStatus();
         vm.getLocale = getLocale;
-        vm.ticket = {
-            user: {
-                id: User.$id,
-                name: User.name,
-                group : User.groups
-            },
-            lang : getLocale(),
-            status: defaultStatus
-        };
+        if(User.groups){
+          vm.ticket = {
+              user: {
+                  id: User.$id,
+                  name: User.name,
+                  group : User.groups
+              },
+              lang : getLocale(),
+              status: defaultStatus
+          };
+        }
+        else if (!User.groups) {
+          vm.ticket = {
+              user: {
+                  id: User.$id,
+                  name: User.name,
+              },
+              lang : getLocale(),
+              status: defaultStatus
+          };
+        }
+
         vm.module = Module;
 
         vm.cancel = cancel;
