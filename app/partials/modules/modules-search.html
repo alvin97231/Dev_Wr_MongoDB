@@ -80,17 +80,19 @@
                   <md-icon data-ng-switch-when="dropdouble"  data-ng-click="vm.ticket[key].first = undefined">cancel</md-icon>
                 </div>
             </div>
-            <div flex="16">
-              <md-input-container flex>
-                <label>Date de début</label>
-                <input id="dateSearch1" ng-model="vm.dateFrom">
-              </md-input-container>
-            </div>
-            <div flex="16">
-              <md-input-container flex>
-                <label>Date de fin</label>
-                <input id="dateSearch2" ng-model="vm.dateTo">
-              </md-input-container>
+            <div layout="row">
+              <div flex="16">
+                <md-input-container flex>
+                  <label>Date de début</label>
+                  <input id="dateSearch1" ng-model="vm.dateFrom">
+                </md-input-container>
+              </div>
+              <div flex="16">
+                <md-input-container flex>
+                  <label>Date de fin</label>
+                  <input id="dateSearch2" ng-model="vm.dateTo">
+                </md-input-container>
+              </div>
             </div>
         </div>
     </md-content>
