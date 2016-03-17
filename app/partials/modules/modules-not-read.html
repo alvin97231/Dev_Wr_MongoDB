@@ -114,6 +114,7 @@
   </md-fab-speed-dial>
 </div>
 <script data-ng-if="vm.tickets">
+  var flag = true;
   $('#table_notread tbody').on('inview', function(event, isInView) {
       if (isInView) {
         setTimeout(function(){
@@ -144,6 +145,7 @@
                                                                         });
             tfnotread.init();
         }, 200);
+        flag = false;
       }
       else{
         console.log('Error');

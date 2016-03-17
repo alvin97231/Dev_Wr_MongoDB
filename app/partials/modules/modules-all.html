@@ -116,6 +116,7 @@
   </md-fab-speed-dial>
 </div>
 <script data-ng-if="vm.tickets">
+  var flag = true;
   $('#table_all tbody').on('inview', function(event, isInView) {
       if (isInView) {
         setTimeout(function(){
@@ -147,6 +148,7 @@
                                                                         });
             tfall.init();
         }, 200);
+        flag=false;
       }
       else{
         console.log('Error');

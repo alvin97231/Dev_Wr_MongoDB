@@ -132,8 +132,9 @@
 </div>
   <script data-ng-if="vm.tickets">
     var tf = [];
+    var flag = true;
     $('#table_0 tbody').on('inview', function(event, isInView) {
-        if (isInView) {
+        if (isInView && flag) {
           setTimeout(function(){
             for (var i = 0; i < $('table').length; i++) {
               tf[i] = new TableFilter(document.querySelector('#table_'+i), {base_path: '/tablefilter/'
@@ -163,6 +164,7 @@
               tf[i].init();
             }
           }, 200);
+          flag = false; 
         }
         else{
           console.log('TableFilter Error');
