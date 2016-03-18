@@ -66,7 +66,7 @@
                               <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                               <td style="text-align:center" id="subject">{{ticket.subject}}</td>
                               <td style="text-align:center" id="status">{{ticket.status}}</td>
-                              <td style="text-align:center" id="date">{{ticket.created | date : 'dd-MM-yyyy'}} {{ticket.created | date : 'HH:mm:ss'}}</td>
+                              <td style="text-align:center" id="date">{{ticket.created | date : 'dd/MM/yyyy'}} {{ticket.created | date : 'HH:mm:ss'}}</td>
                               <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
                               <td style="text-align:center" id="nbjours">{{ticket.created | amDifference : null : 'minute' | amDurationFormat : 'minute'}}</td>
                               <td data-ng-repeat="(key, field) in vm.module.ticketFields" style="text-align:center" id="key">
@@ -118,7 +118,7 @@
 <script data-ng-if="vm.tickets">
   var flag = true;
   $('#table_all tbody').on('inview', function(event, isInView) {
-      if (isInView) {
+      if (isInView && flag) {
         setTimeout(function(){
             tfall = new TableFilter(document.querySelector('#table_all'), {base_path: '/tablefilter/'
                                                                           ,
@@ -136,11 +136,13 @@
                                                                           rows_counter: true,
                                                                           loader: true,
                                                                           alternate_rows: true,
+                                                                          btn_reset: true,
+                                                                          btn_reset_text: "Clear",
                                                                           extensions:[{
                                                                             name: 'sort',
                                                                             types: [
                                                                             'number', 'string', 'string',
-                                                                            'string', 'string', 'string',
+                                                                            'string', 'dmydate', 'string',
                                                                             'string', 'string', 'string',
                                                                             'number', 'number'
                                                                             ]

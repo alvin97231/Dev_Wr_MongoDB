@@ -48,7 +48,7 @@ angular.module('workingRoom')
             },
             add: function (id, obj) {
                 if (ticketsForModule[id]) {
-                    obj.id = ticketsForModule[id].length + 1;
+                    obj.id = ticketsForModule[id].length + 2;
                     obj.created = new Date().getTime();
                     return ticketsForModule[id].$add(obj);
                 } else {

@@ -44,7 +44,6 @@ angular.module('workingRoom')
             vm.endTime = vm.end.getTime();
 
             function show(snap){
-              vm.ticketsFiltered = snap.numChildren();
               vm.test = snap.val();
 
               if(vm.test){
@@ -66,7 +65,6 @@ angular.module('workingRoom')
             function show(snap){
               vm.startTime = 1438380000;
               vm.endTime = new Date().getTime();
-              vm.ticketsFiltered = snap.numChildren();
               vm.test = snap.val();
               if(vm.test){
                 vm.tickets = [];
@@ -91,7 +89,7 @@ angular.module('workingRoom')
               vm.sta=[];
               snap.forEach(function (childSnap){
                 var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket.status === child.name;});
+                vm.test = vm.tickets.filter(function (ticket){return ticket.status === child.name && ticket.lang == moment.locale();});
                 vm.statsStatus.push(vm.test);
                 vm.sta.push(child);
               });
@@ -102,7 +100,7 @@ angular.module('workingRoom')
               vm.dat=[];
               snap.forEach(function (childSnap){
                 var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name;});
+                vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name && ticket.lang == moment.locale();});
                 vm.statsData.push(vm.test);
                 vm.dat.push(child);
               });
@@ -113,7 +111,7 @@ angular.module('workingRoom')
               vm.cat=[];
               snap.forEach(function (childSnap){
                 var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name;});
+                vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.lang == moment.locale();});
                 vm.statsCat.push(vm.test);
                 vm.cat.push(child);
               });
@@ -123,15 +121,14 @@ angular.module('workingRoom')
             function takeStatsCat2(snap){
               vm.statsCat=[];
               vm.cat=[];
-
               snap.forEach(function (childSnap){
                 var child = childSnap.val();
                 vm.test = vm.tickets.filter(function (ticket){
                   if(ticket[5].first){
-                    return ticket[5].first === child.name;
+                    return ticket[5].first === child.name && ticket.lang == moment.locale();
                   }
                   else if (!ticket[5].first) {
-                    return ticket[5] === child.name;
+                    return ticket[5] === child.name && ticket.lang == moment.locale();
                   }
                 });
                 vm.statsCat.push(vm.test);
@@ -155,9 +152,14 @@ angular.module('workingRoom')
             }
 
             var dataData = [];
+            var somme = 0;
             for(var i = 0; i<vm.statsData.length ; i++){
               dataData.push({name: vm.dat[i].name, y:vm.statsData[i].length});
             }
+            for(var i = 0; i<dataData.length; i++){
+              somme += dataData[i].y;
+            }
+            vm.ticketsFiltered = somme;
           }
 
           else if (vm.openLogin.length>0 ||vm.closeLogin.length>0 ) {
@@ -169,7 +171,7 @@ angular.module('workingRoom')
                 vm.sta=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket.status === child.name && ticket.user.name===vm.name;});
+                  vm.test = vm.tickets.filter(function (ticket){return ticket.status === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
                   vm.statsStatus.push(vm.test);
                   vm.sta.push(child);
                 });
@@ -180,7 +182,7 @@ angular.module('workingRoom')
                 vm.cat=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.user.name===vm.name;});
+                  vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
                   vm.statsCat.push(vm.test);
                   vm.cat.push(child);
                 });
@@ -195,10 +197,10 @@ angular.module('workingRoom')
                   var child = childSnap.val();
                   vm.test = vm.tickets.filter(function (ticket){
                     if(ticket[5].first){
-                      return ticket[5].first === child.name && ticket.user.name===vm.name;
+                      return ticket[5].first === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();
                     }
                     else if(!ticket[5].first){
-                      return ticket[5] === child.name && ticket.user.name===vm.name;
+                      return ticket[5] === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();
                     }
                   });
                   vm.statsCat.push(vm.test);
@@ -211,7 +213,7 @@ angular.module('workingRoom')
                 vm.dat=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name && ticket.user.name===vm.name;});
+                  vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
                   vm.statsData.push(vm.test);
                   vm.dat.push(child);
                 });
@@ -235,9 +237,14 @@ angular.module('workingRoom')
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
               }
               var dataData = [];
+              var somme = 0;
               for(var i = 0; i<vm.statsData.length ; i++){
                 dataData.push({name: vm.dat[i].name, y:vm.statsData[i].length});
               }
+              for(var i = 0; i<dataData.length; i++){
+                somme += dataData[i].y;
+              }
+              vm.ticketsFiltered = somme;
             }
 
             else if(vm.closeLogin.length>0){
@@ -248,7 +255,7 @@ angular.module('workingRoom')
                 vm.sta=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket.status === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket.status === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
                   vm.statsStatus.push(vm.test);
                   vm.sta.push(child);
                 });
@@ -259,7 +266,7 @@ angular.module('workingRoom')
                 vm.cat=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[1].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[1].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
                   vm.statsCat.push(vm.test);
                   vm.cat.push(child);
                 });
@@ -274,10 +281,10 @@ angular.module('workingRoom')
                   var child = childSnap.val();
                   vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){
                     if(ticket[5].first){
-                      return ticket[5].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;
+                      return ticket[5].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();
                     }
                     else if (!ticket[5].first) {
-                      return ticket[5] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;
+                      return ticket[5] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();
                     }
                   }
                   });
@@ -291,7 +298,7 @@ angular.module('workingRoom')
                 vm.dat=[];
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[0] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name;}});
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[0] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
                   vm.statsData.push(vm.test);
                   vm.dat.push(child);
                 });
@@ -307,9 +314,15 @@ angular.module('workingRoom')
                 vm.categoriesQuery2.once('value', takeStatsCat2ByCloseLogin);
               }
               var dataData = [];
+              var somme = 0 ;
               for(var i = 0; i<vm.statsData.length ; i++){
                 dataData.push({name: vm.dat[i].name, y:vm.statsData[i].length});
               }
+              for(var i = 0; i<dataData.length; i++){
+                somme += dataData[i].y;
+              }
+              vm.ticketsFiltered = somme;
+
               var dataCat = [];
               for(var i = 0; i<vm.statsCat.length ; i++){
                 dataCat.push({name: vm.cat[i].name, y:vm.statsCat[i].length});
@@ -319,7 +332,6 @@ angular.module('workingRoom')
               for(var i = 0; i<vm.statsStatus.length ; i++){
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
               }
-
             }
           }
 

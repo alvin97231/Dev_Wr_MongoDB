@@ -40,16 +40,38 @@ angular.module('workingRoom')
         });
 
         vm.ticketsNotRead = TicketsList.filter(function (ticket) {
+          if (vm.admin || vm.super && !vm.user){
             return !ticket.lastResponse && ticket.lang == moment.locale();
+          }
+          else if (!vm.admin && !vm.super && vm.user){
+            return !ticket.lastResponse && ticket.lang == moment.locale() && ticket.user.name == vm.filterName;
+          }
         });
+
         vm.ticketsCurrent = TicketsList.filter(function (ticket) {
+          if (vm.admin || vm.super && !vm.user){
             return ticket.status === 'En cours' && ticket.lang == moment.locale();
+          }
+          else if (!vm.admin && !vm.super && vm.user){
+            return ticket.status === 'En cours' && ticket.lang == moment.locale() && ticket.user.name == vm.filterName;
+          }
         });
         vm.ticketsCurrentCC = TicketsList.filter(function (ticket) {
+          if (vm.admin || vm.super && !vm.user){
             return ticket.status === 'En cours : Attente conseiller' && ticket.lang == moment.locale();
+          }
+          else if (!vm.admin && !vm.super && vm.user){
+            return ticket.status === 'En cours : Attente conseiller' && ticket.lang == moment.locale() && ticket.user.name == vm.filterName;
+          }
         });
+
         vm.ticketsCurrentCPM = TicketsList.filter(function (ticket) {
+          if (vm.admin || vm.super && !vm.user){
             return ticket.status === 'En cours : Attente CPM' && ticket.lang == moment.locale();
+          }
+          else if (!vm.admin && !vm.super && vm.user){
+            return ticket.status === 'En cours : Attente CPM' && ticket.lang == moment.locale() && ticket.user.name == vm.filterName;
+          }
         });
 
         function filterTicketList() {

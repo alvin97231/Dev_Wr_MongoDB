@@ -119,7 +119,7 @@
 <script data-ng-if="vm.tickets">
   var flag = true;
   $('#table_current tbody').on('inview', function(event, isInView) {
-      if (isInView) {
+      if (isInView && flag) {
         setTimeout(function(){
             tfcurrent = new TableFilter(document.querySelector('#table_current'), {base_path: '/tablefilter/'
                                                                           ,flts_row_css_class: "test",
@@ -136,6 +136,8 @@
                                                                           rows_counter: true,
                                                                           loader: true,
                                                                           alternate_rows: true,
+                                                                          btn_reset: true,
+                                                                          btn_reset_text: "Clear",
                                                                           extensions:[{
                                                                             name: 'sort',
                                                                             types: [
@@ -148,7 +150,7 @@
                                                                         });
             tfcurrent.init();
         }, 200);
-        flag = false; 
+        flag = false;
       }
       else{
         console.log('Error');

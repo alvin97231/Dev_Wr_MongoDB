@@ -7,7 +7,7 @@ angular.module('workingRoom')
         if (Auth.$getAuth()) {
             goLastLocation();
         }
-
+        console.log($('#email').val());
         vm.passwordReset = passwordReset;
         vm.passwordLogin = passwordLogin;
 
@@ -25,7 +25,7 @@ angular.module('workingRoom')
 
         function passwordLogin()
         {
-          Auth.$authWithPassword({email: vm.email,password: vm.password,rememberMe: true}).then(function ()
+          Auth.$authWithPassword({email: vm.email,password: vm.password,rememberMe: false}).then(function ()
           {
             goLastLocation();
           }, function (error)
@@ -49,4 +49,7 @@ angular.module('workingRoom')
                 });
             });
         }
+
+        console.log(vm.email);
+        console.log(vm.password);
     });
