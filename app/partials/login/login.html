@@ -15,21 +15,18 @@
             </div>
             <md-input-container class="md-accent">
                 <label>Email</label>
-                <input id="email" type="email" name="email" required data-ng-model="vm.email" title="email">
+                <input id="email" type="email" name="email" data-ng-model="vm.email" title="email" ng-click="vm.testValues()" required>
             </md-input-container>
             <md-input-container class="md-accent">
                 <label>Mot de passe</label>
-                <input id="password" type="password" name="password" required data-ng-model="vm.password" title="mot de passe">
+                <input id="password" type="password" name="password" data-ng-model="vm.password" title="mot de passe" ng-click="vm.testValues()" required>
             </md-input-container>
         </md-card-content>
         <div class="md-actions"
              layout="row"
              layout-align="center">
             <div layout="column">
-                <md-button type="submit"
-                           class="md-raised md-accent"
-                           data-ng-disabled="loginForm.$invalid">Connexion
-                </md-button>
+                <md-button type="submit" class="md-raised md-accent" data-ng-disabled="loginForm.$invalid">Connexion</md-button>
                 <md-button type="button" data-ng-click="vm.passwordReset($event)">Mot de passe oublié ?</md-button>
             </div>
         </div>

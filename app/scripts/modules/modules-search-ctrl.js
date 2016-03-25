@@ -37,9 +37,38 @@ angular.module('workingRoom')
         };
 
         function searchTickets() {
+          if(vm.dateFrom && vm.dateTo){
+
+            if(vm.ticket.length > 0){
+              $scope.$parent.vm.currentFilter = vm.ticket;
+              $scope.$parent.vm.filterTicketList();
+              var start = moment($('#dateSearch1').datepicker( "getDate" )).startOf('day').toDate().getTime();
+              var end = moment($('#dateSearch2').datepicker( "getDate" )).endOf('day').toDate().getTime();
+              vm.ticketsSearch = $scope.$parent.vm.tickets.filter(function (ticket) {
+                  if(ticket.created >= start && ticket.created <= end){
+                    return ticket;
+                  }
+              });
+              $scope.$parent.vm.tickets = vm.ticketsSearch;
+            }
+            else if(!vm.ticket.length){
+
+              var start = moment($('#dateSearch1').datepicker( "getDate" )).startOf('day').toDate().getTime();
+              var end = moment($('#dateSearch2').datepicker( "getDate" )).endOf('day').toDate().getTime();
+              vm.ticketsSearch = $scope.$parent.vm.tickets.filter(function (ticket) {
+                  if(ticket.created >= start && ticket.created <= end){
+                    return ticket;
+                  }
+              });
+              $scope.$parent.vm.tickets = vm.ticketsSearch;
+            }
+
+          }
+          else if(!vm.dateFrom || !vm.dateTo){
+
             $scope.$parent.vm.currentFilter = vm.ticket;
             $scope.$parent.vm.filterTicketList();
-            $filter('searchDate')(TicketsList, parseDate(vm.dateFrom), parseDate(vm.dateTo));
+          }
         }
 
         function largeSearch() {
@@ -50,29 +79,4 @@ angular.module('workingRoom')
           }, 200);
         }
 
-        function parseDate(input) {
-          if(input){
-            var parts = input.split('-');
-            return new Date(parts[2], parts[1]-1, parts[0]);
-          }
-        }
-
-    }).filter('searchDate', function($filter){
-      return function(items, from, to){
-
-       if(from == 'undifined' || to == 'undifined' ){
-         return items
-       }
-
-       else if(from && to){
-
-         var start = moment(from).startOf('day').toDate().getTime();
-         var end = moment(to).endOf('day').toDate().getTime();
-
-         var filtered = items.filter(function (item) {
-            return item.created >= start && item.created <= end;
-         });
-           console.log(filtered);
-       }
-     }
-});
+    });

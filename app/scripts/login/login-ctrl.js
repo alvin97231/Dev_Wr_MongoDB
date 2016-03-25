@@ -7,9 +7,10 @@ angular.module('workingRoom')
         if (Auth.$getAuth()) {
             goLastLocation();
         }
-        console.log($('#email').val());
+
         vm.passwordReset = passwordReset;
         vm.passwordLogin = passwordLogin;
+        vm.testValues = testValues;
 
         function goLastLocation()
         {
@@ -25,7 +26,13 @@ angular.module('workingRoom')
 
         function passwordLogin()
         {
-          Auth.$authWithPassword({email: vm.email,password: vm.password,rememberMe: false}).then(function ()
+          if(!vm.email && !vm.password){
+            console.log('bitch');
+
+            vm.email = $('#email').val();
+            vm.password = $('#password').val();
+          }
+          Auth.$authWithPassword({email: vm.email,password: vm.password,rememberMe: true}).then(function ()
           {
             goLastLocation();
           }, function (error)
@@ -50,6 +57,11 @@ angular.module('workingRoom')
             });
         }
 
-        console.log(vm.email);
-        console.log(vm.password);
+        function testValues(){
+          loginForm.$invalid=true;
+          console.log($('#email').val());
+          console.log($('#password').val());
+          console.log(loginForm);
+        }
+
     });

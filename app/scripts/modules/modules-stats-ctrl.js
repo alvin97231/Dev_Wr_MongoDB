@@ -568,6 +568,7 @@ angular.module('workingRoom')
                 }
 
                 vm.test = snap.val();
+                console.log(snap.numChildren());
                 var i=0;
                 var delais = [];
 
