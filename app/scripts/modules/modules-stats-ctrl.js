@@ -147,9 +147,14 @@ angular.module('workingRoom')
             }
 
             var dataStatus = [];
+            var sommeStatus = 0;
             for(var i = 0; i<vm.statsStatus.length ; i++){
               dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
             }
+            for(var i = 0; i<dataStatus.length ; i++){
+              sommeStatus += dataStatus[i].y;
+            }
+            console.log(sommeStatus);
 
             var dataData = [];
             var somme = 0;
@@ -236,6 +241,12 @@ angular.module('workingRoom')
               for(var i = 0; i<vm.statsStatus.length ; i++){
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
               }
+              var sommeStatus = 0;
+              for(var i = 0; i<dataStatus.length ; i++){
+                sommeStatus += dataStatus[i].y;
+              }
+              console.log(sommeStatus);
+
               var dataData = [];
               var somme = 0;
               for(var i = 0; i<vm.statsData.length ; i++){
@@ -332,124 +343,125 @@ angular.module('workingRoom')
               for(var i = 0; i<vm.statsStatus.length ; i++){
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
               }
+              var sommeStatus = 0;
+              for(var i = 0; i<dataStatus.length ; i++){
+                sommeStatus += dataStatus[i].y;
+              }
             }
           }
-
-          vm.config1 = {
-            options: {
-              chart: {
-              renderTo: 'container',
-              type: 'column'
-              },
-              title: {
-                  text: 'Statuts'
-              },
-              xAxis:{
-                type: 'category'
-              }
-            },
-            plotOptions: {
-              series: {
-                  dataLabels: {
-                      enabled: true,
-                      format: '{point.name}: {point.y:.1f}%'
-                  }
-                }
-            },
-            "credits": {
-              "enabled": false
-            },
-            tooltip: {
-                valueSuffix: '%'
-            },
-            series: [{
-                name : 'Nombre de tickets',
-                colorByPoint: true,
-                data: dataStatus
-            }],
-          }
-
-
-
-          vm.config2 = {
-            options: {
-              chart: {
-                renderTo: 'container2',
-                type: 'pie'
-              },
-              title: {
-                  text: 'Catégories'
-              },
-              xAxis:{
-                type: 'Statuts'
-              }
-          },
-          tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-          },
-          plotOptions: {
-                series: {
-                  dataLabels: {
-                      enabled: true,
-                      format: '{point.name}: {point.y:.1f} %'
-                  }
-              }
-          },
-          "credits": {
-            "enabled": false
-          },
-            series: [{
-                type: 'pie',
-                name : 'Nombre de tickets',
-                colorByPoint: true,
-                data: dataCat }],
-          }
-
-          vm.config3 = {
-            options: {
-              chart: {
-                type: 'pie'
-              },
-              title: {
-                  text: 'Source'
-              },
-              xAxis:{
-                type: 'category'
-              }
-          },
-          tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-          },
-          plotOptions: {
-                pie : {
-                  allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: false
+          Highcharts.chart('container1', {
+            chart: {
+                      type: 'column'
+                  },
+                  title: {
+                      text: 'Statuts'
+                  },
+                  xAxis:{
+                    type: 'category'
+                  },
+                  tooltip: {
+                      headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                      pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}</b> Tickets<br/>'
+                  },
+                  plotOptions: {
+                    column: {
+                        dataLabels: {
+                            enabled: true
+                        }
                     },
-                    showInLegend: true
-                },
-                series: {
-                  dataLabels: {
-                      enabled: true,
-                      format: '{point.name}: {point.y:.1f} %'
-                  }
-              }
-          },
-          "credits": {
-            "enabled": false
-          },
-            series: [{
-                type: 'pie',
-                name : 'Nombre de tickets',
-                colorByPoint: true,
-                data: dataData
-            }],
-          }
+                    series: {
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function () {
+                                var pcnt = (this.y / sommeStatus) * 100;
+                                return Highcharts.numberFormat(pcnt) + '%';
+                            }
+                        }
+                    }
+                  },
+                  "credits": {
+                    "enabled": false
+                  },
+                  series: [{
+                      name: 'Tickets par Statuts',
+                      colorByPoint: true,
+                      data: dataStatus
+                  }]
+          });
 
+          Highcharts.chart('container2', {
+            chart: {
+                      plotBackgroundColor: null,
+                      plotBorderWidth: null,
+                      plotShadow: false,
+                      type: 'pie'
+                  },
+                  title: {
+                      text: 'Catégories'
+                  },
+                  xAxis:{
+                    type: 'Statuts'
+                  },
+                  tooltip: {
+                      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} Tickets)'
+                  },
+                  plotOptions: {
+                      pie: {
+                          allowPointSelect: true,
+                          cursor: 'pointer',
+                          dataLabels: {
+                              enabled: false
+                          },
+                          showInLegend: true
+                      }
+                  },
+                  "credits": {
+                    "enabled": false
+                  },
+                  series: [{
+                      name: 'Pourcentage',
+                      colorByPoint: true,
+                      data:dataCat
+                  }]
+              });
+
+          Highcharts.chart('container3', {
+            chart: {
+                      plotBackgroundColor: null,
+                      plotBorderWidth: null,
+                      plotShadow: false,
+                      type: 'pie'
+                  },
+                  title: {
+                      text: 'Source'
+                  },
+                  xAxis:{
+                    type: 'Type'
+                  },
+                  tooltip: {
+                      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} Tickets)'
+                  },
+                  plotOptions: {
+                      pie: {
+                          allowPointSelect: true,
+                          cursor: 'pointer',
+                          dataLabels: {
+                              enabled: false
+                          },
+                          showInLegend: true
+                      }
+                  },
+                  "credits": {
+                    "enabled": false
+                  },
+                  series: [{
+                      name: 'Pourcentage',
+                      colorByPoint: true,
+                      data:dataData
+                  }]
+              });
         }
+
 
         function querySearchName (query) {
           var results = query ? vm.users.filter( createFilterForName(query, name) ) : vm.users,
@@ -611,5 +623,4 @@ angular.module('workingRoom')
     $('#date2').datepicker({ dateFormat: "dd-mm-yy" });
     statusDuration();
     filter();
-
   });
