@@ -34,15 +34,13 @@ angular.module('workingRoom')
           vm.statusQuery = Ref.child('modules').child(Module.$id).child('status');
 
           if (vm.startDate && vm.endDate) {
-            vm.start = $('#date1').datepicker('getDate');
-            vm.end = $('#date2').datepicker('getDate');
-            var jour = vm.start.getDay();
-            var mois = vm.start.getMonth();
-            var annee = vm.start.getFullYear();
-            vm.start= new Date(annee, mois, jour);
-            vm.startTime = vm.start.getTime();
-            vm.endTime = vm.end.getTime();
-
+            vm.startTime = moment($('#date1').datepicker( "getDate" )).startOf('day').toDate().getTime();
+            vm.endTime = moment($('#date2').datepicker( "getDate" )).startOf('day').toDate().getTime();
+          }
+          else if (!vm.startDate || !vm.endDate) {
+            vm.startTime = 1438380000;
+            vm.endTime = new Date().getTime();
+          }
             function show(snap){
               vm.test = snap.val();
 
@@ -51,36 +49,14 @@ angular.module('workingRoom')
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
                   vm.tickets.push(child);
+                  console.log(vm.tickets);
                 });
               }
             else if(!vm.test){
               vm.tickets = [];
             }
            }
-
           vm.periodQuery = vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
-          }
-
-          else{
-            function show(snap){
-              vm.startTime = 1438380000;
-              vm.endTime = new Date().getTime();
-              vm.test = snap.val();
-              if(vm.test){
-                vm.tickets = [];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  //if(child.user.group){console.log(child.user.group[0].name);}
-                  vm.tickets.push(child);
-                });
-            }
-
-            else if(!vm.test){
-              vm.tickets = [];
-            }
-           }
-            vm.periodQuery = vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
-          }
 
           if(vm.openLogin.length===0 && vm.closeLogin.length===0){
 
@@ -154,7 +130,6 @@ angular.module('workingRoom')
             for(var i = 0; i<dataStatus.length ; i++){
               sommeStatus += dataStatus[i].y;
             }
-            console.log(sommeStatus);
 
             var dataData = [];
             var somme = 0;
@@ -245,7 +220,6 @@ angular.module('workingRoom')
               for(var i = 0; i<dataStatus.length ; i++){
                 sommeStatus += dataStatus[i].y;
               }
-              console.log(sommeStatus);
 
               var dataData = [];
               var somme = 0;
@@ -532,55 +506,50 @@ angular.module('workingRoom')
         });
 
         function takeLate(ticket, delais){
-          if (ticket.status === 'Soldé : Recontact client effectué' || 'Clos' || 'Traité avec résolution DC' || 'Traité sans résolution DC') {
-              if(ticket.messages.length === 1){
-                var id = 0;
-              }
-              else{
-                var id = ticket.messages.length - 1;
-              }
-              vm.closeName = ticket.messages[id].author.name;
-
-            if(vm.openLogin.length>0 && vm.closeName === vm.openLogin[0].name){
-              var dateStatusChange = ticket.messages[id].date;
-              vm.done = dateStatusChange - ticket.created;
-              vm.diffDisp = vm.done/3600000;
-              delais.push(vm.diffDisp);
-              tableAvg(delais);
-            }
-            else if(vm.openLogin.length==0){
-              if(ticket.messages.length === 1){
-                var id = 0;
-              }
-              else{
-                var id = ticket.messages.length - 1;
-              }
-
-              var dateStatusChange = ticket.messages[id].date;
-              vm.done = dateStatusChange - ticket.created;
-              vm.diffDisp = vm.done/3600000;
-              delais.push(vm.diffDisp);
-              tableAvg(delais);
-            }
+          if(ticket.messages.length === 1){
+            var id = 0;
           }
+          else{
+            var id = ticket.messages.length - 1;
+          }
+          vm.closeName = ticket.messages[id].author.name;
+
+        if(vm.openLogin.length>0 && vm.closeName === vm.openLogin[0].name){
+          var dateStatusChange = ticket.messages[id].date;
+          vm.done = dateStatusChange - ticket.created;
+          vm.diffDisp = vm.done/3600000;
+          delais.push(vm.diffDisp);
+          tableAvg(delais);
+        }
+        else if(vm.openLogin.length==0){
+          if(ticket.messages.length === 1){
+            var id = 0;
+          }
+          else{
+            var id = ticket.messages.length - 1;
+          }
+
+          var dateStatusChange = ticket.messages[id].date;
+          vm.done = dateStatusChange - ticket.created;
+          vm.diffDisp = vm.done/3600000;
+          delais.push(vm.diffDisp);
+          tableAvg(delais);
+        }
         }
 
         function statusDuration(){
 
-            function show(snap){
-                if (vm.startDate && vm.endDate) {
-                  vm.start = $('#date1').datepicker('getDate');
-                  vm.end = $('#date2').datepicker('getDate');
-                  vm.startTime = vm.start.getTime();
-                  vm.endTime = vm.end.getTime();
-                }
-                else{
-                  vm.startTime = 1438380000;
-                  vm.endTime = new Date().getTime();
-                }
+          if (vm.startDate && vm.endDate) {
+            vm.startTime = moment($('#date1').datepicker( "getDate" )).startOf('day').toDate().getTime();
+            vm.endTime = moment($('#date2').datepicker( "getDate" )).startOf('day').toDate().getTime();
+          }
+          else{
+            vm.startTime = 1438380000;
+            vm.endTime = new Date().getTime();
+          }
 
+            function show(snap){
                 vm.test = snap.val();
-                console.log(snap.numChildren());
                 var i=0;
                 var delais = [];
 
