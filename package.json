@@ -1,6 +1,6 @@
 {
-  "name": "material-start",
-  "version": "0.0.0",
+  "name": "WorkingRoom",
+  "version": "0.0.1",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -49,19 +49,23 @@
     "require-dir": "^0.3",
     "wiredep": "^2.2.2"
   },
+  "scripts": {
+       "gulp": "gulp",
+       "bower": "bower"
+   },
   "engines": {
     "node": ">=0.10.0"
   },
-  "description": "This Material **start*** project is a *seed* for AngularJS Material applications. The project contains a sample AngularJS application and is pre-configured to install the Angular framework and a bunch of development and testing tools for instant web development gratification.",
+  "description": "A ticketing tool",
   "main": "gulpfile.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alvin97231/material-start.git"
+    "url": "git+https://github.com/alvin97231/Dev_WR.git"
   },
-  "author": "Alvin",
+  "author": "Alvin EUSTACHE",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alvin97231/material-start/issues"
+    "url": "https://github.com/alvin97231/Dev_WR/issues"
   },
-  "homepage": "https://github.com/alvin97231/material-start#readme"
+  "homepage": "https://github.com/alvin97231/Dev_WR#readme"
 }
