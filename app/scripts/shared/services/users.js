@@ -54,7 +54,7 @@ angular.module('workingRoom')
                         } else {
                             var count = Ref.child('userCounter');
                             count.once("value", function(snap) {
-                                vm.counter = snap.val();console.log(typeof vm.counter);
+                                vm.counter = snap.val();
                                 ref.child(userData.uid).set({
                                     id: parseInt(vm.counter+1, 10),
                                     email: user.email,

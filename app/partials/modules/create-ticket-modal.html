@@ -38,17 +38,19 @@
                             <label>{{ field.name }}</label>
                         </md-checkbox>
                     </md-input-container>
-                    <md-input-container data-ng-switch-when="dropsimple">
+                    <md-input-container data-ng-switch-when="dropsimple" required>
                         <label>{{field.name}}</label>
                         <md-select data-ng-model="vm.ticket[key]" required>
-                            <md-option data-ng-repeat="data in field.data" value="{{data.name}}">{{data.name}}
-                            </md-option>
+                            <md-option data-ng-repeat="data in field.data" value="{{data.name}}" required>{{data.name}}</md-option>
                         </md-select>
+                        <div class="errors" ng-messages="responseForm.vm.ticket[key].$error" ng-if="responseForm.$dirty">
+                          <div ng-message="required">Required</div>
+                        </div>
                     </md-input-container>
                     <div flex layout="row" data-ng-switch-when="dropdouble">
                         <md-input-container flex>
                             <label>{{field.name}}</label>
-                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" required>
+                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" required >
                                 <md-option data-ng-repeat="data in field.data" value="{{data.name}}">
                                     {{data.name}}
                                 </md-option>

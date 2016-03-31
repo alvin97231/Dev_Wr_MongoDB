@@ -7,6 +7,7 @@ angular.module('workingRoom')
         vm.deleteUser = deleteUser;
         vm.user = user;
         vm.admin = admin;
+        console.log(vm.user);
 
         function deleteUser(event) {
             $mdDialog.show({
@@ -19,7 +20,7 @@ angular.module('workingRoom')
                     }
                 }
             }).then(function (res) {
-                Users.delete(res, user, User);
+              Users.delete(res, user, User);
             });
         }
     });

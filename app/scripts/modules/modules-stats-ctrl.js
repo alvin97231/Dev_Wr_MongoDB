@@ -49,7 +49,6 @@ angular.module('workingRoom')
                 snap.forEach(function (childSnap){
                   var child = childSnap.val();
                   vm.tickets.push(child);
-                  console.log(vm.tickets);
                 });
               }
             else if(!vm.test){
@@ -377,7 +376,7 @@ angular.module('workingRoom')
                     type: 'Statuts'
                   },
                   tooltip: {
-                      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.y} Tickets)'
+                      pointFormat: '<b>{point.percentage:.1f}%</b> ({point.y} Tickets)'
                   },
                   plotOptions: {
                       pie: {
@@ -434,6 +433,7 @@ angular.module('workingRoom')
                       data:dataData
                   }]
               });
+              statusDuration();
         }
 
 
@@ -487,24 +487,6 @@ angular.module('workingRoom')
             };
           }
 
-        TicketsList.$loaded().then(function () {
-            vm.ticketsUser = vm.tickets.filter(function (ticket) {return ticket;});
-            vm.ticketsToDeal = vm.tickets.filter(function (ticket) {return ticket.status === 'A traiter';});
-            vm.ticketsDouble = vm.tickets.filter(function (ticket) {return ticket.status === 'Doublon';});
-            vm.ticketsCurrent = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours';});
-            vm.ticketsClimb = vm.tickets.filter(function (ticket) {return ticket.status === 'Escaladé';});
-            vm.ticketsDCNo = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité sans résolution DC';});
-            vm.ticketsDCYes = vm.tickets.filter(function (ticket) {return ticket.status === 'Traité avec résolution DC';});
-            vm.ticketsNoCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'Demande hors procédure CPM';});
-            vm.ticketsNotRead = vm.tickets.filter(function (ticket) {return !ticket.lastResponse;});
-            vm.ticketsClientNeedCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'A solder : En attente de recontact client';});
-            vm.ticketsClientCtc = vm.tickets.filter(function (ticket) {return ticket.status === 'Soldé : Recontact client effectué';});
-            vm.ticketsCurrentCC = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente conseiller';});
-            vm.ticketsCurrentCPM = vm.tickets.filter(function (ticket) {return ticket.status === 'En cours : Attente CPM';});
-            vm.ticketsReminder = vm.tickets.filter(function (ticket) {return ticket.status === 'A relancer';});
-
-        });
-
         function takeLate(ticket, delais){
           if(ticket.messages.length === 1){
             var id = 0;
@@ -514,27 +496,27 @@ angular.module('workingRoom')
           }
           vm.closeName = ticket.messages[id].author.name;
 
-        if(vm.openLogin.length>0 && vm.closeName === vm.openLogin[0].name){
-          var dateStatusChange = ticket.messages[id].date;
-          vm.done = dateStatusChange - ticket.created;
-          vm.diffDisp = vm.done/3600000;
-          delais.push(vm.diffDisp);
-          tableAvg(delais);
-        }
-        else if(vm.openLogin.length==0){
-          if(ticket.messages.length === 1){
-            var id = 0;
+          if(vm.openLogin.length>0 && vm.closeName === vm.openLogin[0].name){
+            var dateStatusChange = ticket.messages[id].date;
+            vm.done = dateStatusChange - ticket.created;
+            vm.diffDisp = vm.done/3600000;
+            delais.push(vm.diffDisp);
+            tableAvg(delais);
           }
-          else{
-            var id = ticket.messages.length - 1;
-          }
+          else if(vm.openLogin.length==0){
+            if(ticket.messages.length === 1){
+              var id = 0;
+            }
+            else{
+              var id = ticket.messages.length - 1;
+            }
 
-          var dateStatusChange = ticket.messages[id].date;
-          vm.done = dateStatusChange - ticket.created;
-          vm.diffDisp = vm.done/3600000;
-          delais.push(vm.diffDisp);
-          tableAvg(delais);
-        }
+            var dateStatusChange = ticket.messages[id].date;
+            vm.done = dateStatusChange - ticket.created;
+            vm.diffDisp = vm.done/3600000;
+            delais.push(vm.diffDisp);
+            tableAvg(delais);
+          }
         }
 
         function statusDuration(){
@@ -556,23 +538,28 @@ angular.module('workingRoom')
                 snap.forEach(function (childSnap){
                 var child = childSnap.val();
 
-                switch(child.status){
+                if(child.lang == moment.locale()){
+                  switch(child.status){
 
-                  case 'Clos':
-                    vm.takeLate(child,delais);
-                  break;
+                    case 'Clos':
+                      vm.takeLate(child,delais);
+                    break;
 
-                  case 'Soldé : Recontact client effectué':
-                    vm.takeLate(child,delais);
-                  break;
+                    case 'Soldé : Recontact client effectué':
+                      vm.takeLate(child,delais);
+                    break;
 
-                  case 'Traité avec résolution DC':
-                    vm.takeLate(child,delais);
-                  break;
+                    case 'Traité avec résolution DC':
+                      vm.takeLate(child,delais);
+                    break;
 
-                  case 'Traité sans résolution DC':
-                    vm.takeLate(child, delais);
-                  break;
+                    case 'Traité sans résolution DC':
+                      vm.takeLate(child, delais);
+                    break;
+                  }
+                }
+                else{
+                  console.log("Ticket N° "+child.id+" N/A");
                 }
                 });
               }
@@ -586,10 +573,9 @@ angular.module('workingRoom')
               }
               vm.avg = somme/tableau.length;
               vm.avg = Math.round(vm.avg);
-              //vm.allDuration =[];
         }
     $('#date1').datepicker({ dateFormat: "dd-mm-yy" });
     $('#date2').datepicker({ dateFormat: "dd-mm-yy" });
-    statusDuration();
+    //vm.avg = 0;
     filter();
   });
