@@ -38,19 +38,16 @@
                             <label>{{ field.name }}</label>
                         </md-checkbox>
                     </md-input-container>
-                    <md-input-container data-ng-switch-when="dropsimple" required>
+                    <md-input-container data-ng-switch-when="dropsimple">
                         <label>{{field.name}}</label>
-                        <md-select data-ng-model="vm.ticket[key]" required>
-                            <md-option data-ng-repeat="data in field.data" value="{{data.name}}" required>{{data.name}}</md-option>
+                        <md-select data-ng-model="vm.ticket[key]" ng-required="vm.required">
+                            <md-option data-ng-repeat="data in field.data" value="{{data.name}}" >{{data.name}}</md-option>
                         </md-select>
-                        <div class="errors" ng-messages="responseForm.vm.ticket[key].$error" ng-if="responseForm.$dirty">
-                          <div ng-message="required">Required</div>
-                        </div>
                     </md-input-container>
                     <div flex layout="row" data-ng-switch-when="dropdouble">
                         <md-input-container flex>
                             <label>{{field.name}}</label>
-                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" required >
+                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" ng-required="vm.required">
                                 <md-option data-ng-repeat="data in field.data" value="{{data.name}}">
                                     {{data.name}}
                                 </md-option>
@@ -58,7 +55,7 @@
                         </md-input-container>
                         <md-input-container flex data-ng-show="vm.ticket[key].first">
                             <label>{{field.subName}}</label>
-                            <md-select data-ng-model="vm.ticket[key].second" aria-label="subcat" required>
+                            <md-select data-ng-model="vm.ticket[key].second" aria-label="subcat" ng-required="vm.required">
                                 <md-option data-ng-repeat="subdata in vm.getSubCat(vm.ticket[key].first, field.data)"
                                            value="{{subdata}}">{{subdata}}
                                 </md-option>
@@ -75,14 +72,14 @@
         </md-dialog-content>
         <div class="md-actions">
           <input type="file" id="file" multiple>
-          <md-button class="md-raised" type="button" data-ng-if="!vm.ticket.file" data-ng-click="vm.upload()">Upload</md-button>
+          <md-button class="md-raised" type="button" data-ng-if="!vm.newFile" data-ng-click="vm.upload()">Upload</md-button>
           <md-button class="md-raised" type="button" data-ng-if="vm.newFile" data-ng-click="vm.deleteFile()">Supprimer</md-button>
-          <md-button class="md-accent md-raised" type="submit" data-ng-disabled="responseForm.$invalid">
+          <md-button class="md-accent md-raised" type="submit" data-ng-disabled="ticketForm.$invalid">
             {{'VIEW_TICKET_MODAL_SEND' | translate}}
           </md-button>
         </div>
     </form>
-    <div class="md-actions" layout="row" data-ng-if="vm.newFile" data-ng-repeat="file in vm.newFile">
+    <div class="md-actions" layout="row" data-ng-if="vm.newFile" data-ng-hide="!vm.newFile" data-ng-repeat="file in vm.newFile">
       <md-checkbox ng-model="fileOk" ng-init="fileOk=true">Fichier {{file.name}} ajouté</md-ckeckbox>
     </div>
 </md-dialog>

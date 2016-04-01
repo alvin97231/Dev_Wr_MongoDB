@@ -35,7 +35,7 @@ angular.module('workingRoom')
         vm.deleteFile = deleteFile;
         vm.getPattern = getPattern;
         vm.upload = upload;
-
+        vm.required = true;
 
         vm.getSubCat = function (cat, subcats) {
             var ret = [];
@@ -68,8 +68,8 @@ angular.module('workingRoom')
         }
 
         function deleteFile() {
-          Toasts.simple('Fichier ' + vm.ticket.file.name+ ' supprimé');
-          vm.ticket.file = null;
+          vm.newFile = null;
+          Toasts.simple('Fichier supprimé');
         }
 
         function getLocale()

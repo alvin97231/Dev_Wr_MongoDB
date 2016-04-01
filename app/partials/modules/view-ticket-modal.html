@@ -78,7 +78,7 @@
         </div>
         <div flex="5"></div>
         <input type="file" id="file" multiple>
-        <md-button class="md-raised" type="button" data-ng-if="!vm.ticket.file" data-ng-click="vm.upload()">Upload</md-button>
+        <md-button class="md-raised" type="button" data-ng-if="!vm.newFile" data-ng-click="vm.upload()">Upload</md-button>
         <md-button class="md-raised" type="button" data-ng-if="vm.newFile" data-ng-click="vm.deleteFile()">Supprimer</md-button>
         <md-button class="md-accent md-raised" type="submit" data-ng-disabled="responseForm.$invalid">
           {{'VIEW_TICKET_MODAL_SEND' | translate}}

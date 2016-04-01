@@ -51,7 +51,8 @@
   },
   "scripts": {
        "gulp": "gulp",
-       "bower": "bower"
+       "bower": "bower",
+       "firebase":"firebase"
    },
   "engines": {
     "node": ">=0.10.0"
