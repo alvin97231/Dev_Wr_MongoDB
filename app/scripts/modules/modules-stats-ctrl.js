@@ -556,6 +556,14 @@ angular.module('workingRoom')
                     case 'Traité sans résolution DC':
                       vm.takeLate(child, delais);
                     break;
+
+                    case 'Résolu avec solution satisfaisante':
+                      vm.takeLate(child, delais);
+                    break;
+
+                    case 'Résolu sans solution satisfaisante':
+                      vm.takeLate(child, delais);
+                    break;
                   }
                 }
                 else{
