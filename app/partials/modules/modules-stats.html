@@ -101,8 +101,60 @@
   </form>
 
   <md-card flex style="background-color:#eaeaea;" layout-padding>
-    <h2 id="h2Stats">{{vm.ticketsFiltered}} Tickets</h2>
-    <h2 id="h2Stats" data-ng-if="vm.avg">Moyenne de traitement: {{vm.avg}} heures</h2><br/>
+
+    <div flex layout="row">
+      <div flex></div>
+      <h2 id="h2Stats">{{vm.ticketsFiltered}} Tickets</h2>
+      <div flex></div>
+      <h2 id="h2Stats" data-ng-if="vm.avg">Moyenne de traitement: {{vm.avg}} heures</h2><br/>
+      <div flex></div>
+      <md-button class="md-primary" ng-click="vm.activeQS()">QS CPM</md-button>
+    </div>
+
+    <div flex layout="row" data-ng-if="vm.QSCpm">
+      <div flex>
+        <a download="exportQS.xls" href="#" onclick="return ExcellentExport.excel(this, 'qs1', 'TicketExport');"><md-button class="md-accent">Exporter</md-button></a>
+        <table id="qs1" class="table">
+          <thead>
+            <th colspan="3" style="text-align:center"><h3>QS CPM "A Traiter" = {{vm.QSHoursToDeal}}h</h3></th>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Demande à traiter la plus ancienne : {{vm.oldiestTicketToDeal.created | date : 'dd-MM-yyyy'}}</th>
+              <th>Date</th>
+              <th>Tickets à Traiter</th>
+            </tr>
+            <tr ng-repeat="data in vm.countTicketTableToDeal">
+              <td></td>
+              <td style="text-align:center">{{data.date}}</td>
+              <td style="text-align:center">{{data.count}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div flex="10"></div>
+      <div flex>
+        <a download="exportQS2.xls" href="#" onclick="return ExcellentExport.excel(this, 'qs2', 'TicketExport');"><md-button class="md-accent">Exporter</md-button></a>
+        <table id="qs2" class="table">
+          <thead>
+            <th colspan="3" style="text-align:center"><h3>QS CPM "Escladé" = {{vm.QSHoursClimb}}h</h3></th>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Demande à traiter la plus ancienne : {{vm.oldiestTicketClimb.created | date : 'dd-MM-yyyy'}}</th>
+              <th>Date</th>
+              <th>Tickets à Traiter</th>
+            </tr>
+            <tr ng-repeat="data in vm.countTicketTableClimb">
+              <td></td>
+              <td style="text-align:center">{{data.date}}</td>
+              <td style="text-align:center">{{data.count}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div layout="column" flex>
       <div flex>
         <div id="container1" style="min-width: 310px; height: 400px; width:100%; margin: 0 auto"></div>

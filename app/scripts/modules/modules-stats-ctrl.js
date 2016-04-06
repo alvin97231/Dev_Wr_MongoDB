@@ -20,7 +20,22 @@ angular.module('workingRoom')
         vm.transformChip = transformChip;
         vm.closeLogin = [];
         vm.openLogin = [];
+        vm.activeQS = activeQS;
+        vm.QSCpm = false;
+        vm.exportExcel = exportExcel;
 
+        function exportExcel(id){
+          return ExcellentExport.excel(this, id, 'TicketExport');
+        }
+
+        function activeQS(){
+          if(Module.name === 'CPM'){
+            vm.QSCpm = true;
+          }
+          else{
+            alert("Vous n'êtes pas sur le module CPM");
+          }
+        }
         function transformChip(chip) {
           if (angular.isObject(chip)) {
               return chip;
@@ -68,6 +83,42 @@ angular.module('workingRoom')
                 vm.statsStatus.push(vm.test);
                 vm.sta.push(child);
               });
+
+              vm.oldiestTicketToDeal = vm.statsStatus[0][0];
+              vm.QSDaysToDeal = (new Date().getTime() - vm.oldiestTicketToDeal.created)/86400000;
+              vm.QSHoursToDeal = (Math.round(vm.QSDaysToDeal))*24;
+
+              vm.dateTableToDeal=[]
+              for (var i = 0; i < vm.statsStatus[0].length; i++) {
+                var dateToDeal = moment(vm.statsStatus[0][i].created).format("DD-MM-YYYY");
+                if(vm.dateTableToDeal.indexOf(dateToDeal) === -1){
+                  vm.dateTableToDeal.push(dateToDeal);
+                }
+              }
+
+              vm.countTicketTableToDeal=[]
+              for (var i = 0; i < vm.dateTableToDeal.length; i++) {
+                vm.qsTicketsToDeal = vm.statsStatus[0].filter(function (ticket){return moment(ticket.created).format("DD-MM-YYYY") === vm.dateTableToDeal[i];});
+                vm.countTicketTableToDeal.push({date:vm.dateTableToDeal[i], count:vm.qsTicketsToDeal.length});
+              }
+
+              vm.oldiestTicketClimb = vm.statsStatus[6][0];
+              vm.QSDaysClimb = (new Date().getTime() - vm.oldiestTicketClimb.created)/86400000;
+              vm.QSHoursClimb = (Math.round(vm.QSDaysClimb))*24;
+
+              vm.dateTableClimb=[]
+              for (var i = 0; i < vm.statsStatus[6].length; i++) {
+                var dateToDeal = moment(vm.statsStatus[6][i].created).format("DD-MM-YYYY");
+                if(vm.dateTableClimb.indexOf(dateToDeal) === -1){
+                  vm.dateTableClimb.push(dateToDeal);
+                }
+              }
+
+              vm.countTicketTableClimb=[]
+              for (var i = 0; i < vm.dateTableClimb.length; i++) {
+                vm.qsTicketsClimb = vm.statsStatus[6].filter(function (ticket){return moment(ticket.created).format("DD-MM-YYYY") === vm.dateTableClimb[i];});
+                vm.countTicketTableClimb.push({date:vm.dateTableClimb[i], count:vm.qsTicketsClimb.length});
+              }
             }
 
             function takeStatsData(snap){
