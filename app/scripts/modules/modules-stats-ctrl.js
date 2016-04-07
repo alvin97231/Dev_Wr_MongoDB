@@ -30,12 +30,18 @@ angular.module('workingRoom')
 
         function activeQS(){
           if(Module.name === 'CPM'){
-            vm.QSCpm = true;
+            if(vm.QSCpm){
+              vm.QSCpm = false;
+            }
+            else if (!vm.QSCpm) {
+              vm.QSCpm = true;
+            }
           }
           else{
             alert("Vous n'êtes pas sur le module CPM");
           }
         }
+
         function transformChip(chip) {
           if (angular.isObject(chip)) {
               return chip;
@@ -85,8 +91,10 @@ angular.module('workingRoom')
               });
 
               vm.oldiestTicketToDeal = vm.statsStatus[0][0];
-              vm.QSDaysToDeal = (new Date().getTime() - vm.oldiestTicketToDeal.created)/86400000;
-              vm.QSHoursToDeal = (Math.round(vm.QSDaysToDeal))*24;
+              if (vm.oldiestTicketToDeal) {
+                vm.QSDaysToDeal = (new Date().getTime() - vm.oldiestTicketToDeal.created)/86400000;
+                vm.QSHoursToDeal = (Math.round(vm.QSDaysToDeal))*24;
+              }
 
               vm.dateTableToDeal=[]
               for (var i = 0; i < vm.statsStatus[0].length; i++) {
@@ -103,8 +111,10 @@ angular.module('workingRoom')
               }
 
               vm.oldiestTicketClimb = vm.statsStatus[6][0];
-              vm.QSDaysClimb = (new Date().getTime() - vm.oldiestTicketClimb.created)/86400000;
-              vm.QSHoursClimb = (Math.round(vm.QSDaysClimb))*24;
+              if(vm.oldiestTicketClimb){
+                vm.QSDaysClimb = (new Date().getTime() - vm.oldiestTicketClimb.created)/86400000;
+                vm.QSHoursClimb = (Math.round(vm.QSDaysClimb))*24;
+              }
 
               vm.dateTableClimb=[]
               for (var i = 0; i < vm.statsStatus[6].length; i++) {
