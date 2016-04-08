@@ -79,6 +79,18 @@ angular.module('workingRoom')
           vm.periodQuery = vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
 
           if(vm.openLogin.length===0 && vm.closeLogin.length===0){
+            vm.ticketEi =[];
+            for (var i = 0; i < vm.tickets.length; i++) {
+              if(vm.tickets[i].messages){
+                for (var j = 0; j < vm.tickets[i].messages.length; j++) {
+                  if (vm.tickets[i].messages[j].ei && vm.tickets[i].lang == moment.locale()) {
+                    if (vm.ticketEi.indexOf(vm.tickets[i]) === -1) {
+                      vm.ticketEi.push(vm.tickets[i]);
+                    }
+                  }
+                }
+              }
+            }console.log(vm.ticketEi);
 
             function takeStatsStatus(snap){
               vm.statsStatus=[];
@@ -187,6 +199,8 @@ angular.module('workingRoom')
             for(var i = 0; i<vm.statsStatus.length ; i++){
               dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
             }
+            dataStatus[13].y = vm.ticketEi.length;
+
             for(var i = 0; i<dataStatus.length ; i++){
               sommeStatus += dataStatus[i].y;
             }
@@ -205,6 +219,19 @@ angular.module('workingRoom')
           else if (vm.openLogin.length>0 ||vm.closeLogin.length>0 ) {
             if(vm.openLogin.length>0){
               vm.name = vm.openLogin[0].name;
+
+              vm.ticketEi =[];
+              for (var i = 0; i < vm.tickets.length; i++) {
+                if(vm.tickets[i].messages){
+                  for (var j = 0; j < vm.tickets[i].messages.length; j++) {
+                    if (vm.tickets[i].messages[j].ei && vm.tickets[i].user.name===vm.name && vm.tickets[i].lang == moment.locale()) {
+                      if (vm.ticketEi.indexOf(vm.tickets[i]) === -1) {
+                        vm.ticketEi.push(vm.tickets[i]);
+                      }
+                    }
+                  }
+                }
+              }
 
               function takeStatsStatusByOpenLogin(snap){
                 vm.statsStatus=[];
@@ -276,6 +303,7 @@ angular.module('workingRoom')
               for(var i = 0; i<vm.statsStatus.length ; i++){
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
               }
+              dataStatus[13].y = vm.ticketEi.length;
               var sommeStatus = 0;
               for(var i = 0; i<dataStatus.length ; i++){
                 sommeStatus += dataStatus[i].y;
