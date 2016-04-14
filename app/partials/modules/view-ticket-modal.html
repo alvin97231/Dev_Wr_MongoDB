@@ -20,7 +20,8 @@
             <div flex layout="row" layout-wrap style="padding: 20px;" layout-padding>
                 <div flex="33" data-ng-repeat="(key, field) in vm.module.ticketFields">
                     <span>{{field.name}} :</span>
-                    <h4 data-ng-if="field.type !== 'dropdouble'">{{ vm.ticket[key] }}</h4>
+                    <h4 data-ng-if="field.name ===  'Attribué à'">{{ vm.ticket[key].name }}</h4>
+                    <h4 data-ng-if="field.type !== 'dropdouble' && field.name !== 'Attribué à'">{{ vm.ticket[key] }}</h4>
                     <h4 data-ng-if="field.type === 'dropdouble'">{{ vm.ticket[key].first + ' - ' + vm.ticket[key].second }}</h4>
                 </div>
                 <div flex="100">

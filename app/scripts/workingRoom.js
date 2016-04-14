@@ -122,6 +122,7 @@ angular.module('workingRoom', [
             templateUrl: 'partials/modules/modules.html',
             controller: 'ModulesCtrl as vm',
             resolve: {
+
                 User: function (User) {
                     return User;
                 },
@@ -133,6 +134,9 @@ angular.module('workingRoom', [
                 },
                 TicketsList: function (Tickets, $stateParams) {
                     return Tickets.get($stateParams.id);
+                },
+                GroupsList: function (User, Groups) {
+                    return Groups.all(User);
                 }
             },
         })

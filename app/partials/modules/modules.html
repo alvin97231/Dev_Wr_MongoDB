@@ -86,7 +86,10 @@
                                   <td style="text-align:center" id="answer">{{ticket.lastResponse}}</td>
                                   <td style="text-align:center" id="nbjours">{{ticket.created | amDifference : null : 'minute' | amDurationFormat : 'minute'}}</td>
                                   <td data-ng-repeat="(key, field) in vm.module.ticketFields " style="text-align:center" id="key">
-                                      <div data-ng-if="field.type !== 'dropdouble'">
+                                      <div data-ng-if="field.name ===  'Attribué à'">
+                                          {{ticket[key].name}}
+                                      </div>
+                                      <div data-ng-if="field.type !== 'dropdouble' && field.name !== 'Attribué à'">
                                           {{ticket[key]}}
                                       </div>
                                       <div data-ng-if="field.type === 'dropdouble'">

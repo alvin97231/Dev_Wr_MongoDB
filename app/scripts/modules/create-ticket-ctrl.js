@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('CreateTicketCtrl', function ($scope, $mdDialog, Module, User, Toasts, Upload, $timeout) {
+    .controller('CreateTicketCtrl', function ($scope, $mdDialog, Ref, Module, User, Toasts, Upload, $timeout) {
         var vm = this;
 
         var defaultStatus = getDefaultStatus();
+        vm.groupsQuery = Ref.child('groups').once('value', function(snap){vm.groups = snap.val();});
         vm.getLocale = getLocale;
+        vm.getAttribution = getAttribution;
         if(User.groups){
           vm.ticket = {
               user: {
@@ -49,6 +51,16 @@ angular.module('workingRoom')
             }
             return ret;
         };
+
+        function getAttribution() {
+          for (var objet in vm.groups){
+            if(vm.groups[objet].name.slice(0, 3).toLowerCase() == vm.ticket[5].first.slice(0, 3).toLowerCase()){
+              vm.attributed = vm.groups[objet];
+              vm.ticket[6] = vm.attributed;
+              console.log(vm.ticket);
+            }
+          }
+        }
 
         function cancel(event) {
             event.preventDefault();
@@ -106,4 +118,5 @@ angular.module('workingRoom')
                       return '.{0,}'
                   }
         }
+
 });

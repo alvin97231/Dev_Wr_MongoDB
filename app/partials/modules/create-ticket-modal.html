@@ -28,6 +28,8 @@
                               title="{{field.name}}"/>
                         <input data-ng-if="field.name==='Ref. SRP'" data-ng-model="vm.ticket[key]" type="text"
                                       required title="{{field.name}}"/>
+                        <input data-ng-if="field.name==='Attribué à'" data-ng-model="vm.attributed.name" type="text"
+                                      required title="{{field.name}}" disabled/>
                     </md-input-container>
                     <md-input-container data-ng-switch-when="checkbox">
                         <md-checkbox data-ng-model="vm.ticket[key]"
@@ -47,7 +49,7 @@
                     <div flex layout="row" data-ng-switch-when="dropdouble">
                         <md-input-container flex>
                             <label>{{field.name}}</label>
-                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" ng-required="vm.required">
+                            <md-select data-ng-model="vm.ticket[key].first" aria-label="cat" ng-required="vm.required" data-md-on-close="vm.getAttribution()">
                                 <md-option data-ng-repeat="data in field.data" value="{{data.name}}">
                                     {{data.name}}
                                 </md-option>

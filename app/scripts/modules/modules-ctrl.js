@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin) {
+    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
         var vm = this;
 
         var authData = Ref.getAuth();
@@ -14,6 +14,7 @@ angular.module('workingRoom')
         vm.filterNotReadTickets = filterNotReadTickets;
         vm.filterByStatusTickets = filterByStatusTickets;
         vm.filterTicketList = filterTicketList;
+        vm.getGroups = getGroups;
         vm.admin = admin;
         vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');
         vm.ticketsCount = vm.ticketsAll.once('value', function(snap){vm.ticketsTotal = snap.numChildren();});
@@ -32,7 +33,6 @@ angular.module('workingRoom')
         vm.currentFilter = {status: defaultStatus};
         vm.status = defaultStatus;
         vm.filter = 'Tickets par statut';
-
         vm.tickets = null;
         TicketsList.$loaded().then(function () {
             TicketsList.$watch(filterTicketList);
@@ -73,6 +73,10 @@ angular.module('workingRoom')
             return ticket.status === 'En cours : Attente CPM' && ticket.lang == moment.locale() && ticket.user.name == vm.filterName;
           }
         });
+
+        function getGroups(){
+          return GroupsList;
+        }
 
         function filterTicketList() {
              $timeout(function () {
