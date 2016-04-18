@@ -131,6 +131,8 @@ angular.module('workingRoom')
 
         function filterByStatusTickets(status)
         {
+          console.log(Module);
+          //console.log();
           var statusName = status;
 
             if (vm.admin || vm.super && !vm.user){
