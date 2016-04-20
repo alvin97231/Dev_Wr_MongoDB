@@ -34,6 +34,10 @@
     <script src="bower_components/jquery/dist/excellentexport.min.js"></script>
     <script src="tablefilter/tablefilter.js"></script>
     <script src="https://highcharts.github.io/export-csv/export-csv.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+            var socket = io.connect('http://localhost:3000');
+    </script>
 
 </head>
 
@@ -110,7 +114,6 @@
 <script src="scripts/translate/en.js"></script>
 <script src="scripts/translate/de.js"></script>
 <script src="scripts/translate/be.js"></script>
-<script src="scripts/main/main-ctrl.js"></script>
 <script src="scripts/modules/view-ticket-ctrl.js"></script>
 <script src="scripts/modules/new-ticket-field-ctrl.js"></script>
 <script src="scripts/modules/modules-stats-ctrl.js"></script>
@@ -121,6 +124,7 @@
 <script src="scripts/modules/create-ticket-ctrl.js"></script>
 <script src="scripts/login/reset-password-ctrl.js"></script>
 <script src="scripts/login/login-ctrl.js"></script>
+<script src="scripts/main/main-ctrl.js"></script>
 <script src="scripts/firebase/ref.js"></script>
 <script src="scripts/firebase/config.js"></script>
 <script src="scripts/firebase/auth.js"></script>

@@ -2,6 +2,7 @@
 
 angular.module('workingRoom')
     .factory('Groups', function ($q, Ref, $firebaseObject, $firebaseArray, Auth) {
+
         var ref = Ref.child('groups');
         var groups = null;
         var groupsList = {};

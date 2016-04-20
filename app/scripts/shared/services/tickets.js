@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Tickets', function (Ref, $firebaseObject, $firebaseArray, $q, Auth) {
+    .factory('Tickets', function (Ref, $http, $firebaseObject, $firebaseArray, $q, Auth) {
         var ref = Ref.child('tickets');
         var ticketsForModule = {};
         var tickets = null;

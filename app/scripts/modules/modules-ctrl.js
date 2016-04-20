@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
+    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
         var vm = this;
 
         var authData = Ref.getAuth();
@@ -37,6 +37,11 @@ angular.module('workingRoom')
         TicketsList.$loaded().then(function () {
             TicketsList.$watch(filterTicketList);
             filterTicketList();
+        });
+
+        $http.get("data/testing.json").success(function(data){
+            $scope.dataLoaded = angular.fromJson(data);
+            console.log($scope.dataLoaded);
         });
 
         vm.ticketsNotRead = TicketsList.filter(function (ticket) {

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Users', function (Ref, $firebaseArray, $firebaseObject, $q, Toasts, Auth) {
+    .factory('Users', function (Ref, $http, $firebaseArray, $firebaseObject, $q, Toasts, Auth) {
         var vm = this;
 
         var ref = Ref.child('users');
