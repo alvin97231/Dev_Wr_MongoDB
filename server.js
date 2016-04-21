@@ -9,6 +9,8 @@ var errorhandler = require('errorhandler');
 
 var async = require('async');
 var bodyParser = require('body-parser');
+
+var r = require('rethinkdb');
 var config = require(__dirname + '/config.js');
 
 var app = express();
@@ -26,25 +28,74 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(bodyParser.json());
 
+app.route('/users')
+  .get(UsersList);
+
+  /*
+   * Retrieve all todo items.
+   */
+  function UsersList(req, res, next) {
+    r.table('users').run(req.app._rdbConn, function(err, cursor) {
+      if(err) {
+        return next(err);
+      }
+
+      //Retrieve all the todos in an array.
+      cursor.toArray(function(err, result) {
+        if(err) {
+          return next(err);
+        }
+
+        res.json(result);
+      });
+    });
+  }
+
 // development only
 if ('development' === app.get('env')) {
   app.use(errorhandler());
 }
 
-var server = http.createServer(app);
-var io = require('socket.io').listen(server);
+function startExpress(connection) {
+  app._rdbConn = connection;
+  app.listen(config.express.port);
+  console.log('Listening on port ' + config.express.port);
+}
 
-server.listen(app.get('port'), function () {
-    console.log('WorkingRoom server listening on port ' + app.get('port'));
-});
-
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
-
-io.sockets.on('connection', function (socket) {
-    console.log('Un client est connecté !');
-
-    socket.on('my other event', function (data) {
-      console.log(data);
+async.waterfall([
+  function connect(callback) {
+    r.connect(config.rethinkdb, callback);
+  },
+  function createDatabase(connection, callback) {
+    //Create the database if needed.
+    r.dbList().contains(config.rethinkdb.db).do(function(containsDb) {
+      return r.branch(
+        containsDb,
+        {created: 0},
+        r.dbCreate(config.rethinkdb.db)
+      );
+    }).run(connection, function(err) {
+      callback(err, connection);
     });
+  },
+  function createTable(connection, callback) {
+    //Create the table if needed.
+    r.tableList().contains('users').do(function(containsTable) {
+      return r.branch(
+        containsTable,
+        {created: 0},
+        r.tableCreate('todos')
+      );
+    }).run(connection, function(err) {
+      callback(err, connection);
+    });
+  }
+], function(err, connection) {
+  if(err) {
+    console.error(err);
+    process.exit(1);
+    return;
+  }
+
+  startExpress(connection);
 });
