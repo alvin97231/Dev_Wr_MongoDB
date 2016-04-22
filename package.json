@@ -26,6 +26,7 @@
     "node-json-db": "^0.7.2",
     "nodemon": "^1.9.1",
     "requirejs": "^2.2.0",
+    "rethinkdb": "^2.3.0",
     "serve-favicon": "^2.3.0",
     "tablefilter": "^0.1.14",
     "wiredep": "^2.2.2"

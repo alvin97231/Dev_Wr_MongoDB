@@ -84,7 +84,7 @@ async.waterfall([
       return r.branch(
         containsTable,
         {created: 0},
-        r.tableCreate('todos')
+        r.tableCreate('users')
       );
     }).run(connection, function(err) {
       callback(err, connection);
