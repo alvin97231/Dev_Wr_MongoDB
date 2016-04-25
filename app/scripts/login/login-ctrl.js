@@ -1,45 +1,47 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('LoginCtrl', function (Auth, $state, $stateParams, $mdDialog, Toasts) {
+    .controller('LoginCtrl', function (Auth,$rootScope, $state, $stateParams, $mdDialog, Toasts, UsersList, $http) {
         var vm = this;
 
         if (Auth.$getAuth()) {
             goLastLocation();
         }
-
+        console.log(UsersList.data);
         vm.passwordReset = passwordReset;
-        vm.passwordLogin = passwordLogin;
         vm.testValues = testValues;
+
 
         function goLastLocation()
         {
-            //if ($stateParams.state)
-            //{
+            if ($stateParams.state)
+            {
                 //$state.go($stateParams.state, $stateParams.params);
-            //}
-            //else
-            //{
+            }
+            else
+            {
                 $state.go('main');
-            //}
+            }
         }
 
-        function passwordLogin()
-        {
-          if(!vm.email && !vm.password){
-            console.log('bitch');
-
-            vm.email = $('#email').val();
-            vm.password = $('#password').val();
-          }
-          Auth.$authWithPassword({email: vm.email,password: vm.password,rememberMe: true}).then(function ()
-          {
-            goLastLocation();
-          }, function (error)
-          {
-                Toasts.error(error);
+        vm.login = function(){
+          $http.post('/login', {
+            username: vm.email,
+            password: vm.password,
+          })
+          .success(function(user){
+            // No error: authentication OK
+            $rootScope.message = 'Authentication successful!';
+            console.log($rootScope.message);
+            $state.go('main');
+          })
+          .error(function(){
+            // Error: authentication failed
+            $rootScope.message = 'Authentication failed.';
+            Toasts.simple($rootScope.message);
+            $state.go('login');
           });
-        }
+        };
 
         function passwordReset(event) {
             $mdDialog.show({
@@ -59,9 +61,6 @@ angular.module('workingRoom')
 
         function testValues(){
           loginForm.$invalid=true;
-          console.log($('#email').val());
-          console.log($('#password').val());
-          console.log(loginForm);
         }
 
     });

@@ -2,7 +2,7 @@
       name="loginForm"
       layout="row"
       layout-align="center center"
-      data-ng-submit="vm.passwordLogin()">
+      ng-submit="vm.login()">
     <md-card flex="33"
              flex-md="50"
              flex-sm="100">
@@ -15,7 +15,7 @@
             </div>
             <md-input-container class="md-accent">
                 <label>Email</label>
-                <input id="email" type="email" name="email" data-ng-model="vm.email" title="email" ng-click="vm.testValues()" required>
+                <input id="email" type="email" name="username" data-ng-model="vm.email" title="email" ng-click="vm.testValues()" required>
             </md-input-container>
             <md-input-container class="md-accent">
                 <label>Mot de passe</label>

@@ -17,7 +17,7 @@ angular.module('workingRoom', [
     'angularFileUpload',
     'highcharts-ng'
 
-]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider) {
+]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider, $locationProvider, $httpProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);
     $mdThemingProvider.definePalette('workingRoomPrimary', {
         "50": "#f2f2f2",
@@ -65,6 +65,24 @@ angular.module('workingRoom', [
             default: '500'
         });
 
+        //================================================
+        // Add an interceptor for AJAX errors
+        //================================================
+        $httpProvider.interceptors.push(function($q, $location) {
+          return {
+            response: function(response) {
+              // do something on success
+              return response;
+            },
+            responseError: function(response) {
+              if (response.status === 401)
+                $location.url('/login');
+              return $q.reject(response);
+            }
+          };
+        });
+        //================================================
+
     $urlRouterProvider.otherwise('/');
     //noinspection JSUnusedGlobalSymbols
     $stateProvider
@@ -75,6 +93,11 @@ angular.module('workingRoom', [
             params: {
                 state: null,
                 params: null
+            },
+            resolve: {
+              UsersList: function (Users) {
+                  return Users.get();
+              }
             }
         })
         .state('main', {
@@ -82,27 +105,7 @@ angular.module('workingRoom', [
             templateUrl: 'partials/main.html',
             controller: 'MainCtrl as vm',
             resolve: {
-                User: function ($q, Auth, Users)
-                {
-                  return $q(function (resolve, reject)
-                    {
-                      Auth.$requireAuth().then(function (user)
-                      {
-                        Users.get(user.uid).then(function (user)
-                        {
-                          resolve(user);
-                        },
-                        function (error)
-                        {
-                          reject(error);
-                        });
-                      },
-                      function ()
-                      {
-                        reject('AUTH_REQUIRED');
-                      });
-                  });
-                },
+                
                 GroupsList: function (User, Groups) {
                     return Groups.all(User);
                 },

@@ -80,20 +80,23 @@ module.exports.setup = function() {
 module.exports.findUserByEmail = function (mail, callback) {
   onConnect(function (err, connection) {
     logdebug("[INFO ][%s][findUserByEmail] Login {user: %s, pwd: 'you really thought I'd log it?'}", connection['_id'], mail);
-
-    r.db(dbConfig.db).table('users').filter({'mail': mail}).limit(1).run(connection, function(err, cursor) {
+    console.log()
+    r.db(dbConfig.db).table('users').filter({'email': mail}).limit(1).run(connection, function(err, cursor) {
       if(err) {
         logerror("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        console.log("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s");
         callback(err);
       }
       else {
         cursor.next(function (err, row) {
           if(err) {
             logerror("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+            console.log(row);
             callback(null, null); // no user, cursor is empty
           }
           else {
             callback(null, row);
+            console.log(row);
           }
           connection.close();
         });
@@ -158,7 +161,7 @@ module.exports.findUserById = function (userId, callback) {
  */
 module.exports.findMessages = function (max_results, callback) {
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('messages').orderBy(r.desc('timestamp')).limit(max_results).run(connection, function(err, cursor) {
+    r.db(dbConfig.db).table('messages').orderBy(r.desc('timestamp')).limit(max_results).run(connection, function(err, cursor) {
       if(err) {
         logerror("[ERROR][%s][findMessages] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         callback(null, []);
@@ -180,7 +183,22 @@ module.exports.findMessages = function (max_results, callback) {
   });
 };
 
-
+module.exports.UsersList = function (req, res, next) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig.db).table('users').run(req.app._rdbConn, function(err, cursor) {
+      if(err) {
+        return next(err);
+      }
+      //Retrieve all the todos in an array.
+      cursor.toArray(function(err, result) {
+        if(err) {
+          return next(err);
+        }
+        res.json(result);
+      });
+    });
+  });
+}
 /**
  * To save a new chat message using we are using
  * [`insert`](http://www.rethinkdb.com/api/javascript/insert/).

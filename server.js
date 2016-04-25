@@ -1,21 +1,78 @@
 'use strict';
 
+//==================================================================
+// Define variables
+//==================================================================
 var express = require('express');
 var http = require('http');
 var path = require('path');
 var favicon = require('serve-favicon');
+var passport = require('passport');
+var flash    = require('connect-flash');
+var local = require('passport-local').Strategy;
 var morgan = require('morgan'); // formerly express.logger
 var errorhandler = require('errorhandler');
+var db = require('./server/db/db');
 
 var async = require('async');
 var bodyParser = require('body-parser');
+var session = require('express-session');
+//var router = require('router');
 
 var r = require('rethinkdb');
-var config = require(__dirname + '/config.js');
+var config = require(__dirname + '/server/db/config.js');
+var routes = require(__dirname + '/server/routes');
 
 var app = express();
+//==================================================================
 
-// all environments
+
+//==================================================================
+// Define the strategy to be used by PassportJS
+//==================================================================
+
+passport.use(new local(
+  function(username, password, done) {
+    // asynchronous verification, for effect...
+
+      var validateUser = function (err, user) {
+        if (err) { return done(err); console.log('Error validateUser');}
+        if (!user) { return done(null, false, {message: 'Unknown user: ' + username});console.log('Error validateUser');}
+
+        if (user.email == username && user.password == password) {return done(null, user);console.log('users Ok!');}
+        else {
+          return done(null, false, {message: 'Invalid username or password'});
+          console.log('Error validateUser');
+        }
+      };
+
+      db.findUserByEmail(username, validateUser);
+      console.log(validateUser);
+  }
+));
+
+passport.serializeUser(function(user, done) {
+  console.log("[DEBUG][passport][serializeUser] %j", user);
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  db.findUserById(id, done);
+});
+
+// Define a middleware function to be used for every secured routes
+var auth = function(req, res, next){
+  if (!req.isAuthenticated())
+  	res.send(401);
+  else
+  	next();
+};
+//==================================================================
+
+
+//==================================================================
+// Define environments
+//==================================================================
 app.set('port', process.env.PORT || 8000);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', require('ejs').renderFile);
@@ -25,31 +82,30 @@ app.use(favicon(__dirname + '/app/favicon.ico'));
 app.use(morgan('dev'));
 
 // serve up static assets
-app.use(express.static(path.join(__dirname, 'app')));
+app.use(express.static(__dirname+'/app'));
 app.use(bodyParser.json());
 
+// required for passport
+app.use(session({ secret: 'WorkingRoom' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+//==================================================================
+
+// set up the RethinkDB database
+db.setup();
+
+app.get('/', routes.index);
+app.get('/partials/:name', routes.partials);
+
+app.post('/login', passport.authenticate('local'), function(req, res) {
+  console.log(res, req);
+  res.redirect('/');
+});
+
 app.route('/users')
-  .get(UsersList);
+  .get(db.UsersList);
 
-  /*
-   * Retrieve all todo items.
-   */
-  function UsersList(req, res, next) {
-    r.table('users').run(req.app._rdbConn, function(err, cursor) {
-      if(err) {
-        return next(err);
-      }
-
-      //Retrieve all the todos in an array.
-      cursor.toArray(function(err, result) {
-        if(err) {
-          return next(err);
-        }
-
-        res.json(result);
-      });
-    });
-  }
 
 // development only
 if ('development' === app.get('env')) {
@@ -65,30 +121,6 @@ function startExpress(connection) {
 async.waterfall([
   function connect(callback) {
     r.connect(config.rethinkdb, callback);
-  },
-  function createDatabase(connection, callback) {
-    //Create the database if needed.
-    r.dbList().contains(config.rethinkdb.db).do(function(containsDb) {
-      return r.branch(
-        containsDb,
-        {created: 0},
-        r.dbCreate(config.rethinkdb.db)
-      );
-    }).run(connection, function(err) {
-      callback(err, connection);
-    });
-  },
-  function createTable(connection, callback) {
-    //Create the table if needed.
-    r.tableList().contains('users').do(function(containsTable) {
-      return r.branch(
-        containsTable,
-        {created: 0},
-        r.tableCreate('users')
-      );
-    }).run(connection, function(err) {
-      callback(err, connection);
-    });
   }
 ], function(err, connection) {
   if(err) {

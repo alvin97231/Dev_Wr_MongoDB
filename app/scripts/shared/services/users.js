@@ -17,18 +17,24 @@ angular.module('workingRoom')
         return {
           get: function () {
             var url = '/users';
-            return $http.get(url);
+            return $http.get(url).
+            success(function(data, status) {
+            	return data;
+            }).
+            error(function(data, status) {
+            	console.log('Erreur chargement Utilisateurs');
+            });
           },
-          create: function (todo) {
-            var url = '/todos';
-            return $http.post(url, todo);
+          create: function (user) {
+            var url = '/users';
+            return $http.post(url, user);
           },
-          update: function (todo) {
-            var url = '/todos/' + todo.id;
-            return $http.put(url, todo);
+          update: function (user) {
+            var url = '/users/' + user.id;
+            return $http.put(url, user);
           },
           delete: function(id) {
-            var url = '/todos/' + id;
+            var url = '/users/' + id;
             return $http.delete(url);
           }
         };
