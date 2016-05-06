@@ -1,12 +1,13 @@
 //'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, Ref, UsersList, GroupsList) {
+    .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList) {
         var vm = this;
         vm.users = UsersList;
         vm.groups = GroupsList;
         vm.tickets = TicketsList;
-        vm.ticketsAll = Ref.child('tickets/'+Module.$id);
+        console.log(Module.ticketFields[1].data);
+        //vm.ticketsAll = Ref.child('tickets/'+Module.$id);
         vm.simulateQuery = false;
         vm.isDisabled    = false;
         vm.querySearchName   = querySearchName;

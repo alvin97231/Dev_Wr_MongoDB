@@ -263,26 +263,27 @@ module.exports.GetModule = function (req, res, next) {
   });
 };
 
-module.exports.GetTicket = function(req, res, next) {
+module.exports.GetTicket = function(req, res) {
 
   var moduleId = req.params.id;
   var ticketId = req.params.ticket;
+  console.log(moduleId);
+  console.log(ticketId);
 
   onConnect(function (err, connection) {
-    r.db(dbConfig.db).table('tickets').get(moduleId)('tickets').filter({'id': ticketId}).limit(1).run(connection, function(err, cursor) {
+    r.db(dbConfig.db).table('tickets').get(moduleId)('tickets').filter(function(ticket) {
+      return ticket('id').eq(ticketId);
+    }).run(req.app._rdbConn, function(err, cursor) {
       if(err) {
-        callback(err);
+        return next(err);
       }
-      else {
-        cursor.next(function (err, row) {
+      if(cursor){
+        cursor.toArray(function(err, result) {
           if(err) {
-            logerror("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-            callback(null, null); // no user, cursor is empty
+            return next(err);
           }
-          else {
-            callback(null, row);
-          }
-          connection.close();
+          console.log(cursor);
+          res.json(result);
         });
       }
     });
@@ -335,6 +336,28 @@ module.exports.AddTicket = function (req, res, next) {
     });
   });
 };
+
+module.exports.UpdateTicket = function (req, res, next) {
+
+  var Ticket = req.body;
+  var moduleId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('tickets').get(moduleId).update({
+      'tickets': r.row('tickets').append(Ticket)
+    }).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
 
 /**
  * Adding a new user to database using  [`insert`](http://www.rethinkdb.com/api/javascript/insert/).

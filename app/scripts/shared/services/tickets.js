@@ -34,24 +34,27 @@ angular.module('workingRoom')
           },
 
           getTicket: function (moduleId, ticketId) {
-            var url = '/tickets/'+moduleId+'/tickets/'+ticketId;
+            for (var i = 0; i < ticketsForModule.length; i++) {
+              if (ticketsForModule[i].id == ticketId) {
+                return ticketsForModule[i];
+              }
+            }
+            /*var url = '/tickets/'+moduleId+'/'+ticketId;
             return $http.get(url).
               then(function mySucces(response) {
                 console.log(response);
                 return response.data;
               }, function myError(response) {
                 $log.error(response.statusText);
-              });
+              });*/
           },
 
           add: function (moduleId, ticket) {
             var url = '/tickets/'+moduleId;
-            console.log(ticket);
             ticket.id = ticketsForModule.length+2;
             ticket.created = new Date().getTime();
             return $http.post(url, ticket).
               then(function mySucces(response) {
-                console.log(response);
                 return response.data;
                 $log.info('Ticket crée');
               }, function myError(response) {
@@ -59,25 +62,15 @@ angular.module('workingRoom')
               });
           },
 
-          update: function (module, ticket) {
-            var url = '/tickets' + module.id;
+          update: function (moduleId, ticket) {
+            var url = '/tickets/' + moduleId;
             return $http.put(url, ticket).
               then(function mySucces(response) {
-                $log.info('Ticket modifié');
+                $log.info('Ticket mis à jour');
               }, function myError(response) {
                 $log.error(response.statusText);
               });
           },
-
-          delete: function(module ,id) {
-            var url = '/modules' + module.id +id;
-            return $http.delete(url).
-              then(function mySucces(response) {
-                $log.info('Ticket supprimé');
-              }, function myError(response) {
-                $log.error(response.statusText);
-              });
-          }
 
         };
         /*Auth.$onAuth(function (user) {

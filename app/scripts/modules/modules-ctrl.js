@@ -3,8 +3,7 @@
 angular.module('workingRoom')
     .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
         var vm = this;
-        console.log(TicketsList);
-        //var authData = Ref.getAuth();
+        
         vm.moduleId = $stateParams.id;
         vm.module = Module;
         vm.openCreateTicket = openCreateTicket;
@@ -14,6 +13,7 @@ angular.module('workingRoom')
         vm.filterNotReadTickets = filterNotReadTickets;
         vm.filterByStatusTickets = filterByStatusTickets;
         vm.filterTicketList = filterTicketList;
+        vm.filterName = User.name;
         vm.getGroups = getGroups;
         vm.admin = admin;
         //vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');

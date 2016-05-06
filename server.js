@@ -81,9 +81,11 @@ app.get('/modules', db.ModulesList);
 app.get('/groups', db.GroupsList);
 app.get('/modules/:id', db.GetModule);
 app.get('/tickets/:id', db.TicketsList);
-app.get('/tickets/:id/tickets/:ticket', db.GetTicket);
+app.get('/tickets/:id/:ticket', db.GetTicket);
 
 app.post('/tickets/:id', db.AddTicket);
+
+app.put('/tickets/:id', db.UpdateTicket);
 //==================================================================
 
 

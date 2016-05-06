@@ -57,7 +57,7 @@ angular.module('workingRoom')
                     status: vm.newStatus
                 });
                 ticket.lastResponse = User.name;
-                Tickets.save($stateParams.id, ticket);
+                Tickets.update($stateParams.id, ticket);
                 vm.newMessage = '';
                 $mdDialog.hide();
             }
@@ -129,6 +129,6 @@ angular.module('workingRoom')
               }
             }
           }
-        Tickets.save($stateParams.id, ticket);  
+        Tickets.save($stateParams.id, ticket);
         }
     });
