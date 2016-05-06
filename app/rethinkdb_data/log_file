@@ -1,0 +1,57 @@
+2016-04-29T10:32:37.732717746 0.190158s notice: Recursively removing directory /var/Dev_Wr_MongoDB/app/rethinkdb_data/tmp
+2016-04-29T10:32:37.737364875 0.194808s notice: Initializing directory /var/Dev_Wr_MongoDB/app/rethinkdb_data
+2016-04-29T10:32:37.737651856 0.195091s info: Creating a default database for your convenience. (This is because you ran 'rethinkdb' without 'create', 'serve', or '--join', and the directory '/var/Dev_Wr_MongoDB/app/rethinkdb_data' did not already exist or is empty.)
+2016-04-29T10:32:37.737717228 0.195156s notice: Running rethinkdb 2.3.0~0trusty (GCC 4.8.2)...
+2016-04-29T10:32:37.746129908 0.203573s notice: Running on Linux 3.13.0-24-generic x86_64
+2016-04-29T10:32:37.746378883 0.203818s notice: Loading data from directory /var/Dev_Wr_MongoDB/app/rethinkdb_data
+2016-04-29T10:32:37.774677530 0.232118s info: Automatically using cache size of 100 MB
+2016-04-29T10:32:37.778136229 0.235575s warn: Cache size does not leave much memory for server and query overhead (available memory: 664 MB).
+2016-04-29T10:32:37.778145890 0.235585s warn: Cache size is very low and may impact performance.
+2016-04-29T10:32:37.779339385 0.236778s notice: Listening for intracluster connections on port 29015
+2016-04-29T10:32:37.783668390 0.241108s notice: Listening for client driver connections on port 28015
+2016-04-29T10:32:37.786305417 0.243745s notice: Listening for administrative HTTP connections on port 8080
+2016-04-29T10:32:37.786308225 0.243747s notice: Listening on cluster addresses: 127.0.0.1, ::1
+2016-04-29T10:32:37.786312956 0.243752s notice: Listening on driver addresses: 127.0.0.1, ::1
+2016-04-29T10:32:37.786313930 0.243753s notice: Listening on http addresses: 127.0.0.1, ::1
+2016-04-29T10:32:37.786317539 0.243756s notice: To fully expose RethinkDB on the network, bind to all addresses by running rethinkdb with the `--bind all` command line option.
+2016-04-29T10:32:37.786321110 0.243760s notice: Server ready, "Ubuntu14_s4j" c53bcd4b-eec9-4f2c-be33-0c3622f59f34
+2016-04-29T10:32:38.865693578 1.323133s notice: A newer version of the RethinkDB server is available: 2.3.1. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2016-04-29T10:32:51.956483138 14.413922s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2016-04-29T10:32:51.956607902 14.414047s notice: Shutting down client connections...
+2016-04-29T10:32:51.959742985 14.417182s notice: All client connections closed.
+2016-04-29T10:32:51.959748876 14.417188s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2016-04-29T10:32:51.977089920 14.434529s notice: Storage engine shut down.
+2016-04-29T10:33:00.637672477 0.012988s notice: Running rethinkdb 2.3.0~0trusty (GCC 4.8.2)...
+2016-04-29T10:33:00.647773202 0.023088s notice: Running on Linux 3.13.0-24-generic x86_64
+2016-04-29T10:33:00.649921881 0.025232s notice: Loading data from directory /var/Dev_Wr_MongoDB/app/rethinkdb_data
+2016-04-29T10:33:00.673832287 0.049144s info: Automatically using cache size of 100 MB
+2016-04-29T10:33:00.675884408 0.051195s warn: Cache size does not leave much memory for server and query overhead (available memory: 664 MB).
+2016-04-29T10:33:00.675893649 0.051203s warn: Cache size is very low and may impact performance.
+2016-04-29T10:33:00.686457186 0.061767s notice: Listening for intracluster connections on port 29015
+2016-04-29T10:33:00.690866034 0.066176s notice: Listening for client driver connections on port 28015
+2016-04-29T10:33:00.693358265 0.068668s notice: Listening for administrative HTTP connections on port 8080
+2016-04-29T10:33:00.699368184 0.074678s notice: Listening on cluster addresses: 127.0.0.1, 77.81.229.106, ::1, fe80::250:56ff:fe96:6a4%2
+2016-04-29T10:33:00.700993929 0.076304s notice: Listening on driver addresses: 127.0.0.1, 77.81.229.106, ::1, fe80::250:56ff:fe96:6a4%2
+2016-04-29T10:33:00.702327629 0.077638s notice: Listening on http addresses: 127.0.0.1, 77.81.229.106, ::1, fe80::250:56ff:fe96:6a4%2
+2016-04-29T10:33:00.702400420 0.077710s notice: Server ready, "Ubuntu14_s4j" c53bcd4b-eec9-4f2c-be33-0c3622f59f34
+2016-04-29T10:33:01.480914701 0.856225s notice: A newer version of the RethinkDB server is available: 2.3.1. You can read the changelog at <https://github.com/rethinkdb/rethinkdb/releases>.
+2016-04-29T10:41:18.614352172 497.989663s info: Table 0a131e31-ec68-4609-bc67-d4e65073d0b6: Starting a new Raft election for term 1.
+2016-04-29T10:41:18.616104867 497.991415s info: Table 0a131e31-ec68-4609-bc67-d4e65073d0b6: Added replica on this server.
+2016-04-29T10:41:18.621555927 497.996866s info: Table 0a131e31-ec68-4609-bc67-d4e65073d0b6: This server is Raft leader for term 1. Latest log index is 0.
+2016-04-29T10:41:25.725248348 505.100559s info: Table 06922a85-ce02-4390-a2eb-fea554935f86: Starting a new Raft election for term 1.
+2016-04-29T10:41:25.725742681 505.101053s info: Table 06922a85-ce02-4390-a2eb-fea554935f86: Added replica on this server.
+2016-04-29T10:41:25.733902665 505.109213s info: Table 06922a85-ce02-4390-a2eb-fea554935f86: This server is Raft leader for term 1. Latest log index is 0.
+2016-04-29T10:42:22.649162224 562.024473s notice: Removing file /var/Dev_Wr_MongoDB/app/rethinkdb_data/06922a85-ce02-4390-a2eb-fea554935f86
+2016-04-29T10:42:22.650093073 562.025403s info: Table 06922a85-ce02-4390-a2eb-fea554935f86: Deleted the table.
+2016-04-29T10:42:22.650244178 562.025554s notice: Removing file /var/Dev_Wr_MongoDB/app/rethinkdb_data/0a131e31-ec68-4609-bc67-d4e65073d0b6
+2016-04-29T10:42:22.650248993 562.025559s info: Table 0a131e31-ec68-4609-bc67-d4e65073d0b6: Deleted the table.
+2016-04-29T10:43:40.501992716 639.877303s info: Table 65e7634d-d070-4209-b6d6-ddd7e0e84035: Starting a new Raft election for term 1.
+2016-04-29T10:43:40.502408239 639.877718s info: Table 65e7634d-d070-4209-b6d6-ddd7e0e84035: Added replica on this server.
+2016-04-29T10:43:40.509475082 639.884785s info: Table 65e7634d-d070-4209-b6d6-ddd7e0e84035: This server is Raft leader for term 1. Latest log index is 0.
+2016-04-29T10:43:56.474843139 655.850154s notice: Removing file /var/Dev_Wr_MongoDB/app/rethinkdb_data/65e7634d-d070-4209-b6d6-ddd7e0e84035
+2016-04-29T10:43:56.475164742 655.850475s info: Table 65e7634d-d070-4209-b6d6-ddd7e0e84035: Deleted the table.
+2016-04-29T10:44:32.594905506 691.970216s notice: Server got SIGINT from pid 0, uid 0; shutting down...
+2016-04-29T10:44:32.597929286 691.973240s notice: Shutting down client connections...
+2016-04-29T10:44:32.598300506 691.973611s notice: All client connections closed.
+2016-04-29T10:44:32.599664633 691.974975s notice: Shutting down storage engine... (This may take a while if you had a lot of unflushed data in the writeback cache.)
+2016-04-29T10:44:32.600193123 691.975503s notice: Storage engine shut down.

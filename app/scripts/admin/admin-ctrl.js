@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('AdminCtrl', function ($mdDialog, $state,$scope, Modules, Groups, Users, Tickets, Ref, ModulesList, GroupsList, UsersList, Toasts) {
+    .controller('AdminCtrl', function ($mdDialog, $state,$scope, Modules, Groups, Users, Tickets, ModulesList, GroupsList, UsersList, Toasts) {
         var vm = this;
 
         vm.modules = ModulesList;

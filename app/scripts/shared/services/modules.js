@@ -1,17 +1,69 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Modules', function ($q, Ref, $firebaseObject, $firebaseArray, Auth) {
-        var ref = Ref.child('modules');
-        var modulesList = {};
-        var modules = null;
+    .factory('Modules', function ($q, $http,$log) {
 
-        Auth.$onAuth(function (user) {
-            if (!user) {
-                destroy();
-            }
-        });
+      var modulesList = {};
+      var modules = null;
 
+      return {
+
+        all: function () {
+          var url = '/modules';
+          return $http.get(url).
+            then(function mySucces(response) {
+              return response.data;
+            }, function myError(response) {
+              $log.error(response.statusText);
+            });
+        },
+
+        get: function (id) {
+          var url = '/modules';
+          return $http.get(url).
+            then(function mySucces(response) {
+              for (var i = 0; i < response.data.length; i++) {
+                if(response.data[i].id == id){
+                  return response.data[i];
+                }
+              }
+            }, function myError(response) {
+              $log.error(response.statusText);
+            });
+        },
+
+        add: function (module) {
+          var url = '/modules';
+          return $http.post(url, module).
+            then(function mySucces(response) {
+              $log.info('Nouveau groupe ajouté');
+            }, function myError(response) {
+              $log.error(response.statusText);
+            });
+        },
+
+        update: function (module) {
+          var url = '/modules' + module.id;
+          return $http.put(url, user).
+            then(function mySucces(response) {
+              $log.info('Module modifié');
+            }, function myError(response) {
+              $log.error(response.statusText);
+            });
+        },
+
+        delete: function(id) {
+          var url = '/modules' + id;
+          return $http.delete(url).
+            then(function mySucces(response) {
+              $log.info('Module supprimé');
+            }, function myError(response) {
+              $log.error(response.statusText);
+            });
+        }
+
+      };
+/*
         function destroy() {
             for (var moduleId in modulesList) {
                 modulesList[moduleId].$destroy();
@@ -75,5 +127,5 @@ angular.module('workingRoom')
             delete: function (item) {
                 if (modules) return modules.$remove(item);
             }
-        };
+        };*/
     });

@@ -1,8 +1,12 @@
-exports.index = function(req, res){
-  res.render('/index');
-};
+var path = require('path');
 
-exports.partials = function (req, res) {
-  var name = req.params.name;
-  res.render('/partials/' + name);
+module.exports = function(app) {
+
+   // basic routes to handle request
+    app.get('/', function(req, res) {
+            console.log("Main route");
+            res.sendFile(path.join(__dirname, '../../app', 'index.html'));
+
+    });
+
 };

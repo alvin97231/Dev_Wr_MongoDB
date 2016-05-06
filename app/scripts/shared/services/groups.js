@@ -1,19 +1,65 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Groups', function ($q, Ref, $firebaseObject, $firebaseArray, Auth) {
+    .factory('Groups', function ($q, $http) {
 
-        var ref = Ref.child('groups');
         var groups = null;
         var groupsList = {};
 
-        Auth.$onAuth(function (user) {
-            if (!user) {
-                destroy();
-            }
-        });
+        return {
 
-        function destroy() {
+          all: function () {
+            var url = '/groups';
+            return $http.get(url).
+              then(function mySucces(response) {
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          get: function (id) {
+            var url = '/groups'+ id;
+            return $http.get(url).
+              then(function mySucces(response) {
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          add: function (group) {
+            var url = '/groups';
+            return $http.post(url, group).
+              then(function mySucces(response) {
+                $log.info('Nouveau groupe ajouté');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          update: function (group) {
+            var url = '/groups' + group.id;
+            return $http.put(url, user).
+              then(function mySucces(response) {
+                $log.info('Groupe modifié');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          delete: function(id) {
+            var url = '/groups' + id;
+            return $http.delete(url).
+              then(function mySucces(response) {
+                $log.info('Groupe supprimé');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          }
+
+        };
+        /*function destroy() {
             for (var groupId in groupsList) {
                 groupsList[groupId].$destroy();
                 groupsList[groupId] = null;
@@ -55,5 +101,5 @@ angular.module('workingRoom')
             delete: function (item) {
                 return groups.$remove(item);
             }
-        }
+        }*/
     });

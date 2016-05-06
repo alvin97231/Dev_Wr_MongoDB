@@ -15,7 +15,7 @@
 
         <md-button class="md-fab md-raised"
                    data-ng-if="vm.super || vm.admin"
-                   data-ui-sref="main.modulesAll({id: vm.module.$id})">
+                   data-ui-sref="main.modulesAll({id: vm.module.id})">
             <md-tooltip data-md-direction="down">
                 {{ 'ALL_TICKETS' | translate }}
             </md-tooltip>
@@ -23,14 +23,14 @@
         </md-button>
 
         <div flex></div>
-        <md-button class="md-fab md-primary"  aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.$id})">
+        <md-button class="md-fab md-primary"  aria-label="Tickets En Cours" data-ui-sref="main.modulesCurrent({id: vm.module.id})">
           <md-icon>chat</md-icon>
           <span>{{vm.ticketsCurrent.length + vm.ticketsCurrentCPM.length + vm.ticketsCurrentCC.length}}</span>
           <md-tooltip data-md-direction="down">
               Tickets En Cours
           </md-tooltip>
         </md-button>
-        <md-button class="md-fab" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.$id})">
+        <md-button class="md-fab" aria-label="Tickets Non Lus" data-ui-sref="main.modulesNotRead({id: vm.module.id})">
           <md-icon>announcement</md-icon>
           <span>{{vm.ticketsNotRead.length}}</span>
           <md-tooltip data-md-direction="down">
@@ -39,7 +39,7 @@
         </md-button>
         <md-button aria-label="group-settings"
                     data-ng-if="vm.admin || vm.module.$rights === 'c' || vm.module.$rights === 'b' || vm.module.$rights === 'a'"
-                    data-ui-sref="main.modulesStats({id: vm.module.$id})"
+                    data-ui-sref="main.modulesStats({id: vm.module.id})"
                     class=" md-fab md-raised">
             <md-tooltip data-md-direction="down">
                 {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
@@ -77,7 +77,7 @@
                                 <th style="text-align:center" hidden>J+</th>
                                 <th style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields" hidden>{{field.name}}</th>
                               </tr>
-                              <tr ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.$id)">
+                              <tr ng-repeat="ticket in vm.tickets" data-ng-click="vm.openTicketView($event, ticket.id)">
                                   <td style="text-align:center; whitespace:nowrap" id="id">{{ticket.id}}</td>
                                   <td style="text-align:center" id="user">{{ticket.user.name}}</td>
                                   <td style="text-align:center" id="subject">{{ticket.subject}}</td>

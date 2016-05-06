@@ -1,13 +1,86 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Tickets', function (Ref, $http, $firebaseObject, $firebaseArray, $q, Auth) {
-        var ref = Ref.child('tickets');
+    .factory('Tickets', function ($http, $q, $log) {
         var ticketsForModule = {};
         var tickets = null;
         var vm = this;
 
-        Auth.$onAuth(function (user) {
+        function valuesToArray(obj) {
+          return Object.keys(obj).map(function (key) { return obj[key]; });
+        }
+
+        return {
+
+          all: function () {
+            var url = '/tickets';
+            return $http.get(url).
+              then(function mySucces(response) {
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          get: function (moduleId) {
+            var url = '/tickets/'+moduleId;
+            return $http.get(url).
+              then(function mySucces(response) {
+                ticketsForModule = response.data;
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          getTicket: function (moduleId, ticketId) {
+            var url = '/tickets/'+moduleId+'/tickets/'+ticketId;
+            return $http.get(url).
+              then(function mySucces(response) {
+                console.log(response);
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          add: function (moduleId, ticket) {
+            var url = '/tickets/'+moduleId;
+            console.log(ticket);
+            ticket.id = ticketsForModule.length+2;
+            ticket.created = new Date().getTime();
+            return $http.post(url, ticket).
+              then(function mySucces(response) {
+                console.log(response);
+                return response.data;
+                $log.info('Ticket crée');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          update: function (module, ticket) {
+            var url = '/tickets' + module.id;
+            return $http.put(url, ticket).
+              then(function mySucces(response) {
+                $log.info('Ticket modifié');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          delete: function(module ,id) {
+            var url = '/modules' + module.id +id;
+            return $http.delete(url).
+              then(function mySucces(response) {
+                $log.info('Ticket supprimé');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          }
+
+        };
+        /*Auth.$onAuth(function (user) {
             if (!user) {
                 destroy();
             }
@@ -63,5 +136,5 @@ angular.module('workingRoom')
             delete: function (moduleId) {
                 ref.child(moduleId).remove();
             }
-        }
+        }*/
     });

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate, amMoment, Auth, User, ModulesList, Modules) {
+    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts) {
         var vm = this;
 
-        vm.unauth = Auth.saveDisconnect;
+        vm.logout = logout;
         vm.currentState = $state.current.name;
         vm.toggleSidenav = toogleSidenav;
         vm.modules = ModulesList;
@@ -12,7 +12,6 @@ angular.module('workingRoom')
         vm.showModulesGrid = true;
         $scope.selectedLocale = 'fr';
         vm.changeLocale = changeLocale;
-
 
         updateState();
         checkModulesState($state.params);
@@ -47,7 +46,7 @@ angular.module('workingRoom')
                 case 'main.modules.edit':
                     vm.toolbarTitle = 'Module';
                     break;
-                case 'main.modules.search':
+                case 'main.modulesAll.search':
                     vm.toolbarTitle = 'Recherche';
                     break;
                 case 'main.admin':
@@ -65,6 +64,20 @@ angular.module('workingRoom')
         function changeLocale() {
             $translate.use($scope.selectedLocale);
             amMoment.changeLocale($scope.selectedLocale);
+        }
+
+        function logout(){
+          $http.get('/logout')
+          .success(function(){
+            $rootScope.message = 'Logout successful!';
+            Toasts.simple($rootScope.message);
+            $location.url('/login');
+          })
+          .error(function(){
+            $rootScope.message = 'Logout failed.';
+            Toasts.simple($rootScope.message);
+            $location.url('/');
+          });
         }
 
     });

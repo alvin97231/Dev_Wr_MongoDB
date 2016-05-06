@@ -1,15 +1,11 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('LoginCtrl', function (Auth,$rootScope, $state, $stateParams, $mdDialog, Toasts, UsersList, $http) {
+    .controller('LoginCtrl', function ($rootScope, $state, $stateParams,$location, $mdDialog, Toasts, $http, Authentication) {
         var vm = this;
-
-        if (Auth.$getAuth()) {
-            goLastLocation();
-        }
-        console.log(UsersList.data);
-        vm.passwordReset = passwordReset;
+        //vm.passwordReset = passwordReset;
         vm.testValues = testValues;
+        vm.login = login;
 
 
         function goLastLocation()
@@ -24,26 +20,26 @@ angular.module('workingRoom')
             }
         }
 
-        vm.login = function(){
-          $http.post('/login', {
-            username: vm.email,
-            password: vm.password,
-          })
-          .success(function(user){
-            // No error: authentication OK
-            $rootScope.message = 'Authentication successful!';
-            console.log($rootScope.message);
-            $state.go('main');
-          })
-          .error(function(){
-            // Error: authentication failed
-            $rootScope.message = 'Authentication failed.';
-            Toasts.simple($rootScope.message);
-            $state.go('login');
-          });
+        function login() {
+            vm.dataLoading = true;
+            Authentication.login(vm.email, vm.password, function (response) {
+                console.log(response);
+                if (response) {
+                  $rootScope.message = 'Authentication successful!';
+                  Toasts.simple($rootScope.message);
+                  Authentication.setCredentials(response, vm.email, vm.password);
+                  $location.path('/');
+                }
+                else {
+                  $rootScope.message = 'Authentication Failed!';
+                  Toasts.simple($rootScope.message);
+                  $log.error(response.message);
+                  vm.dataLoading = false;
+                }
+            });
         };
 
-        function passwordReset(event) {
+        /*function passwordReset(event) {
             $mdDialog.show({
                 controller: 'resetPasswordCtrl as vm',
                 templateUrl: 'partials/login/reset-password-modal.html',
@@ -57,7 +53,7 @@ angular.module('workingRoom')
                     Toasts.error(error);
                 });
             });
-        }
+        }*/
 
         function testValues(){
           loginForm.$invalid=true;

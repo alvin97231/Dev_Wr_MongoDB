@@ -1,45 +1,79 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Users', function (Ref, $http, $firebaseArray, $firebaseObject, $q, Toasts, Auth) {
+    .factory('Users', function ($http, Toasts, $log) {
         var vm = this;
-
-        var ref = Ref.child('users');
         var users = null;
         var usersList = {};
 
-        Auth.$onAuth(function (user) {
-            if (!user) {
-                destroy();
-            }
-        });
+
 
         return {
-          get: function () {
+
+          current : function () {
+            var url = '/login';
+            return $http.get(url).
+              then(function mySucces(response) {
+                return response.data;
+                console.log(response);
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          all: function () {
             var url = '/users';
             return $http.get(url).
-            success(function(data, status) {
-            	return data;
-            }).
-            error(function(data, status) {
-            	console.log('Erreur chargement Utilisateurs');
-            });
+              then(function mySucces(response) {
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
           },
-          create: function (user) {
+
+          get: function (id) {
+            var url = '/users'+ id;
+            return $http.get(url).
+              then(function mySucces(response) {
+                return response.data;
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+          add: function (user) {
             var url = '/users';
-            return $http.post(url, user);
+            return $http.post(url, user).
+              then(function mySucces(response) {
+                $log.info('Nouvel utilisateur ajouté');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
           },
+
           update: function (user) {
             var url = '/users/' + user.id;
-            return $http.put(url, user);
+            return $http.put(url, user).
+              then(function mySucces(response) {
+                $log.info('Nouvel utilisateur modifié');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
           },
+
           delete: function(id) {
             var url = '/users/' + id;
-            return $http.delete(url);
+            $http.delete(url).
+              then(function mySucces(response) {
+                $log.info('utilisateur supprimé');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
           }
+
         };
 
-        function destroy() {
+        /*function destroy() {
             for (var userId in usersList) {
                 usersList[userId].$destroy();
                 usersList[userId] = null;
@@ -148,5 +182,5 @@ angular.module('workingRoom')
                     });
                 })
             }
-        };
+        };*/
     });

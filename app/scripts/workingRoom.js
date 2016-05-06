@@ -6,7 +6,6 @@ angular.module('workingRoom', [
     'ngSanitize',
     'ngMessages',
     'ngTouch',
-    'firebase',
     'ngResource',
     'ngMaterial',
     'ngLocale',
@@ -65,24 +64,6 @@ angular.module('workingRoom', [
             default: '500'
         });
 
-        //================================================
-        // Add an interceptor for AJAX errors
-        //================================================
-        $httpProvider.interceptors.push(function($q, $location) {
-          return {
-            response: function(response) {
-              // do something on success
-              return response;
-            },
-            responseError: function(response) {
-              if (response.status === 401)
-                $location.url('/login');
-              return $q.reject(response);
-            }
-          };
-        });
-        //================================================
-
     $urlRouterProvider.otherwise('/');
     //noinspection JSUnusedGlobalSymbols
     $stateProvider
@@ -93,11 +74,6 @@ angular.module('workingRoom', [
             params: {
                 state: null,
                 params: null
-            },
-            resolve: {
-              UsersList: function (Users) {
-                  return Users.get();
-              }
             }
         })
         .state('main', {
@@ -105,18 +81,21 @@ angular.module('workingRoom', [
             templateUrl: 'partials/main.html',
             controller: 'MainCtrl as vm',
             resolve: {
-                
-                GroupsList: function (User, Groups) {
-                    return Groups.all(User);
-                },
-                ModulesList: function (User, Modules, GroupsList) {
-                    return Modules.all(User, GroupsList);
-                },
-                UsersList: function (User, Users) {
-                    return Users.all(User);
+
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User) {
                     return User.type === 'admin';
+                },
+                ModulesList: function (User, Modules) {
+                    return Modules.all(User);
+                },
+                UsersList: function (User, Users) {
+                    return Users.all();
+                },
+                GroupsList: function (User, Groups) {
+                    return Groups.all(User);
                 }
             }
         })
@@ -126,8 +105,8 @@ angular.module('workingRoom', [
             controller: 'ModulesCtrl as vm',
             resolve: {
 
-                User: function (User) {
-                    return User;
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User) {
                     return User.type === 'admin';
@@ -308,27 +287,24 @@ angular.module('workingRoom', [
                 }
             }
         });
-}).run(function ($rootScope, $state, Auth, loginRedirectPath, amMoment) {
+
+
+}).run(function ($rootScope, $location, $cookieStore, $http, $state, amMoment) {
     amMoment.changeLocale('fr');
 
-    Auth.$onAuth(function (user) {
-        if (!user) {
-            if ($state.current.name.length > 0) {
-                $state.go(loginRedirectPath, {state: $state.current, params: $state.params});
-            } else {
-                $state.go(loginRedirectPath);
-            }
+    $rootScope.globals = $cookieStore.get('globals') || {};
+        if ($rootScope.globals.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
         }
-    });
 
-    $rootScope.$on('$stateChangeError',
-        function (event, toState, toParams, fromState, fromParams, error) {
-            if (error === 'AUTH_REQUIRED') {
-                event.preventDefault();
-                $state.go(loginRedirectPath, {state: toState, params: toParams});
+        $rootScope.$on('$locationChangeStart', function (event, next, current) {
+            // redirect to login page if not logged in and trying to access a restricted page
+            var restrictedPage = $.inArray($location.path(), ['/login','/']) === -1;
+            var loggedIn = $rootScope.globals.currentUser;
+            if (restrictedPage && !loggedIn) {
+                $location.path('/login');
             }
-        }
-    );
+        });
 });
 
 angular.element(document).ready(function () {

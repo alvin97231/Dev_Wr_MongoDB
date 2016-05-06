@@ -1,11 +1,10 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('CreateTicketCtrl', function ($scope, $mdDialog, Ref, Module, User, Toasts, Upload, $timeout) {
+    .controller('CreateTicketCtrl', function ($scope, $mdDialog, Module, User, Toasts, Upload, $timeout) {
         var vm = this;
 
         var defaultStatus = getDefaultStatus();
-        vm.groupsQuery = Ref.child('groups').once('value', function(snap){vm.groups = snap.val();});
         vm.getLocale = getLocale;
         vm.getAttribution = getAttribution;
         if(User.groups){

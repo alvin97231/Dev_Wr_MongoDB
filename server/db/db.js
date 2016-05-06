@@ -8,7 +8,8 @@ var r = require('rethinkdb')
   , util = require('util')
   , assert = require('assert')
   , logdebug = require('debug')('rdb:debug')
-  , logerror = require('debug')('rdb:error');
+  , logerror = require('debug')('rdb:error')
+  , rand = require('generate-key');
 
 
 // #### Connection details
@@ -18,9 +19,7 @@ var dbConfig = {
   host: process.env.RDB_HOST || 'localhost',
   port: parseInt(process.env.RDB_PORT) || 28015,
   db  : process.env.RDB_DB || 'test',
-  tables: {
-    'users': 'id'
-  }
+  tables: {}
 };
 
 /**
@@ -80,28 +79,23 @@ module.exports.setup = function() {
 module.exports.findUserByEmail = function (mail, callback) {
   onConnect(function (err, connection) {
     logdebug("[INFO ][%s][findUserByEmail] Login {user: %s, pwd: 'you really thought I'd log it?'}", connection['_id'], mail);
-    console.log()
     r.db(dbConfig.db).table('users').filter({'email': mail}).limit(1).run(connection, function(err, cursor) {
       if(err) {
         logerror("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-        console.log("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s");
         callback(err);
       }
       else {
         cursor.next(function (err, row) {
           if(err) {
             logerror("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-            console.log(row);
             callback(null, null); // no user, cursor is empty
           }
           else {
             callback(null, row);
-            console.log(row);
           }
           connection.close();
         });
       }
-
     });
   });
 };
@@ -198,7 +192,104 @@ module.exports.UsersList = function (req, res, next) {
       });
     });
   });
-}
+};
+
+module.exports.ModulesList = function (req, res, next) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig.db).table('modules').run(req.app._rdbConn, function(err, cursor) {
+      if(err) {
+        return next(err);
+      }
+      //Retrieve all the todos in an array.
+      cursor.toArray(function(err, result) {
+        if(err) {
+          return next(err);
+        }
+        res.json(result);
+      });
+    });
+  });
+};
+
+module.exports.GroupsList = function (req, res, next) {
+  onConnect(function (err, connection) {
+    r.db(dbConfig.db).table('groups').run(req.app._rdbConn, function(err, cursor) {
+      if(err) {
+        return next(err);
+      }
+      cursor.toArray(function(err, result) {
+        if(err) {
+          return next(err);
+        }
+        res.json(result);
+      });
+    });
+  });
+};
+
+module.exports.TicketsList = function (req, res, next) {
+  var moduleId = req.params.id;
+  onConnect(function (err, connection) {
+    r.db(dbConfig.db).table('tickets').get(moduleId)("tickets").run(req.app._rdbConn, function(err, cursor) {
+      if(err) {
+        return next(err);
+      }
+      cursor.toArray(function(err, result) {
+        if(err) {
+          return next(err);
+        }
+        res.json(result);
+      });
+    });
+  });
+};
+
+module.exports.GetModule = function (req, res, next) {
+  var moduleId = req.params.id;
+  onConnect(function (err, connection) {
+    r.db(dbConfig.db).table('modules').get(moduleId).run(req.app._rdbConn, function(err, cursor) {
+      if(err) {
+        return next(err);
+      }
+      if(cursor){
+        cursor.toArray(function(err, result) {
+          if(err) {
+            return next(err);
+          }
+          res.json(result);
+        });
+      }
+    });
+  });
+};
+
+module.exports.GetTicket = function(req, res, next) {
+
+  var moduleId = req.params.id;
+  var ticketId = req.params.ticket;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig.db).table('tickets').get(moduleId)('tickets').filter({'id': ticketId}).limit(1).run(connection, function(err, cursor) {
+      if(err) {
+        callback(err);
+      }
+      else {
+        cursor.next(function (err, row) {
+          if(err) {
+            logerror("[ERROR][%s][findUserByEmail][collect] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+            callback(null, null); // no user, cursor is empty
+          }
+          else {
+            callback(null, row);
+          }
+          connection.close();
+        });
+      }
+    });
+  });
+};
+
+
 /**
  * To save a new chat message using we are using
  * [`insert`](http://www.rethinkdb.com/api/javascript/insert/).
@@ -224,22 +315,23 @@ module.exports.UsersList = function (req, res, next) {
  *
  * @returns {Boolean} `true` if the user was created, `false` otherwise
  */
-module.exports.saveMessage = function (msg, callback) {
+module.exports.AddTicket = function (req, res, next) {
+
+  var newTicket = req.body;
+  var moduleId = req.params.id;
+
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('messages').insert(msg).run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('tickets').get(moduleId).update({
+      'tickets': r.row('tickets').append(newTicket)
+    }).run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-        callback(err);
+        return next(err);
       }
       else {
-        if(result.inserted === 1) {
-          callback(null, true);
-        }
-        else {
-          callback(null, false);
-        }
+        console.log(result);
+        res.json({success: true});
       }
-      connection.close();
     });
   });
 };

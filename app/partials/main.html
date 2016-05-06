@@ -16,7 +16,7 @@
                 <span>{{ 'SIDENAV_MODULES' | translate }}</span>
             </md-list-item>
             <md-list-item data-ng-repeat="module in vm.modules">
-                <md-button data-ui-sref="main.modules({id: module.$id})" data-ui-sref-active="active">{{module.name}}</md-button>
+                <md-button data-ui-sref="main.modules({id: module.id})" data-ui-sref-active="active">{{module.name}}</md-button>
             </md-list-item>
         </md-list>
 
@@ -24,7 +24,7 @@
 
         <md-list layout="column">
             <md-list-item>
-                <md-button class="black" data-ui-sref="main.users({id: vm.user.$id})" data-ui-sref-active="active">
+                <md-button class="black" data-ui-sref="main.users({id: vm.user.id})" data-ui-sref-active="active">
                     <md-icon>person</md-icon>
                     {{ 'SIDENAV_PROFILE' | translate }}
                 </md-button>
@@ -36,7 +36,7 @@
                 </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button class="black" data-ng-click="vm.unauth()" href="">
+                <md-button class="black" data-ng-click="vm.logout()" href="">
                     <md-icon>exit_to_app</md-icon>
                     {{ 'SIDENAV_LOGOUT' | translate }}
                 </md-button>
@@ -83,10 +83,10 @@
                     </md-card-content>
 
                     <div class="md-actions" layout="row" layout-align="end center">
-                        <md-button class="md-accent" data-ui-sref="main.modulesStats({id: module.$id})">
+                        <md-button class="md-accent" data-ui-sref="main.modulesStats({id: module.id})">
                             {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
                         </md-button>
-                        <md-button class="md-accent" data-ui-sref="main.modules({id: module.$id})">
+                        <md-button class="md-accent" data-ui-sref="main.modules({id: module.id})">
                             {{ 'HOME_PAGE_MODULES_TICKETS_CPM' | translate }}
                         </md-button>
                     </div>

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, Ref, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
+    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
         var vm = this;
-
-        var authData = Ref.getAuth();
+        console.log(TicketsList);
+        //var authData = Ref.getAuth();
         vm.moduleId = $stateParams.id;
         vm.module = Module;
         vm.openCreateTicket = openCreateTicket;
@@ -16,12 +16,12 @@ angular.module('workingRoom')
         vm.filterTicketList = filterTicketList;
         vm.getGroups = getGroups;
         vm.admin = admin;
-        vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');
-        vm.ticketsCount = vm.ticketsAll.once('value', function(snap){vm.ticketsTotal = snap.numChildren();});
-        vm.userName = Ref.child('users').child(authData.uid).child('name');
-        vm.groupQuery = Ref.child('users').child(authData.uid).child('groups');
-        vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
-        vm.currentGroup = vm.groupQuery.once('value', function(snap){vm.groupName = snap.val();});
+        //vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');
+        //vm.ticketsCount = vm.ticketsAll.once('value', function(snap){vm.ticketsTotal = snap.numChildren();});
+        //vm.userName = Ref.child('users').child(authData.uid).child('name');
+        //vm.groupQuery = Ref.child('users').child(authData.uid).child('groups');
+        //vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
+        //vm.currentGroup = vm.groupQuery.once('value', function(snap){vm.groupName = snap.val();});
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
@@ -34,15 +34,14 @@ angular.module('workingRoom')
         vm.status = defaultStatus;
         vm.filter = 'Tickets par statut';
         vm.tickets = null;
-        TicketsList.$loaded().then(function () {
-            TicketsList.$watch(filterTicketList);
-            filterTicketList();
-        });
 
-        $http.get("data/testing.json").success(function(data){
-            $scope.dataLoaded = angular.fromJson(data);
-            console.log($scope.dataLoaded);
-        });
+        function valuesToArray(obj) {
+          return Object.keys(obj).map(function (key) { return obj[key]; });
+        }
+
+        //TicketsList = valuesToArray(TicketsList);
+
+        filterTicketList();
 
         vm.ticketsNotRead = TicketsList.filter(function (ticket) {
           if (vm.admin || vm.super && !vm.user){
@@ -136,8 +135,6 @@ angular.module('workingRoom')
 
         function filterByStatusTickets(status)
         {
-          console.log(Module);
-          //console.log();
           var statusName = status;
 
             if (vm.admin || vm.super && !vm.user){

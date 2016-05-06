@@ -16,6 +16,7 @@ var db = require('./server/db/db');
 
 var async = require('async');
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 var session = require('express-session');
 //var router = require('router');
 
@@ -27,84 +28,64 @@ var app = express();
 //==================================================================
 
 
-//==================================================================
-// Define the strategy to be used by PassportJS
-//==================================================================
-
-passport.use(new local(
-  function(username, password, done) {
-    // asynchronous verification, for effect...
-
-      var validateUser = function (err, user) {
-        if (err) { return done(err); console.log('Error validateUser');}
-        if (!user) { return done(null, false, {message: 'Unknown user: ' + username});console.log('Error validateUser');}
-
-        if (user.email == username && user.password == password) {return done(null, user);console.log('users Ok!');}
-        else {
-          return done(null, false, {message: 'Invalid username or password'});
-          console.log('Error validateUser');
-        }
-      };
-
-      db.findUserByEmail(username, validateUser);
-      console.log(validateUser);
-  }
-));
-
-passport.serializeUser(function(user, done) {
-  console.log("[DEBUG][passport][serializeUser] %j", user);
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-  db.findUserById(id, done);
-});
-
-// Define a middleware function to be used for every secured routes
-var auth = function(req, res, next){
-  if (!req.isAuthenticated())
-  	res.send(401);
-  else
-  	next();
-};
-//==================================================================
 
 
-//==================================================================
-// Define environments
-//==================================================================
+/******************************************************************
+************************ Configuration ****************************
+*******************************************************************/
 app.set('port', process.env.PORT || 8000);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/app'));
 app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+//
 
 // express/connect middleware
 app.use(favicon(__dirname + '/app/favicon.ico'));
 app.use(morgan('dev'));
 
 // serve up static assets
-app.use(express.static(__dirname+'/app'));
-app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'app')));
+app.use(bodyParser());
+app.use(methodOverride());
 
 // required for passport
 app.use(session({ secret: 'WorkingRoom' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
-app.use(flash()); // use connect-flash for flash messages stored in session
+app.use(flash()); // use connect-flash for flash messages stored in sessio
 //==================================================================
 
-// set up the RethinkDB database
+
+
+/******************************************************************
+********************* Setup the RethinkDB *************************
+*******************************************************************/
 db.setup();
+//==================================================================
 
-app.get('/', routes.index);
-app.get('/partials/:name', routes.partials);
 
-app.post('/login', passport.authenticate('local'), function(req, res) {
-  console.log(res, req);
-  res.redirect('/');
-});
 
-app.route('/users')
-  .get(db.UsersList);
+/******************************************************************
+********* Define the strategy to be used by PassportJS*************
+*******************************************************************/
+require('./server/routes/index')(app);
+require('./server/routes/auth')(app);
+//==================================================================
+
+
+/******************************************************************
+*************************** API ************************************
+*******************************************************************/
+app.get('/users', db.UsersList);
+app.get('/modules', db.ModulesList);
+app.get('/groups', db.GroupsList);
+app.get('/modules/:id', db.GetModule);
+app.get('/tickets/:id', db.TicketsList);
+app.get('/tickets/:id/tickets/:ticket', db.GetTicket);
+
+app.post('/tickets/:id', db.AddTicket);
+//==================================================================
+
 
 
 // development only
@@ -131,3 +112,4 @@ async.waterfall([
 
   startExpress(connection);
 });
+exports = module.exports = app;
