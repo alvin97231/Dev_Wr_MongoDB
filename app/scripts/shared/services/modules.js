@@ -43,8 +43,8 @@ angular.module('workingRoom')
         },
 
         update: function (module) {
-          var url = '/modules' + module.id;
-          return $http.put(url, user).
+          var url = '/modules/' + module.id;
+          return $http.put(url, module).
             then(function mySucces(response) {
               $log.info('Module modifié');
             }, function myError(response) {
@@ -52,8 +52,8 @@ angular.module('workingRoom')
             });
         },
 
-        delete: function(id) {
-          var url = '/modules' + id;
+        delete: function(module) {
+          var url = '/modules/' + module.id;
           return $http.delete(url).
             then(function mySucces(response) {
               $log.info('Module supprimé');

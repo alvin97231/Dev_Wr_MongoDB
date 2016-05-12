@@ -28,7 +28,7 @@ angular.module('workingRoom')
             user.type = vm.user.type;
             user.groups = vm.user.groups;
             user.email = vm.user.email;
-            user.$save().then(function () {
+            Users.update(user).then(function () {
                 Toasts.simple('Sauvegarde réussie');
                 $state.go('^');
             }, function (error) {

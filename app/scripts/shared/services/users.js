@@ -26,19 +26,20 @@ angular.module('workingRoom')
             return $http.get(url).
               then(function mySucces(response) {
                 return response.data;
+                usersList = response.data;
+                console.log(usersList);
               }, function myError(response) {
                 $log.error(response.statusText);
               });
           },
 
           get: function (id) {
-            var url = '/users'+ id;
-            return $http.get(url).
-              then(function mySucces(response) {
-                return response.data;
-              }, function myError(response) {
-                $log.error(response.statusText);
-              });
+            for (var i = 0; i < usersList.length; i++) {
+              if (usersList[i].id == id) {
+                console.log(usersList[i]);
+                return usersList[i];
+              }
+            }
           },
 
           add: function (user) {
@@ -61,8 +62,8 @@ angular.module('workingRoom')
               });
           },
 
-          delete: function(id) {
-            var url = '/users/' + id;
+          delete: function(user) {
+            var url = '/users/' + user.id;
             $http.delete(url).
               then(function mySucces(response) {
                 $log.info('utilisateur supprimé');

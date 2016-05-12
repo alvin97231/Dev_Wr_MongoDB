@@ -130,53 +130,6 @@ module.exports.findUserById = function (userId, callback) {
   });
 };
 
-// #### Retrieving chat messages
-
-/**
- * To find the last `max_results` messages ordered by `timestamp`,
- * we are using [`table`](http://www.rethinkdb.com/api/javascript/table/) to access
- * messages in the table, then we
- * [`orderBy`](http://www.rethinkdb.com/api/javascript/order_by/) `timestamp`
- * and instruct the server to return only `max_results` using
- * [`limit`](http://www.rethinkdb.com/api/javascript/limit/).
- *
- * These operations are chained together and executed on the database. Results
- * are collected with [`toArray`](http://www.rethinkdb.com/api/javascript/toArray)
- * and passed as an array to the callback function.
- *
- *
- * @param {Number} max_results
- *    Maximum number of results to be retrieved from the db
- *
- * @param {Function} callback
- *    callback invoked after collecting all the results
- *
- * @returns {Array} an array of messages
- */
-module.exports.findMessages = function (max_results, callback) {
-  onConnect(function (err, connection) {
-    r.db(dbConfig.db).table('messages').orderBy(r.desc('timestamp')).limit(max_results).run(connection, function(err, cursor) {
-      if(err) {
-        logerror("[ERROR][%s][findMessages] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-        callback(null, []);
-        connection.close();
-      }
-      else {
-        cursor.toArray(function(err, results) {
-          if(err) {
-            logerror("[ERROR][%s][findMessages][toArray] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-            callback(null, []);
-          }
-          else {
-            callback(null, results);
-          }
-          connection.close();
-        });
-      }
-    });
-  });
-};
-
 module.exports.UsersList = function (req, res, next) {
   onConnect(function (err, connection) {
     r.db(dbConfig.db).table('users').run(req.app._rdbConn, function(err, cursor) {
@@ -230,19 +183,20 @@ module.exports.GroupsList = function (req, res, next) {
 module.exports.TicketsList = function (req, res, next) {
   var moduleId = req.params.id;
   onConnect(function (err, connection) {
-    r.db(dbConfig.db).table('tickets').get(moduleId)("tickets").run(req.app._rdbConn, function(err, cursor) {
-      if(err) {
-        return next(err);
-      }
-      cursor.toArray(function(err, result) {
+      r.db(dbConfig.db).table('tickets').get(moduleId)("tickets").run(req.app._rdbConn, function(err, cursor) {
         if(err) {
           return next(err);
         }
-        res.json(result);
+        cursor.toArray(function(err, result) {
+          if(err) {
+            return next(err);
+          }
+          res.json(result);
+        });
       });
-    });
   });
 };
+
 
 module.exports.GetModule = function (req, res, next) {
   var moduleId = req.params.id;
@@ -263,17 +217,12 @@ module.exports.GetModule = function (req, res, next) {
   });
 };
 
-module.exports.GetTicket = function(req, res) {
+module.exports.GetUser = function (req, res, next) {
 
-  var moduleId = req.params.id;
-  var ticketId = req.params.ticket;
-  console.log(moduleId);
-  console.log(ticketId);
-
+  var userId = req.params.id;
+  
   onConnect(function (err, connection) {
-    r.db(dbConfig.db).table('tickets').get(moduleId)('tickets').filter(function(ticket) {
-      return ticket('id').eq(ticketId);
-    }).run(req.app._rdbConn, function(err, cursor) {
+    r.db(dbConfig.db).table('users').get(userId).run(req.app._rdbConn, function(err, cursor) {
       if(err) {
         return next(err);
       }
@@ -282,7 +231,6 @@ module.exports.GetTicket = function(req, res) {
           if(err) {
             return next(err);
           }
-          console.log(cursor);
           res.json(result);
         });
       }
@@ -291,31 +239,6 @@ module.exports.GetTicket = function(req, res) {
 };
 
 
-/**
- * To save a new chat message using we are using
- * [`insert`](http://www.rethinkdb.com/api/javascript/insert/).
- *
- * An `insert` op returns an object specifying the number
- * of successfully created objects and their corresponding IDs:
- *
- * ```
- * {
- *   "inserted": 1,
- *   "errors": 0,
- *   "generated_keys": [
- *     "b3426201-9992-ab84-4a21-576719746036"
- *   ]
- * }
- * ```
- *
- * @param {Object} msg
- *    The message to be saved
- *
- * @param {Function} callback
- *    callback invoked once after the first result returned
- *
- * @returns {Boolean} `true` if the user was created, `false` otherwise
- */
 module.exports.AddTicket = function (req, res, next) {
 
   var newTicket = req.body;
@@ -337,15 +260,48 @@ module.exports.AddTicket = function (req, res, next) {
   });
 };
 
-module.exports.UpdateTicket = function (req, res, next) {
+module.exports.AddGroup = function (req, res, next) {
 
-  var Ticket = req.body;
-  var moduleId = req.params.id;
+  var Group = req.body;
 
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('tickets').get(moduleId).update({
-      'tickets': r.row('tickets').append(Ticket)
-    }).run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('groups').insert(Group).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+module.exports.AddUser = function (req, res, next) {
+
+  var User = req.body;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users').insert(User).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+module.exports.AddModule = function (req, res, next) {
+
+  var Module = req.body;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('modules').insert(Module).run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
@@ -359,39 +315,146 @@ module.exports.UpdateTicket = function (req, res, next) {
 };
 
 
-/**
- * Adding a new user to database using  [`insert`](http://www.rethinkdb.com/api/javascript/insert/).
- *
- * If the document to be saved doesn't have an `id` field, RethinkDB automatically
- * generates an unique `id`. This is returned in the result object.
- *
- * @param {Object} user
- *   The user JSON object to be saved.
- *
- * @param {Function} callback
- *    callback invoked once after the first result returned
- *
- * @returns {Boolean} `true` if the user was created, `false` otherwise
- */
-module.exports.saveUser = function (user, callback) {
+module.exports.UpdateTicket = function (req, res, next) {
+
+  var Ticket = req.body;
+  var moduleId = req.params.id;
+
   onConnect(function (err, connection) {
-    r.db(dbConfig.db).table('users').insert(user).run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('tickets').get(moduleId).update({
+      'tickets': r.row('tickets').map(function (ticket) {
+                          return r.branch(
+                                          ticket('id').eq(Ticket.id),
+                                          // 2. The change you want to perform on the matching elements
+                                          ticket.merge(Ticket),
+                                          ticket)
+                      })
+    }).run(connection, function(err, result) {
       if(err) {
-        logerror("[ERROR][%s][saveUser] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-        callback(err);
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
       }
       else {
-        if (result.inserted === 1) {
-          callback(null, true);
-        }
-        else {
-          callback(null, false);
-        }
+        console.log(result);
+        res.json({success: true});
       }
-      connection.close();
     });
   });
 };
+
+module.exports.UpdateModule = function (req, res, next) {
+
+  var Module = req.body;
+  var moduleId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('modules').get(moduleId).update(Module).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+module.exports.UpdateGroup = function (req, res, next) {
+
+  var Group = req.body;
+  var groupId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('groups').get(groupId).update(Group).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+module.exports.UpdateUser = function (req, res, next) {
+
+  var User = req.body;
+  var userId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users').get(userId).update(User).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+
+module.exports.DeleteUser = function (req, res, next) {
+
+  var userId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('users').get(userId).delete().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+module.exports.DeleteGroup = function (req, res, next) {
+
+  var groupId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('groups').get(groupId).delete().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+module.exports.DeleteModule = function (req, res, next) {
+
+  var moduleId = req.params.id;
+
+  onConnect(function (err, connection) {
+    r.db(dbConfig['db']).table('modules').get(moduleId).delete().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+  });
+};
+
+
 
 // #### Helper functions
 

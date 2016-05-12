@@ -81,7 +81,7 @@ angular.module('workingRoom')
                 if (res.name.length > 0) {
                     group.name = res.name;
                     group.modules = res.modules;
-                    Groups.save(group).then(function () {
+                    Groups.update(group).then(function () {
                         Toasts.simple('Sauvegarde réussie');
                     }, function (error) {
                         Toasts.error(error);
@@ -115,7 +115,7 @@ angular.module('workingRoom')
         }
 
         function goToModule(module) {
-            $state.go('main.modules.edit', {id: module.$id});
+            $state.go('main.modules.edit', {id: module.id});
         }
 
     });

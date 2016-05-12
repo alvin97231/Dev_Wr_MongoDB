@@ -6,10 +6,6 @@ angular.module('workingRoom')
         var tickets = null;
         var vm = this;
 
-        function valuesToArray(obj) {
-          return Object.keys(obj).map(function (key) { return obj[key]; });
-        }
-
         return {
 
           all: function () {

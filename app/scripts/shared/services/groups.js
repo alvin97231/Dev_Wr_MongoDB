@@ -19,7 +19,7 @@ angular.module('workingRoom')
           },
 
           get: function (id) {
-            var url = '/groups'+ id;
+            var url = '/groups/'+ id;
             return $http.get(url).
               then(function mySucces(response) {
                 return response.data;
@@ -39,8 +39,8 @@ angular.module('workingRoom')
           },
 
           update: function (group) {
-            var url = '/groups' + group.id;
-            return $http.put(url, user).
+            var url = '/groups/' + group.id;
+            return $http.put(url, group).
               then(function mySucces(response) {
                 $log.info('Groupe modifié');
               }, function myError(response) {
@@ -48,8 +48,8 @@ angular.module('workingRoom')
               });
           },
 
-          delete: function(id) {
-            var url = '/groups' + id;
+          delete: function(group) {
+            var url = '/groups/' + group.id;
             return $http.delete(url).
               then(function mySucces(response) {
                 $log.info('Groupe supprimé');

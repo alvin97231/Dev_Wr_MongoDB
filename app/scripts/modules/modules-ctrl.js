@@ -3,7 +3,7 @@
 angular.module('workingRoom')
     .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
         var vm = this;
-        
+
         vm.moduleId = $stateParams.id;
         vm.module = Module;
         vm.openCreateTicket = openCreateTicket;
@@ -34,12 +34,6 @@ angular.module('workingRoom')
         vm.status = defaultStatus;
         vm.filter = 'Tickets par statut';
         vm.tickets = null;
-
-        function valuesToArray(obj) {
-          return Object.keys(obj).map(function (key) { return obj[key]; });
-        }
-
-        //TicketsList = valuesToArray(TicketsList);
 
         filterTicketList();
 
@@ -100,6 +94,7 @@ angular.module('workingRoom')
             filterTicketList();
           }
 
+          statusDuration(TicketsList);
           /*else if (!vm.admin && vm.super && !vm.user) {
              for (var i = 0; i < User.groups.length; i++) {
                console.log(User.groups[i]);
@@ -234,62 +229,58 @@ angular.module('workingRoom')
           }
         }
 
-        function statusDuration()
+        function statusDuration(tickets)
         {
-          vm.ticketsAll.on('value', show);
-          function show(snap){
 
-            vm.test = snap.val();
             var i=0;
             var status = [];
             var delais = [];
 
-              snap.forEach(function (childSnap){
-              var child = childSnap.val();
+              tickets.forEach(function (ticket){
 
-              switch(child.status){
+              switch(ticket.status){
                 case 'A solder : En attente de recontact client':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   i ++;
                   status[0] = i;
                 break;
 
                 case 'En cours':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   i ++;
                   status[1]=i;
                   console.log(status[1]);
                 break;
 
                 case 'En cours : Attente CPM':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   status[1] = status[1]+1;
                   console.log(status[1]);
                 break;
 
                 case 'En cours : Attente conseiller':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   status[1] = status[1]+1;
                   console.log(status[1]);
                 break;
 
                 case 'Soldé : Recontact client effectué':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   tableAvg(delais);
                 break;
 
                 case 'Clos':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   tableAvg(delais);
                 break;
 
                 case 'Traité avec résolution DC':
-                  vm.takeLate(child,delais);
+                  vm.takeLate(ticket,delais);
                   tableAvg(delais);
                 break;
 
                 case 'Traité sans résolution DC':
-                  vm.takeLate(child, delais);
+                  vm.takeLate(ticket, delais);
                   tableAvg(delais);
                 break;
               }
@@ -309,7 +300,6 @@ angular.module('workingRoom')
               }
             }
           }
-        }
       }
 
     function tableAvg(tableau){
@@ -319,8 +309,6 @@ angular.module('workingRoom')
       }
       var avg = somme/tableau.length
     }
-
-    statusDuration;
 
 }).controller('speedDialController', function ($scope){
   this.isOpen = false;

@@ -77,14 +77,24 @@ require('./server/routes/auth')(app);
 *************************** API ************************************
 *******************************************************************/
 app.get('/users', db.UsersList);
+app.get('/users/:id', db.GetUser);
+app.post('/users', db.AddUser);
+app.put('/users/:id', db.UpdateUser);
+app.delete('/users/:id', db.DeleteUser);
+
 app.get('/modules', db.ModulesList);
-app.get('/groups', db.GroupsList);
 app.get('/modules/:id', db.GetModule);
+app.post('/modules', db.AddModule);
+app.put('/modules/:id', db.UpdateModule);
+app.delete('/modules/:id', db.DeleteModule);
+
+app.get('/groups', db.GroupsList);
+app.post('/groups', db.AddGroup);
+app.put('/groups/:id', db.UpdateGroup);
+app.delete('/groups/:id', db.DeleteGroup);
+
 app.get('/tickets/:id', db.TicketsList);
-app.get('/tickets/:id/:ticket', db.GetTicket);
-
 app.post('/tickets/:id', db.AddTicket);
-
 app.put('/tickets/:id', db.UpdateTicket);
 //==================================================================
 

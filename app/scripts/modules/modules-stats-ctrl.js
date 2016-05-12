@@ -50,10 +50,10 @@ angular.module('workingRoom')
         }
 
         function filter(){
-          vm.categoriesQuery1 = Ref.child('modules').child(Module.$id).child('ticketFields').child(1).child('data');
-          vm.categoriesQuery2 = Ref.child('modules').child(Module.$id).child('ticketFields').child(5).child('data');
-          vm.dataQuery = Ref.child('modules').child(Module.$id).child('ticketFields').child(0).child('data');
-          vm.statusQuery = Ref.child('modules').child(Module.$id).child('status');
+          vm.categoriesQuery1 = Module.ticketFields[1].data;
+          vm.categoriesQuery2 = Module.ticketFields[5].data;
+          vm.dataQuery = Module.ticketFields[0].data;
+          vm.statusQuery = Module.status;
 
           if (vm.startDate && vm.endDate) {
             vm.startTime = moment($('#date1').datepicker( "getDate" )).startOf('day').toDate().getTime();
@@ -63,21 +63,12 @@ angular.module('workingRoom')
             vm.startTime = 1438380000;
             vm.endTime = new Date().getTime();
           }
-            function show(snap){
-              vm.test = snap.val();
 
-              if(vm.test){
-                vm.tickets = [];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  vm.tickets.push(child);
-                });
+          vm.tickets = TicketsList.filter(function (ticket) {
+              if(ticket.created >= vm.startTime && ticket.created <= vm.endTime){
+                return ticket;
               }
-            else if(!vm.test){
-              vm.tickets = [];
-            }
-           }
-          vm.periodQuery = vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
+          });
 
           if(vm.openLogin.length===0 && vm.closeLogin.length===0){
             vm.ticketEi =[];
@@ -91,16 +82,15 @@ angular.module('workingRoom')
                   }
                 }
               }
-            }console.log(vm.ticketEi);
+            }
 
-            function takeStatsStatus(snap){
+            function takeStatsStatus(status){
               vm.statsStatus=[];
               vm.sta=[];
-              snap.forEach(function (childSnap){
-                var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket.status === child.name && ticket.lang == moment.locale();});
+              status.forEach(function (statut){
+                vm.test = vm.tickets.filter(function (ticket){return ticket.status === statut.name && ticket.lang == moment.locale();});
                 vm.statsStatus.push(vm.test);
-                vm.sta.push(child);
+                vm.sta.push(statut);
               });
 
               vm.oldiestTicketToDeal = vm.statsStatus[0][0];
@@ -144,51 +134,48 @@ angular.module('workingRoom')
               }
             }
 
-            function takeStatsData(snap){
+            function takeStatsData(datas){
               vm.statsData=[];
               vm.dat=[];
-              snap.forEach(function (childSnap){
-                var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name && ticket.lang == moment.locale();});
+              datas.forEach(function (data){
+                vm.test = vm.tickets.filter(function (ticket){return ticket[0] === data.name && ticket.lang == moment.locale();});
                 vm.statsData.push(vm.test);
-                vm.dat.push(child);
+                vm.dat.push(data);
               });
             }
 
-            function takeStatsCat1(snap){
+            function takeStatsCat1(cats){
               vm.statsCat=[];
               vm.cat=[];
-              snap.forEach(function (childSnap){
-                var child = childSnap.val();
-                vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.lang == moment.locale();});
+              cats.forEach(function (cat){
+                vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === cat.name && ticket.lang == moment.locale();});
                 vm.statsCat.push(vm.test);
-                vm.cat.push(child);
+                vm.cat.push(cat);
               });
 
             }
 
-            function takeStatsCat2(snap){
+            function takeStatsCat2(cats){
               vm.statsCat=[];
               vm.cat=[];
-              snap.forEach(function (childSnap){
-                var child = childSnap.val();
+              cats.forEach(function (cat){
                 vm.test = vm.tickets.filter(function (ticket){
                   if(ticket[5].first){
-                    return ticket[5].first === child.name && ticket.lang == moment.locale();
+                    return ticket[5].first === cat.name && ticket.lang == moment.locale();
                   }
                   else if (!ticket[5].first) {
-                    return ticket[5] === child.name && ticket.lang == moment.locale();
+                    return ticket[5] === cat.name && ticket.lang == moment.locale();
                   }
                 });
                 vm.statsCat.push(vm.test);
-                vm.cat.push(child);
+                vm.cat.push(cat);
               });
             }
 
-            vm.statusQuery.once('value',takeStatsStatus);
-            vm.dataQuery.once('value', takeStatsData);
-            if(Module.name === 'CPM'){vm.categoriesQuery1.once('value', takeStatsCat1);}
-            else{vm.categoriesQuery2.once('value', takeStatsCat2);}
+            takeStatsStatus(vm.statusQuery);
+            takeStatsData(vm.dataQuery);
+            if(Module.name === 'CPM'){takeStatsCat1(vm.categoriesQuery1);}
+            else{takeStatsCat2(vm.categoriesQuery2);}
 
             var dataCat = [];
             for(var i = 0; i<vm.statsCat.length ; i++){
@@ -234,67 +221,62 @@ angular.module('workingRoom')
                 }
               }
 
-              function takeStatsStatusByOpenLogin(snap){
+              function takeStatsStatusByOpenLogin(status){
                 vm.statsStatus=[];
                 vm.sta=[];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket.status === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
+                status.forEach(function (statut){
+                  vm.test = vm.tickets.filter(function (ticket){return ticket.status === statut.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
                   vm.statsStatus.push(vm.test);
-                  vm.sta.push(child);
+                  vm.sta.push(statut);
                 });
               }
 
-              function takeStatsCat1ByOpenLogin(snap){
+              function takeStatsCat1ByOpenLogin(cats){
                 vm.statsCat=[];
                 vm.cat=[];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
+                cats.forEach(function (cat){
+                  vm.test = vm.tickets.filter(function (ticket){return ticket[1].first === cat.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
                   vm.statsCat.push(vm.test);
-                  vm.cat.push(child);
+                  vm.cat.push(cat);
                 });
 
               }
 
-              function takeStatsCat2ByOpenLogin(snap){
+              function takeStatsCat2ByOpenLogin(cats){
                 vm.statsCat=[];
                 vm.cat=[];
-
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
+                cats.forEach(function (cat){
                   vm.test = vm.tickets.filter(function (ticket){
                     if(ticket[5].first){
-                      return ticket[5].first === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();
+                      return ticket[5].first === cat.name && ticket.user.name===vm.name && ticket.lang == moment.locale();
                     }
                     else if(!ticket[5].first){
-                      return ticket[5] === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();
+                      return ticket[5] === cat.name && ticket.user.name===vm.name && ticket.lang == moment.locale();
                     }
                   });
                   vm.statsCat.push(vm.test);
-                  vm.cat.push(child);
+                  vm.cat.push(cat);
                 });
               }
 
-              function takeStatsDataByOpenLogin(snap){
+              function takeStatsDataByOpenLogin(datas){
                 vm.statsData=[];
                 vm.dat=[];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){return ticket[0] === child.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
+                datas.forEach(function (data){
+                  vm.test = vm.tickets.filter(function (ticket){return ticket[0] === data.name && ticket.user.name===vm.name && ticket.lang == moment.locale();});
                   vm.statsData.push(vm.test);
-                  vm.dat.push(child);
+                  vm.dat.push(data);
                 });
               }
 
-              vm.dataQuery.once('value', takeStatsDataByOpenLogin);
+              takeStatsDataByOpenLogin(vm.dataQuery);
 
-              vm.statusQuery.once('value',takeStatsStatusByOpenLogin);
+              takeStatsStatusByOpenLogin(vm.statusQuery);
               if(Module.name === 'CPM'){
-                vm.categoriesQuery1.once('value', takeStatsCat1ByOpenLogin);
+                takeStatsCat1ByOpenLogin(vm.categoriesQuery1);
               }
               else{
-                vm.categoriesQuery2.once('value', takeStatsCat2ByOpenLogin);
+                takeStatsCat2ByOpenLogin(vm.categoriesQuery2);
               }
               var dataCat = [];
               for(var i = 0; i<vm.statsCat.length ; i++){
@@ -324,68 +306,65 @@ angular.module('workingRoom')
             else if(vm.closeLogin.length>0){
               vm.name = vm.closeLogin[0].name;
 
-              function takeStatsStatusByCloseLogin(snap){
+              function takeStatsStatusByCloseLogin(status){
                 vm.statsStatus=[];
                 vm.sta=[];
-                snap.forEach(function (childSnap){
+                status.forEach(function (statut){
                   var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket.status === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket.status === statut.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
                   vm.statsStatus.push(vm.test);
-                  vm.sta.push(child);
+                  vm.sta.push(statut);
                 });
               }
 
-              function takeStatsCat1ByCloseLogin(snap){
+              function takeStatsCat1ByCloseLogin(cats){
                 vm.statsCat=[];
                 vm.cat=[];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[1].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
+                cats.forEach(function (cat){
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[1].first === cat.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
                   vm.statsCat.push(vm.test);
-                  vm.cat.push(child);
+                  vm.cat.push(cat);
                 });
 
               }
 
-              function takeStatsCat2ByCloseLogin(snap){
+              function takeStatsCat2ByCloseLogin(cats){
                 vm.statsCat=[];
                 vm.cat=[];
 
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
+                cats.forEach(function (cat){
                   vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){
                     if(ticket[5].first){
-                      return ticket[5].first === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();
+                      return ticket[5].first === cat.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();
                     }
                     else if (!ticket[5].first) {
-                      return ticket[5] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();
+                      return ticket[5] === cat.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();
                     }
                   }
                   });
                   vm.statsCat.push(vm.test);
-                  vm.cat.push(child);
+                  vm.cat.push(cat);
                 });
               }
 
-              function takeStatsDataByCloseLogin(snap){
+              function takeStatsDataByCloseLogin(datas){
                 vm.statsData=[];
                 vm.dat=[];
-                snap.forEach(function (childSnap){
-                  var child = childSnap.val();
-                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[0] === child.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
+                datas.forEach(function (data){
+                  vm.test = vm.tickets.filter(function (ticket){if(ticket.messages){return ticket[0] === data.name && ticket.messages[ticket.messages.length-1].author.name===vm.name && ticket.lang == moment.locale();}});
                   vm.statsData.push(vm.test);
-                  vm.dat.push(child);
+                  vm.dat.push(data);
                 });
               }
 
-              vm.dataQuery.once('value', takeStatsDataByCloseLogin);
+              takeStatsDataByCloseLogin(vm.dataQuery);
 
-              vm.statusQuery.once('value',takeStatsStatusByCloseLogin);
+              takeStatsStatusByCloseLogin(vm.statusQuery);
               if(Module.name === 'CPM'){
-                vm.categoriesQuery1.once('value', takeStatsCat1ByCloseLogin);
+                takeStatsCat1ByCloseLogin(vm.categoriesQuery1);
               }
               else{
-                vm.categoriesQuery2.once('value', takeStatsCat2ByCloseLogin);
+                takeStatsCat2ByCloseLogin(vm.categoriesQuery2);
               }
               var dataData = [];
               var somme = 0 ;
@@ -620,49 +599,49 @@ angular.module('workingRoom')
             vm.endTime = new Date().getTime();
           }
 
-            function show(snap){
-                vm.test = snap.val();
+          vm.tickets = TicketsList.filter(function (ticket) {
+              if(ticket.created >= vm.startTime && ticket.created <= vm.endTime){
+                return ticket;
+              }
+          });
                 var i=0;
                 var delais = [];
 
-                snap.forEach(function (childSnap){
-                var child = childSnap.val();
+                vm.tickets.forEach(function (ticket){
 
-                if(child.lang == moment.locale()){
-                  switch(child.status){
+                if(ticket.lang == moment.locale()){
+                  switch(ticket.status){
 
                     case 'Clos':
-                      vm.takeLate(child,delais);
+                      vm.takeLate(ticket,delais);
                     break;
 
                     case 'Soldé : Recontact client effectué':
-                      vm.takeLate(child,delais);
+                      vm.takeLate(ticket,delais);
                     break;
 
                     case 'Traité avec résolution DC':
-                      vm.takeLate(child,delais);
+                      vm.takeLate(ticket,delais);
                     break;
 
                     case 'Traité sans résolution DC':
-                      vm.takeLate(child, delais);
+                      vm.takeLate(ticket, delais);
                     break;
 
                     case 'Résolu avec solution satisfaisante':
-                      vm.takeLate(child, delais);
+                      vm.takeLate(ticket, delais);
                     break;
 
                     case 'Résolu sans solution satisfaisante':
-                      vm.takeLate(child, delais);
+                      vm.takeLate(ticket, delais);
                     break;
                   }
                 }
                 else{
-                  console.log("Ticket N° "+child.id+" N/A");
+                  console.log("Ticket N° "+ticket.id+" N/A");
                 }
                 });
               }
-            vm.ticketsAll.orderByChild('created').startAt(vm.startTime).endAt(vm.endTime).on('value', show);
-        }
 
         function tableAvg(tableau){
             var somme = 0 ;
@@ -674,6 +653,6 @@ angular.module('workingRoom')
         }
     $('#date1').datepicker({ dateFormat: "dd-mm-yy" });
     $('#date2').datepicker({ dateFormat: "dd-mm-yy" });
-    //vm.avg = 0;
+
     filter();
   });

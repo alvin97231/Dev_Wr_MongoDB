@@ -50,7 +50,7 @@ angular.module('workingRoom')
                 ticket.messages.push({
                     ei : vm.ei,
                     date: Date.now(),
-                    author: {id: User.$id, name: User.name},
+                    author: {id: User.id, name: User.name},
                     content: vm.newMessage,
                     recontact : vm.recontact,
                     file: vm.newFile,

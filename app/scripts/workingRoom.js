@@ -127,8 +127,8 @@ angular.module('workingRoom', [
             templateUrl: 'partials/modules/modules-all.html',
             controller: 'ModulesCtrl as vm',
             resolve: {
-                User: function (User) {
-                    return User;
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User) {
                     return User.type === 'admin';
@@ -146,8 +146,8 @@ angular.module('workingRoom', [
             templateUrl: 'partials/modules/modules-not-read.html',
             controller: 'ModulesCtrl as vm',
             resolve: {
-                User: function (User) {
-                    return User;
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User) {
                     return User.type === 'admin';
@@ -165,8 +165,8 @@ angular.module('workingRoom', [
             templateUrl: 'partials/modules/modules-current.html',
             controller: 'ModulesCtrl as vm',
             resolve: {
-                User: function (User) {
-                    return User;
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User) {
                     return User.type === 'admin';
@@ -190,8 +190,8 @@ angular.module('workingRoom', [
                 ModulesList: function (User, Modules, GroupsList) {
                     return Modules.all(User, GroupsList);
                 },
-                User: function (User) {
-                    return User;
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User) {
                     return User.type === 'admin';
@@ -237,12 +237,12 @@ angular.module('workingRoom', [
             templateUrl: 'partials/users/user.html',
             controller: 'UserCtrl as vm',
             resolve: {
-                User: function (User) {
-                    return User;
+                User: function (Users) {
+                    return Users.current();
                 },
                 admin: function (User, $stateParams, admin, $q) {
                     return $q(function (resolve) {
-                        resolve(User.$id === $stateParams.id || User.type === 'admin');
+                        resolve(User.id === $stateParams.id || User.type === 'admin');
                     });
                 },
                 user: function (Users, $stateParams) {

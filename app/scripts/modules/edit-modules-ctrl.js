@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('EditModulesCtrl', function (Module, Toasts, $state, $mdDialog) {
+    .controller('EditModulesCtrl', function (Modules, Module, Toasts, $state, $mdDialog) {
         var vm = this;
 
-        vm.moduleId = Module.$id;
+        vm.moduleId = Module.id;
         vm.module = {
             name: Module.name,
             description: Module.description || '',
@@ -74,7 +74,8 @@ angular.module('workingRoom')
                 Module.description = vm.module.description;
                 Module.ticketFields = vm.module.ticketFields;
                 Module.status = vm.module.status;
-                Module.$save().then(function () {
+                console.log(Module);
+                Modules.update(Module).then(function () {
                     Toasts.simple('Sauvegarde réussie');
                     $state.go('^');
                 }, function (error) {
