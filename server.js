@@ -3,28 +3,26 @@
 //==================================================================
 // Define variables
 //==================================================================
-var express = require('express');
-var http = require('http');
-var path = require('path');
-var favicon = require('serve-favicon');
-var passport = require('passport');
-var flash    = require('connect-flash');
-var local = require('passport-local').Strategy;
-var morgan = require('morgan'); // formerly express.logger
-var errorhandler = require('errorhandler');
-var db = require('./server/db/db');
+var express = require('express')
+, http = require('http')
+, path = require('path')
+, favicon = require('serve-favicon')
+, passport = require('passport')
+, flash    = require('connect-flash')
+, local = require('passport-local').Strategy
+, morgan = require('morgan')
+, errorhandler = require('errorhandler')
+, db = require('./server/db/db')
 
-var async = require('async');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
-var session = require('express-session');
-//var router = require('router');
+, async = require('async')
+, bodyParser = require('body-parser')
+, methodOverride = require('method-override')
+, session = require('express-session')
 
-var r = require('rethinkdb');
-var config = require(__dirname + '/server/db/config.js');
-var routes = require(__dirname + '/server/routes');
+, r = require('rethinkdb')
+, routes = require(__dirname + '/server/routes')
 
-var app = express();
+, app = express();
 //==================================================================
 
 
@@ -107,13 +105,13 @@ if ('development' === app.get('env')) {
 
 function startExpress(connection) {
   app._rdbConn = connection;
-  app.listen(config.express.port);
-  console.log('Listening on port ' + config.express.port);
+  app.listen(db.dbConfig.expressport);
+  console.log('Listening on port ' + db.dbConfig.expressport);
 }
 
 async.waterfall([
   function connect(callback) {
-    r.connect(config.rethinkdb, callback);
+    r.connect({host: db.dbConfig.host, port: db.dbConfig.port }, callback);
   }
 ], function(err, connection) {
   if(err) {

@@ -6,6 +6,23 @@ angular.module('workingRoom')
         var tickets = null;
         var vm = this;
 
+        /*Auth.$onAuth(function (user) {
+            if (!user) {
+                destroy();
+            }
+        });*/
+
+        function destroy() {
+            for (var moduleId in ticketsForModule) {
+                ticketsForModule[moduleId].$destroy();
+                ticketsForModule[moduleId] = null;
+            }
+            if (tickets) {
+                tickets.$destroy();
+                tickets = null;
+            }
+        }
+
         return {
 
           all: function () {
@@ -69,23 +86,8 @@ angular.module('workingRoom')
           },
 
         };
-        /*Auth.$onAuth(function (user) {
-            if (!user) {
-                destroy();
-            }
-        });
 
-        function destroy() {
-            for (var moduleId in ticketsForModule) {
-                ticketsForModule[moduleId].$destroy();
-                ticketsForModule[moduleId] = null;
-            }
-            if (tickets) {
-                tickets.$destroy();
-                tickets = null;
-            }
-        }
-
+        /*
         return {
             all: function () {
                 if (!tickets) {

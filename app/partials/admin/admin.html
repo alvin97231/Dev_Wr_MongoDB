@@ -85,7 +85,7 @@
                     </thead>
                     <tbody>
                     <tr ng-repeat="user in vm.users | filter:{id:filters.id} | filter:{name:filters.name} | filter:{email:filters.email} | filter:{type:filters.type}"
-                        data-ui-sref="main.users({id: user.$id})"
+                        data-ui-sref="main.users({id: user.id})"
                         si-sortable>
                         <td>{{user.id}}</td>
                         <td>{{user.name}}</td>

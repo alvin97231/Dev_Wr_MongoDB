@@ -7,20 +7,19 @@ angular.module('workingRoom')
         vm.deleteUser = deleteUser;
         vm.user = user;
         vm.admin = admin;
-        console.log(vm.user);
 
-        function deleteUser(event) {
-            $mdDialog.show({
-                controller: 'DeleteUserCtrl as vm',
-                templateUrl: 'partials/users/delete-user-modal.html',
-                targetEvent: event,
-                resolve: {
-                    email: function() {
-                        return user.email;
-                    }
-                }
-            }).then(function (res) {
-              Users.delete(res, user, User);
+        function deleteUser(event, user) {
+            event.stopPropagation();
+            var confirm = $mdDialog.confirm()
+                .title('Attention')
+                .content('Voulez-vous vraiment supprimer cet utilisateur ?')
+                .ariaLabel('confirm delete')
+                .ok('Oui')
+                .cancel('Non')
+                .targetEvent(event);
+            $mdDialog.show(confirm).then(function () {
+              console.log(user);
+              if(User.type == 'admin'){Users.delete(user);}
             });
         }
     });

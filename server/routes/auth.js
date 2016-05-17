@@ -1,10 +1,11 @@
 module.exports = function(app) {
 
-    var passport = require('passport');
-    var LocalStrategy = require('passport-local').Strategy;
-    var db = require('../db/db');
+    var passport = require('passport')
+    , LocalStrategy = require('passport-local').Strategy
+    , bcrypt = require('bcrypt')
+    , db = require('../db/db')
 
-    var session = require('express-session');
+    , session = require('express-session');
 
     app.use(session({ secret: 'WorkingRoom' }));
     app.use(passport.initialize());

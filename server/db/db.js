@@ -9,7 +9,7 @@ var r = require('rethinkdb')
   , assert = require('assert')
   , logdebug = require('debug')('rdb:debug')
   , logerror = require('debug')('rdb:error')
-  , rand = require('generate-key');
+  , bcrypt = require('bcrypt');
 
 
 // #### Connection details
@@ -19,9 +19,10 @@ var dbConfig = {
   host: process.env.RDB_HOST || 'localhost',
   port: parseInt(process.env.RDB_PORT) || 28015,
   db  : process.env.RDB_DB || 'test',
+  expressport :3000,
   tables: {}
 };
-
+module.exports.dbConfig = dbConfig;
 /**
  * Connect to RethinkDB instance and perform a basic database setup:
  *
@@ -220,7 +221,7 @@ module.exports.GetModule = function (req, res, next) {
 module.exports.GetUser = function (req, res, next) {
 
   var userId = req.params.id;
-  
+
   onConnect(function (err, connection) {
     r.db(dbConfig.db).table('users').get(userId).run(req.app._rdbConn, function(err, cursor) {
       if(err) {
@@ -281,16 +282,39 @@ module.exports.AddGroup = function (req, res, next) {
 module.exports.AddUser = function (req, res, next) {
 
   var User = req.body;
+  User.password = bcrypt.hashSync('workingRoom', 10);
 
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').insert(User).run(connection, function(err, result) {
+    r.db(dbConfig.db).table('counter')('userCounter').run(req.app._rdbConn, function(err, cursor) {
       if(err) {
-        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
       }
-      else {
-        console.log(result);
-        res.json({success: true});
+      if(cursor){
+        cursor.next(function(err, result) {
+          if(err) {
+            return next(err);
+          }
+          User.id = result;
+          r.db(dbConfig['db']).table('users').insert(User).run(connection, function(err, result2) {
+            if(err) {
+              logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+              return next(err);
+            }
+            else {
+              counter = User.id +1;
+              r.db(dbConfig.db).table('counter').get('33b255d6-067f-47e0-b1ed-affe126ac0e7').update({userCounter : counter}).run(connection, function(err, result) {
+                if(err) {
+                  logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+                  return next(err);
+                }
+                else {
+                  res.json({success: true});
+                }
+              });
+              res.json({success: true});
+            }
+          });
+        });
       }
     });
   });
@@ -403,6 +427,7 @@ module.exports.UpdateUser = function (req, res, next) {
 module.exports.DeleteUser = function (req, res, next) {
 
   var userId = req.params.id;
+  console.log('Suppresion de l\'utilisateur '+userId);
 
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('users').get(userId).delete().run(connection, function(err, result) {

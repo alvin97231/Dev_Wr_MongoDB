@@ -1,10 +1,21 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Groups', function ($q, $http) {
+    .factory('Groups', function ($q, $http, $log) {
 
         var groups = null;
         var groupsList = {};
+
+        function destroy() {
+            for (var groupId in groupsList) {
+                groupsList[groupId].$destroy();
+                groupsList[groupId] = null;
+            }
+            if (groups) {
+                groups.$destroy();
+                groups = null;
+            }
+        }
 
         return {
 
@@ -13,6 +24,7 @@ angular.module('workingRoom')
             return $http.get(url).
               then(function mySucces(response) {
                 return response.data;
+                groupsList = response.data;
               }, function myError(response) {
                 $log.error(response.statusText);
               });
@@ -59,17 +71,8 @@ angular.module('workingRoom')
           }
 
         };
-        /*function destroy() {
-            for (var groupId in groupsList) {
-                groupsList[groupId].$destroy();
-                groupsList[groupId] = null;
-            }
-            if (groups) {
-                groups.$destroy();
-                groups = null;
-            }
-        }
 
+        /*
         return {
             all: function (user) {
                 if (user.type === 'admin' || user.type === 'user' || user.type === 'super') {

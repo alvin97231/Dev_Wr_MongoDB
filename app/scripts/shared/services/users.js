@@ -6,7 +6,16 @@ angular.module('workingRoom')
         var users = null;
         var usersList = {};
 
-
+        function destroy() {
+            for (var userId in usersList) {
+                usersList[userId].$destroy();
+                usersList[userId] = null;
+            }
+            if (users) {
+                users.$destroy();
+                users = null;
+            }
+        }
 
         return {
 
@@ -15,7 +24,6 @@ angular.module('workingRoom')
             return $http.get(url).
               then(function mySucces(response) {
                 return response.data;
-                console.log(response);
               }, function myError(response) {
                 $log.error(response.statusText);
               });
@@ -25,9 +33,8 @@ angular.module('workingRoom')
             var url = '/users';
             return $http.get(url).
               then(function mySucces(response) {
-                return response.data;
                 usersList = response.data;
-                console.log(usersList);
+                return response.data;
               }, function myError(response) {
                 $log.error(response.statusText);
               });
@@ -36,7 +43,6 @@ angular.module('workingRoom')
           get: function (id) {
             for (var i = 0; i < usersList.length; i++) {
               if (usersList[i].id == id) {
-                console.log(usersList[i]);
                 return usersList[i];
               }
             }
@@ -66,7 +72,8 @@ angular.module('workingRoom')
             var url = '/users/' + user.id;
             $http.delete(url).
               then(function mySucces(response) {
-                $log.info('utilisateur supprimé');
+                Toasts.simple('Utilisateur supprimé')
+                $log.info('Utilisateur supprimé');
               }, function myError(response) {
                 $log.error(response.statusText);
               });
@@ -74,17 +81,8 @@ angular.module('workingRoom')
 
         };
 
-        /*function destroy() {
-            for (var userId in usersList) {
-                usersList[userId].$destroy();
-                usersList[userId] = null;
-            }
-            if (users) {
-                users.$destroy();
-                users = null;
-            }
-        }
 
+        /*
         return {
             all: function (user) {
                 if (user.type === 'admin'|| user.type === 'user' || user.type === 'super') {

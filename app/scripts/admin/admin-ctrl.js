@@ -48,7 +48,7 @@ angular.module('workingRoom')
                 .cancel('Non')
                 .targetEvent(event);
             $mdDialog.show(confirm).then(function () {
-                Tickets.delete(module.$id);
+                Tickets.delete(module.id);
                 Modules.delete(module);
             });
         }

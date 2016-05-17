@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('DeleteUserCtrl', function (email, $mdDialog) {
+    .controller('DeleteUserCtrl', function (id, $mdDialog) {
         var vm = this;
 
         vm.user = {
-            email: email
+            id: id
         };
         vm.hide = $mdDialog.hide;
         vm.cancel = $mdDialog.cancel;

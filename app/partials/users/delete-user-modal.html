@@ -2,10 +2,8 @@
     <form name="userForm" data-ng-submit="vm.hide(vm.user)">
         <md-dialog-content layout="row" layout-wrap>
             <h3>{{'DELETE_USER_MODAL_DELETE_ACCOUNT' | translate}}</h3>
-            <md-input-container flex="100">
-                <label>{{'DELETE_USER_MODAL_PWD' | translate}}</label>
-                <input data-ng-model="vm.user.password" type="password" required title="password"/>
-            </md-input-container>
+            <h2>Voulez-vous vraiment supprimer ce compte?</h2>
+            <md-checkbox ng-model="vm.user.password" required>Supprimer (Action irréversible)</md-ckeckbox>
         </md-dialog-content>
         <div class="md-actions">
             <md-button type="button" data-ng-click="vm.cancel()">
