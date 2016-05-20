@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('AdminCtrl', function ($mdDialog, $state,$scope, Modules, Groups, Users, Tickets, ModulesList, GroupsList, UsersList, Toasts) {
+    .controller('AdminCtrl', function ($mdDialog, $state,$scope, Modules, Groups, Users, Tickets, ModulesList, GroupsList, UsersList, Toasts, Socket) {
         var vm = this;
 
         vm.modules = ModulesList;
@@ -27,6 +27,64 @@ angular.module('workingRoom')
             page: 1,
             rowSelect: [10, 20, 50, 100, 200, 500]
         };
+
+        Socket.on('new_user', function (data) {
+          updateArray(vm.users, data, 'add');
+        });
+        Socket.on('update_user', function (data) {
+          updateArray(vm.users, data, 'update');
+        });
+        Socket.on('delete_user', function (data) {
+          updateArray(vm.users, data, 'delete');
+        });
+
+        Socket.on('new_group', function (data) {
+          updateArray(vm.groups, data, 'add');
+        });
+        Socket.on('update_group', function (data) {
+          updateArray(vm.groups, data, 'update');
+        });
+        Socket.on('delete_group', function (data) {
+          updateArray(vm.groups, data, 'delete');
+        });
+
+        Socket.on('new_module', function (data) {
+          updateArray(vm.modules, data, 'add');
+        });
+        Socket.on('update_module', function (data) {
+          updateArray(vm.modules, data, 'update');
+        });
+        Socket.on('delete_module', function (data) {
+          updateArray(vm.modules, data, 'delete');
+        });
+
+        function updateArray(array, newValue, type) {
+          switch (type) {
+
+            case 'add':
+              array.push(newValue);
+              break;
+
+            case 'update':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array[i] = newValue;
+                }
+              }
+              break;
+
+            case 'delete':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array.splice(i,1);
+                }
+              }
+              break;
+          }
+          $scope.$apply();
+        }
 
         function openCreateModule(event) {
             $mdDialog.show({

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts) {
+    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts, Socket) {
         var vm = this;
 
         vm.logout = logout;
@@ -12,6 +12,44 @@ angular.module('workingRoom')
         vm.showModulesGrid = true;
         $scope.selectedLocale = 'fr';
         vm.changeLocale = changeLocale;
+
+        Socket.on('new_module', function (data) {
+          updateArray(vm.modules, data, 'add');
+        });
+        Socket.on('update_module', function (data) {
+          updateArray(vm.modules, data, 'update');
+        });
+        Socket.on('delete_module', function (data) {
+          updateArray(vm.modules, data, 'delete');
+        });
+
+        function updateArray(array, newValue, type) {
+          switch (type) {
+
+            case 'add':
+              array.push(newValue);
+              break;
+
+            case 'update':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array[i] = newValue;
+                }
+              }
+              break;
+
+            case 'delete':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array.splice(i,1);
+                }
+              }
+              break;
+          }
+          $scope.$apply();
+        }
 
         updateState();
         checkModulesState($state.params);

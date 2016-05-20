@@ -22,7 +22,11 @@ var express = require('express')
 , r = require('rethinkdb')
 , routes = require(__dirname + '/server/routes')
 
-, app = express();
+, app = express()
+, server = require('http').createServer(app)
+, io = require('socket.io').listen(server);
+
+io.sockets.on('connection', require('./server/socket/socket'));
 //==================================================================
 
 
@@ -105,7 +109,7 @@ if ('development' === app.get('env')) {
 
 function startExpress(connection) {
   app._rdbConn = connection;
-  app.listen(db.dbConfig.expressport);
+  server.listen(db.dbConfig.expressport);
   console.log('Listening on port ' + db.dbConfig.expressport);
 }
 
@@ -122,4 +126,5 @@ async.waterfall([
 
   startExpress(connection);
 });
+
 exports = module.exports = app;

@@ -1,9 +1,3 @@
-// A fork of the [node.js chat app](https://github.com/eiriksm/chat-test-2k)
-// by [@orkj](https://twitter.com/orkj) using socket.io, rethinkdb, passport and bcrypt on an express app.
-//
-// See the [GitHub README](https://github.com/rethinkdb/rethinkdb-example-nodejs-chat/blob/master/README.md)
-// for details of the complete stack, installation, and running the app.
-
 var r = require('rethinkdb')
   , util = require('util')
   , assert = require('assert')
@@ -23,12 +17,7 @@ var dbConfig = {
   tables: {}
 };
 module.exports.dbConfig = dbConfig;
-/**
- * Connect to RethinkDB instance and perform a basic database setup:
- *
- * - create the `RDB_DB` database (defaults to `chat`)
- * - create tables `messages`, `cache`, `users` in this database
- */
+
 module.exports.setup = function() {
   r.connect({host: dbConfig.host, port: dbConfig.port }, function (err, connection) {
     assert.ok(err === null, err);
@@ -56,27 +45,7 @@ module.exports.setup = function() {
   });
 };
 
-// #### Filtering results
 
-/**
- * Find a user by email using the
- * [`filter`](http://www.rethinkdb.com/api/javascript/filter/) function.
- * We are using the simple form of `filter` accepting an object as an argument which
- * is used to perform the matching (in this case the attribute `mail` must be equal to
- * the value provided).
- *
- * We only need one result back so we use [`limit`](http://www.rethinkdb.com/api/javascript/limit/)
- * to return it (if found). The result is collected with [`next`](http://www.rethinkdb.com/api/javascript/next/)
- * and passed as an array to the callback function.
- *
- * @param {String} mail
- *    the email of the user that we search for
- *
- * @param {Function} callback
- *    callback invoked after collecting all the results
- *
- * @returns {Object} the user if found, `null` otherwise
- */
 module.exports.findUserByEmail = function (mail, callback) {
   onConnect(function (err, connection) {
     logdebug("[INFO ][%s][findUserByEmail] Login {user: %s, pwd: 'you really thought I'd log it?'}", connection['_id'], mail);
@@ -101,21 +70,6 @@ module.exports.findUserByEmail = function (mail, callback) {
   });
 };
 
-/**
- * Every user document is assigned a unique id when created. Retrieving
- * a document by its id can be done using the
- * [`get`](http://www.rethinkdb.com/api/javascript/get/) function.
- *
- * RethinkDB will use the primary key index to fetch the result.
- *
- * @param {String} userId
- *    The ID of the user to be retrieved.
- *
- * @param {Function} callback
- *    callback invoked after collecting all the results
- *
- * @returns {Object} the user if found, `null` otherwise
- */
 module.exports.findUserById = function (userId, callback) {
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('users').get(userId).run(connection, function(err, result) {
@@ -130,6 +84,7 @@ module.exports.findUserById = function (userId, callback) {
     });
   });
 };
+
 
 module.exports.UsersList = function (req, res, next) {
   onConnect(function (err, connection) {
@@ -408,9 +363,10 @@ module.exports.UpdateUser = function (req, res, next) {
 
   var User = req.body;
   var userId = req.params.id;
-
+  delete User.id;
+  console.log(User);
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').get(userId).update(User).run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('users').get(userId).replace(User, {returnChanges: true}).run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
@@ -478,8 +434,6 @@ module.exports.DeleteModule = function (req, res, next) {
     });
   });
 };
-
-
 
 // #### Helper functions
 

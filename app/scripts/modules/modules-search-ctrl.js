@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesSearchCtrl', function (Module, TicketsList, $filter, $scope, $state, $timeout) {
+    .controller('ModulesSearchCtrl', function (Module, TicketsList, $filter, $scope, $state, $timeout, Socket) {
         var vm = this;
 
         vm.ticket = {};
@@ -35,6 +35,43 @@ angular.module('workingRoom')
             $scope.$parent.vm.filterAllTickets();
             $state.go('^');
         };
+
+        Socket.on('new_ticket', function (data) {
+          updateArray(TicketsList, data, 'add');
+          filterTicketList();
+        });
+        Socket.on('update_ticket', function (data) {
+          updateArray(TicketsList, data, 'update');
+          filterTicketList();
+        });
+
+        function updateArray(array, newValue, type) {
+          switch (type) {
+
+            case 'add':
+              array.push(newValue);
+              break;
+
+            case 'update':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array[i] = newValue;
+                }
+              }
+              break;
+
+            case 'delete':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array.splice(i,1);
+                }
+              }
+              break;
+          }
+          $scope.$apply();
+        }
 
         function searchTickets() {
           if(vm.dateFrom && vm.dateTo){

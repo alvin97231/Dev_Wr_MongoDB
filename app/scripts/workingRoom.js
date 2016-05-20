@@ -14,7 +14,8 @@ angular.module('workingRoom', [
     'angularMoment',
     'ngFileUpload',
     'angularFileUpload',
-    'highcharts-ng'
+    'highcharts-ng',
+    'btford.socket-io'
 
 ]).config(function ($stateProvider, $urlRouterProvider, $mdThemingProvider, $compileProvider, $locationProvider, $httpProvider) {
     $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|data):/);

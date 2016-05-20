@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList) {
+    .controller('ModulesCtrl', function ($scope, $element, $filter, $timeout,$http, TicketsList, Tickets, User, $stateParams, $mdDialog, Toasts, Module, admin, GroupsList, Socket) {
         var vm = this;
 
         vm.moduleId = $stateParams.id;
@@ -16,12 +16,6 @@ angular.module('workingRoom')
         vm.filterName = User.name;
         vm.getGroups = getGroups;
         vm.admin = admin;
-        //vm.ticketsAll = Ref.child('tickets/'+Module.$id+'/');
-        //vm.ticketsCount = vm.ticketsAll.once('value', function(snap){vm.ticketsTotal = snap.numChildren();});
-        //vm.userName = Ref.child('users').child(authData.uid).child('name');
-        //vm.groupQuery = Ref.child('users').child(authData.uid).child('groups');
-        //vm.currentUserName = vm.userName.once('value', function(snap){vm.filterName = snap.val();});
-        //vm.currentGroup = vm.groupQuery.once('value', function(snap){vm.groupName = snap.val();});
         vm.user = User.type === "user";
         vm.super = User.type === "super";
         vm.statusDuration = statusDuration;
@@ -34,6 +28,45 @@ angular.module('workingRoom')
         vm.status = defaultStatus;
         vm.filter = 'Tickets par statut';
         vm.tickets = null;
+
+        Socket.on('new_ticket', function (data) {
+          updateArray(TicketsList, data, 'add');
+          filterTicketList();
+        });
+        Socket.on('update_ticket', function (data) {
+          console.log(data);
+          updateArray(TicketsList, data, 'update');
+          console.log(TicketsList);
+          filterTicketList();
+        });
+
+        function updateArray(array, newValue, type) {
+          switch (type) {
+
+            case 'add':
+              array.push(newValue);
+              break;
+
+            case 'update':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array[i] = newValue;
+                }
+              }
+              break;
+
+            case 'delete':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array.splice(i,1);
+                }
+              }
+              break;
+          }
+          $scope.$apply();
+        }
 
         filterTicketList();
 

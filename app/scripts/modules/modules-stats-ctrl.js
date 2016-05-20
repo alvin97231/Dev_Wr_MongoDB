@@ -1,13 +1,11 @@
 //'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList) {
+    .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList, Socket) {
         var vm = this;
         vm.users = UsersList;
         vm.groups = GroupsList;
         vm.tickets = TicketsList;
-        console.log(Module.ticketFields[1].data);
-        //vm.ticketsAll = Ref.child('tickets/'+Module.$id);
         vm.simulateQuery = false;
         vm.isDisabled    = false;
         vm.querySearchName   = querySearchName;
@@ -24,6 +22,73 @@ angular.module('workingRoom')
         vm.activeQS = activeQS;
         vm.QSCpm = false;
         vm.exportExcel = exportExcel;
+
+        Socket.on('new_user', function (data) {
+          updateArray(vm.users, data, 'add');
+        });
+        Socket.on('update_user', function (data) {
+          updateArray(vm.users, data, 'update');
+        });
+        Socket.on('delete_user', function (data) {
+          updateArray(vm.users, data, 'delete');
+        });
+
+        Socket.on('new_group', function (data) {
+          updateArray(vm.groups, data, 'add');
+        });
+        Socket.on('update_group', function (data) {
+          updateArray(vm.groups, data, 'update');
+        });
+        Socket.on('delete_group', function (data) {
+          updateArray(vm.groups, data, 'delete');
+        });
+
+        Socket.on('new_module', function (data) {
+          updateArray(vm.modules, data, 'add');
+        });
+        Socket.on('update_module', function (data) {
+          updateArray(vm.modules, data, 'update');
+        });
+        Socket.on('delete_module', function (data) {
+          updateArray(vm.modules, data, 'delete');
+        });
+
+        Socket.on('new_ticket', function (data) {
+          updateArray(vm.tickets, data, 'add');
+          filterTicketList();
+        });
+        Socket.on('update_ticket', function (data) {
+          updateArray(vm.tickets, data, 'update');
+          filterTicketList();
+        });
+
+        function updateArray(array, newValue, type) {
+          switch (type) {
+
+            case 'add':
+              array.push(newValue);
+              break;
+
+            case 'update':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array[i] = newValue;
+                }
+              }
+              break;
+
+            case 'delete':
+              var i;
+              for (i = 0; i < array.length; i++) {
+                if (array[i].id === newValue.id) {
+                  array.splice(i,1);
+                }
+              }
+              break;
+          }
+          $scope.$apply();
+        }
 
         function exportExcel(id){
           return ExcellentExport.excel(this, id, 'TicketExport');
