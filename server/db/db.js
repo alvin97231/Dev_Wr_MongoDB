@@ -92,7 +92,6 @@ module.exports.UsersList = function (req, res, next) {
       if(err) {
         return next(err);
       }
-      //Retrieve all the todos in an array.
       cursor.toArray(function(err, result) {
         if(err) {
           return next(err);
@@ -109,7 +108,6 @@ module.exports.ModulesList = function (req, res, next) {
       if(err) {
         return next(err);
       }
-      //Retrieve all the todos in an array.
       cursor.toArray(function(err, result) {
         if(err) {
           return next(err);
@@ -304,9 +302,7 @@ module.exports.UpdateTicket = function (req, res, next) {
       'tickets': r.row('tickets').map(function (ticket) {
                           return r.branch(
                                           ticket('id').eq(Ticket.id),
-                                          // 2. The change you want to perform on the matching elements
-                                          ticket.merge(Ticket),
-                                          ticket)
+                                          ticket.merge(Ticket),ticket)
                       })
     }).run(connection, function(err, result) {
       if(err) {
@@ -363,10 +359,10 @@ module.exports.UpdateUser = function (req, res, next) {
 
   var User = req.body;
   var userId = req.params.id;
-  delete User.id;
+  //delete User.id;
   console.log(User);
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').get(userId).replace(User, {returnChanges: true}).run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('users').filter(r.row("id").eq(userId)).update(User).run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
@@ -449,19 +445,3 @@ function onConnect(callback) {
     callback(err, connection);
   });
 }
-
-// #### Connection management
-//
-// This application uses a new connection for each query needed to serve
-// a user request. In case generating the response would require multiple
-// queries, the same connection should be used for all queries.
-//
-// Example:
-//
-//     onConnect(function (err, connection)) {
-//         if(err) { return callback(err); }
-//
-//         query1.run(connection, callback);
-//         query2.run(connection, callback);
-//     }
-//

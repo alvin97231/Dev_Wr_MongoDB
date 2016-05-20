@@ -68,28 +68,9 @@ module.exports = function(app) {
         res.json(req.user);
     });
 
-    /*app.post('/auth/signup',function(req,res){
-
-        var u =  new User();
-        u.username = req.body.email;
-        u.password = req.body.password;
-        u.lastname = req.body.lastname;
-        u.firstname = req.body.firstname;
-        u.email = req.body.email;
-
-        u.save(function(err){
-            if (err) {
-                res.json({'alert':'Registration error'});
-            }else{
-                res.json({'alert':'Registration success'});
-            }
-        });
-    });*/
-
-     app.get('/logout', function(req, res){
+    app.get('/logout', function(req, res){
         req.logout();
         res.send(200);
-        res.redirect('/login');
      });
 
 };

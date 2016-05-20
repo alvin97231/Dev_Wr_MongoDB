@@ -252,7 +252,9 @@ angular.module('workingRoom')
             for(var i = 0; i<vm.statsStatus.length ; i++){
               dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
             }
-            dataStatus[13].y = vm.ticketEi.length;
+            if(dataStatus[11]){
+              dataStatus[11].y = vm.ticketEi.length;
+            }
 
             for(var i = 0; i<dataStatus.length ; i++){
               sommeStatus += dataStatus[i].y;
