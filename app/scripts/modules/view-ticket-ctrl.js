@@ -15,28 +15,26 @@ angular.module('workingRoom')
         vm.sendMessage = sendMessage;
         vm.upload = upload;
         vm.deleteFile = deleteFile;
+        vm.unlock = unlock;
         vm.super = User.type === "super";
         vm.user = User.type === "user";
         vm.subscription = false;
 
         vm.cancel = $mdDialog.hide;
-        vm.subscribe = subscribe;
+        //vm.subscribe = subscribe;
 
         function sendMessage() {
             if (vm.newMessage.length > 0) {
-                if (vm.newStatus === 'Escalade injustifié' && ticket.status === 'Escaladé'){
+                if (vm.newStatus === 'Injustifié' && ticket.status === 'Escaladé'){
                   ticket.status = 'A traiter';
                   vm.ei = true;
 
                 }
-                else if (vm.newStatus === 'Escalade injustifié' && ticket.status !== 'Escaladé'){
+                else if (vm.newStatus === 'Injustifié' && ticket.status !== 'Escaladé'){
                   ticket.status = 'En cours';
                   vm.ei = true;
                 }
-                else if (vm.newStatus === 'A solder : En attente de recontact client'){
-                  ticket.status = vm.newStatus;
-                }
-                else if (vm.newStatus !== 'Escalde injustifié'){
+                else if (vm.newStatus !== 'Injustifié'){
                   vm.dateChangeState = Date.now();
                   ticket.status = vm.newStatus;
                 }
@@ -88,7 +86,11 @@ angular.module('workingRoom')
             }
         }
 
-        function subscribe(){
+        function unlock() {
+          vm.ticket.status = '';
+        }
+
+        /*function subscribe(){
           if(vm.subscription){
 
             if (!ticket.subsUsers){
@@ -130,5 +132,5 @@ angular.module('workingRoom')
             }
           }
         Tickets.save($stateParams.id, ticket);
-        }
+      }*/
     });

@@ -382,7 +382,7 @@ module.exports.DeleteUser = function (req, res, next) {
   console.log('Suppresion de l\'utilisateur '+userId);
 
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').get(userId).delete().run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('users').filter(r.row('id').eq(userId)).delete().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);

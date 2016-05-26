@@ -48,6 +48,7 @@ app.use(morgan('dev'));
 // serve up static assets
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(bodyParser());
+app.use(bodyParser.json({limit : '10mb'}));
 app.use(methodOverride());
 
 // required for passport

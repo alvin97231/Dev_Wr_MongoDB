@@ -11,6 +11,9 @@
                   M'abonner
                 </md-switch>
                 -->
+                <md-button type="button" data-ng-if="vm.ticket.status === 'Clos' && vm.admin" data-ng-click="vm.unlock()" class="md-icon-button">
+                  <md-icon>lock_open</md-icon>
+                </md-button>
                 <md-button type="button" aria-label="close" data-ng-click="vm.cancel()" class="md-icon-button">
                     <md-icon>close</md-icon>
                 </md-button>

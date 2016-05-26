@@ -34,9 +34,7 @@ angular.module('workingRoom')
           filterTicketList();
         });
         Socket.on('update_ticket', function (data) {
-          console.log(data);
           updateArray(TicketsList, data, 'update');
-          console.log(TicketsList);
           filterTicketList();
         });
 
@@ -241,7 +239,6 @@ angular.module('workingRoom')
           var dateStatusChange = ticket.messages[id].date;
           var currentDate = Date.now();
           vm.diff = currentDate - dateStatusChange;
-          console.log(vm.diff)
           if(vm.diff >= 172800000)
           {
             console.log('Notif Necessaire');
@@ -254,7 +251,6 @@ angular.module('workingRoom')
               vm.diffDisp = vm.done/3600000;
               console.log(vm.diffDisp+' heures');
               delais.push(vm.diffDisp);
-              console.log(delais);
             }
             else {
               console.log('Tickets n° '+ticket.id+' trop vieux')
@@ -282,19 +278,16 @@ angular.module('workingRoom')
                   vm.takeLate(ticket,delais);
                   i ++;
                   status[1]=i;
-                  console.log(status[1]);
                 break;
 
                 case 'En cours : Attente CPM':
                   vm.takeLate(ticket,delais);
                   status[1] = status[1]+1;
-                  console.log(status[1]);
                 break;
 
                 case 'En cours : Attente conseiller':
                   vm.takeLate(ticket,delais);
                   status[1] = status[1]+1;
-                  console.log(status[1]);
                 break;
 
                 case 'Soldé : Recontact client effectué':
