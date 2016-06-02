@@ -17,17 +17,17 @@ module.exports = function(app) {
         function(username, password, done) {
 
             db.findUserByEmail(username, function (err, user) {
-
+              console.log(bcrypt.compareSync(password, user.password));
                 if (err) {
                     return done(err);
                 }
                 if (!user) {
                     return done(null, false, {alert: 'Incorrect username.'});
                 }
-                if (user.password != password) {
+                if (!bcrypt.compareSync(password, user.password)) {
                     return done(null, false, {alert: 'Incorrect password.'});
                 }
-                if (user.email == username && user.password == password) {
+                if (user.email == username && bcrypt.compareSync(password, user.password)) {
                     return done(null, user);
                 }
             });

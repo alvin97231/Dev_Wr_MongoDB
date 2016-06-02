@@ -1,4 +1,4 @@
-//'use strict';
+'use strict';
 
 angular.module('workingRoom')
     .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList, Socket) {
@@ -143,6 +143,7 @@ angular.module('workingRoom')
                   if (vm.tickets[i].messages[j].ei && vm.tickets[i].lang == moment.locale()) {
                     if (vm.ticketEi.indexOf(vm.tickets[i]) === -1) {
                       vm.ticketEi.push(vm.tickets[i]);
+                      console.log(vm.ticketEi);
                     }
                   }
                 }
@@ -178,25 +179,30 @@ angular.module('workingRoom')
                 vm.countTicketTableToDeal.push({date:vm.dateTableToDeal[i], count:vm.qsTicketsToDeal.length});
               }
 
-              vm.oldiestTicketClimb = vm.statsStatus[6][0];
+              vm.oldiestTicketClimb = vm.statsStatus[2][0];
               if(vm.oldiestTicketClimb){
                 vm.QSDaysClimb = (new Date().getTime() - vm.oldiestTicketClimb.created)/86400000;
                 vm.QSHoursClimb = (Math.round(vm.QSDaysClimb))*24;
               }
 
               vm.dateTableClimb=[]
-              for (var i = 0; i < vm.statsStatus[6].length; i++) {
-                var dateToDeal = moment(vm.statsStatus[6][i].created).format("DD-MM-YYYY");
-                if(vm.dateTableClimb.indexOf(dateToDeal) === -1){
-                  vm.dateTableClimb.push(dateToDeal);
+              if(vm.dateTableClimb){
+                for (var i = 0; i < vm.statsStatus[2].length; i++) {
+                  var dateToDeal = moment(vm.statsStatus[6][i].created).format("DD-MM-YYYY");
+                  if(vm.dateTableClimb.indexOf(dateToDeal) === -1){
+                    vm.dateTableClimb.push(dateToDeal);
+                  }
                 }
               }
 
               vm.countTicketTableClimb=[]
-              for (var i = 0; i < vm.dateTableClimb.length; i++) {
-                vm.qsTicketsClimb = vm.statsStatus[6].filter(function (ticket){return moment(ticket.created).format("DD-MM-YYYY") === vm.dateTableClimb[i];});
-                vm.countTicketTableClimb.push({date:vm.dateTableClimb[i], count:vm.qsTicketsClimb.length});
+              if(vm.countTicketTableClimb){
+                for (var i = 0; i < vm.dateTableClimb.length; i++) {
+                  vm.qsTicketsClimb = vm.statsStatus[2].filter(function (ticket){return moment(ticket.created).format("DD-MM-YYYY") === vm.dateTableClimb[i];});
+                  vm.countTicketTableClimb.push({date:vm.dateTableClimb[i], count:vm.qsTicketsClimb.length});
+                }
               }
+
             }
 
             function takeStatsData(datas){
@@ -252,8 +258,9 @@ angular.module('workingRoom')
             for(var i = 0; i<vm.statsStatus.length ; i++){
               dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
             }
-            if(dataStatus[11]){
-              dataStatus[11].y = vm.ticketEi.length;
+
+            if(dataStatus[3]){
+              dataStatus[3].y = vm.ticketEi.length;
             }
 
             for(var i = 0; i<dataStatus.length ; i++){
@@ -353,7 +360,7 @@ angular.module('workingRoom')
               for(var i = 0; i<vm.statsStatus.length ; i++){
                 dataStatus.push({name: vm.sta[i].name, y:vm.statsStatus[i].length});
               }
-              dataStatus[13].y = vm.ticketEi.length;
+              dataStatus[3].y = vm.ticketEi.length;
               var sommeStatus = 0;
               for(var i = 0; i<dataStatus.length ; i++){
                 sommeStatus += dataStatus[i].y;

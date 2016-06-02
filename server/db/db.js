@@ -211,6 +211,7 @@ module.exports.AddTicket = function (req, res, next) {
         res.json({success: true});
       }
     });
+    connection.close();
   });
 };
 
@@ -229,6 +230,7 @@ module.exports.AddGroup = function (req, res, next) {
         res.json({success: true});
       }
     });
+    connection.close();
   });
 };
 
@@ -238,35 +240,30 @@ module.exports.AddUser = function (req, res, next) {
   User.password = bcrypt.hashSync('workingRoom', 10);
 
   onConnect(function (err, connection) {
-    r.db(dbConfig.db).table('counter')('userCounter').run(req.app._rdbConn, function(err, cursor) {
+    r.db(dbConfig.db).table('counter').get('ea507c88-ed43-4833-b3ec-b2b7948c8a51').run(req.app._rdbConn, function(err, result) {
       if(err) {
         return next(err);
       }
-      if(cursor){
-        cursor.next(function(err, result) {
+      if(result){
+        User.id = result.usersCounter;
+        r.db(dbConfig['db']).table('users').insert(User).run(connection, function(err, result2) {
           if(err) {
+            logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
             return next(err);
           }
-          User.id = result;
-          r.db(dbConfig['db']).table('users').insert(User).run(connection, function(err, result2) {
-            if(err) {
-              logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-              return next(err);
-            }
-            else {
-              counter = User.id +1;
-              r.db(dbConfig.db).table('counter').get('33b255d6-067f-47e0-b1ed-affe126ac0e7').update({userCounter : counter}).run(connection, function(err, result) {
-                if(err) {
-                  logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-                  return next(err);
-                }
-                else {
-                  res.json({success: true});
-                }
-              });
-              res.json({success: true});
-            }
-          });
+          else {
+            counter = User.id +1;
+            r.db(dbConfig.db).table('counter').get('ea507c88-ed43-4833-b3ec-b2b7948c8a51').update({userCounter : counter}).run(connection, function(err, result) {
+              if(err) {
+                logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+                return next(err);
+              }
+              else {
+                res.json({success: true});
+              }
+            });
+            res.json({success: true});
+          }
         });
       }
     });
@@ -359,22 +356,53 @@ module.exports.UpdateUser = function (req, res, next) {
 
   var User = req.body;
   var userId = req.params.id;
-  //delete User.id;
-  console.log(User);
-  onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').filter(r.row("id").eq(userId)).update(User).run(connection, function(err, result) {
-      if(err) {
-        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-        return next(err);
-      }
-      else {
-        console.log(result);
-        res.json({success: true});
-      }
-    });
-  });
-};
 
+  onConnect(function (err, connection) {
+    if (User.name) {
+      r.db(dbConfig['db']).table('users').get(userId).update({
+        "name": User.name,
+        "email":User.email,
+        "groups": User.groups,
+        "type": User.type,
+        "password": User.password
+      }).run(connection, function(err, result) {
+        if(err) {
+          logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+          return next(err);
+        }
+        else {
+          console.log(result);
+          res.json({success: true});
+        }
+      });
+    }
+
+    else if (User.newPassword) {
+      r.db(dbConfig['db']).table('users').get(userId).run(connection, function(err, result) {
+        if(err) {
+          logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+          return next(err);
+        }
+        else if (result) {
+          if(bcrypt.compareSync(User.oldPassword, result.password)){
+            console.log(User);
+            r.db(dbConfig['db']).table('users').get(userId).update({password: bcrypt.hashSync(User.newPassword, 10)}).run(connection, function(err, result) {
+              if(err) {
+                logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+                return next(err);
+              }
+              else {
+                console.log(result);
+                res.json({success: true});
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+
+  };
 
 module.exports.DeleteUser = function (req, res, next) {
 

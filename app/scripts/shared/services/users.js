@@ -68,12 +68,22 @@ angular.module('workingRoom')
               });
           },
 
+          changePassword: function (obj, user) {
+            var url = '/users/' + user.id;
+            return $http.put(url, obj).
+              then(function mySucces(response) {
+                $log.info('Mot de passe changé');
+                Toasts.simple('Mot de passe changé');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
           delete: function(user) {
             var url = '/users/' + user.id;
             $http.delete(url).
               then(function mySucces(response) {
-                Toasts.simple('Utilisateur supprimé')
-                $log.info('Utilisateur supprimé');
+                $log.info('Utilisateur supprimé')
               }, function myError(response) {
                 $log.error(response.statusText);
               });

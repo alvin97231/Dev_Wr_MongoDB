@@ -51,7 +51,7 @@
       <md-card>
 
             <md-tabs md-dynamic-height aria-label="select status" >
-              <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Escalade injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
+              <md-tab data-ng-repeat="status in vm.module.status | filter: {name: '!Injustifié'}" class="md-accent" label="{{status.name}}" md-on-select="vm.filterByStatusTickets(status.name)">
                 <md-tab-body><br/>
                   <md-data-table-container>
                     <table id="table_{{$index}}" class="table">

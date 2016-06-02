@@ -45,6 +45,7 @@ module.exports = function (socket) {
              }
              else if(users && users.new_val === null){
                socket.emit('delete_user', users.old_val);
+               socket.broadcast.emit('delete_user', users.new_val);
                console.log('User deleted');
              }
            });

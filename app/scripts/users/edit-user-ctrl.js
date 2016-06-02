@@ -47,7 +47,7 @@ angular.module('workingRoom')
                     }
                 }
             }).then(function (res) {
-                Users.changePassword(res);
+                Users.changePassword(res, user);
             });
         }
 
