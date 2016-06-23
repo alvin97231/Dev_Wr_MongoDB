@@ -311,8 +311,6 @@ angular.module('workingRoom', [
     }
 
     $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
-      console.log(fromState);
-      console.log($rootScope.globals.currentUser);
       if (toState.authenticate && !$rootScope.globals.currentUser) {
         $state.transitionTo("login");
         event.preventDefault();

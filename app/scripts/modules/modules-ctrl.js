@@ -29,44 +29,46 @@ angular.module('workingRoom')
         vm.filter = 'Tickets par statut';
         vm.tickets = null;
 
-        Socket.on('new_ticket', function (data) {
-          updateArray(TicketsList, data, 'add');
-          filterTicketList();
-        });
-        Socket.on('update_ticket', function (data) {
-          updateArray(TicketsList, data, 'update');
-          filterTicketList();
-        });
+        function filterTicketList() {
+             $timeout(function () {
+                vm.tickets = $filter('filter')(TicketsList, vm.currentFilter);
+            });
+        }
 
         function updateArray(array, newValue, type) {
           switch (type) {
 
             case 'add':
-              array.push(newValue);
+              if (newValue.id == vm.moduleId) {
+                array.push(newValue.ticket);
+              }
               break;
 
             case 'update':
               var i;
-              for (i = 0; i < array.length; i++) {
-                if (array[i].id === newValue.id) {
-                  array[i] = newValue;
-                }
-              }
-              break;
-
-            case 'delete':
-              var i;
-              for (i = 0; i < array.length; i++) {
-                if (array[i].id === newValue.id) {
-                  array.splice(i,1);
+              if (newValue.id == vm.moduleId) {
+                for (i = 0; i < array.length; i++) {
+                  if (array[i].id === newValue.ticket.id) {
+                    array[i] = newValue.ticket;
+                  }
                 }
               }
               break;
           }
           $scope.$apply();
+          vm.filterTicketList();
         }
 
         filterTicketList();
+
+        Socket.on('new_ticket', function (data) {
+          console.log(data);
+          updateArray(TicketsList, data, 'add');
+
+        });
+        Socket.on('update_ticket', function (data) {
+          updateArray(TicketsList, data, 'update');
+        });
 
         vm.ticketsNotRead = TicketsList.filter(function (ticket) {
           if (vm.admin || vm.super && !vm.user){
@@ -105,12 +107,6 @@ angular.module('workingRoom')
 
         function getGroups(){
           return GroupsList;
-        }
-
-        function filterTicketList() {
-             $timeout(function () {
-                vm.tickets = $filter('filter')(TicketsList, vm.currentFilter);
-            });
         }
 
         function filterAllTickets()

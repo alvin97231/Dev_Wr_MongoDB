@@ -64,7 +64,7 @@ angular.module('workingRoom')
 
           add: function (moduleId, ticket) {
             var url = '/tickets/'+moduleId;
-            ticket.id = ticketsForModule.length+2;
+            ticket.id = ticketsForModule.length+1;
             ticket.created = new Date().getTime();
             return $http.post(url, ticket).
               then(function mySucces(response) {

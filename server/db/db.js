@@ -211,7 +211,7 @@ module.exports.AddTicket = function (req, res, next) {
         res.json({success: true});
       }
     });
-    connection.close();
+    //connection.close();
   });
 };
 
