@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts, Socket) {
+    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts, Socket, Authentication) {
         var vm = this;
 
         vm.logout = logout;
@@ -107,6 +107,7 @@ angular.module('workingRoom')
         function logout(){
           $http.get('/logout')
           .success(function(){
+            Authentication.clearCredentials();
             $rootScope.message = 'Logout successful!';
             Toasts.simple($rootScope.message);
             $location.url('/login');

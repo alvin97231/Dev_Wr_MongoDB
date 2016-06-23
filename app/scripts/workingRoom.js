@@ -65,7 +65,7 @@ angular.module('workingRoom', [
             default: '500'
         });
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/login');
     //noinspection JSUnusedGlobalSymbols
     $stateProvider
         .state('login', {
@@ -81,6 +81,7 @@ angular.module('workingRoom', [
             url: '/',
             templateUrl: 'partials/main.html',
             controller: 'MainCtrl as vm',
+            authenticate: true,
             resolve: {
 
                 User: function (Users) {
@@ -104,6 +105,7 @@ angular.module('workingRoom', [
             url: 'modules/:id',
             templateUrl: 'partials/modules/modules.html',
             controller: 'ModulesCtrl as vm',
+            authenticate: true,
             resolve: {
 
                 User: function (Users) {
@@ -127,6 +129,7 @@ angular.module('workingRoom', [
             url: 'modules/:id/all',
             templateUrl: 'partials/modules/modules-all.html',
             controller: 'ModulesCtrl as vm',
+            authenticate: true,
             resolve: {
                 User: function (Users) {
                     return Users.current();
@@ -146,6 +149,7 @@ angular.module('workingRoom', [
             url: 'modules/:id/not-read',
             templateUrl: 'partials/modules/modules-not-read.html',
             controller: 'ModulesCtrl as vm',
+            authenticate: true,
             resolve: {
                 User: function (Users) {
                     return Users.current();
@@ -165,6 +169,7 @@ angular.module('workingRoom', [
             url: 'modules/:id/current',
             templateUrl: 'partials/modules/modules-current.html',
             controller: 'ModulesCtrl as vm',
+            authenticate: true,
             resolve: {
                 User: function (Users) {
                     return Users.current();
@@ -184,6 +189,7 @@ angular.module('workingRoom', [
             url: 'modules/:id/stats',
             templateUrl: 'partials/modules/modules-stats.html',
             controller: 'ModulesStatsCtrl as vm',
+            authenticate: true,
             resolve: {
                 GroupsList: function (User, Groups) {
                     return Groups.all(User);
@@ -209,6 +215,7 @@ angular.module('workingRoom', [
             url: '/search',
             templateUrl: 'partials/modules/modules-search.html',
             controller: 'ModulesSearchCtrl as vm',
+            authenticate: true,
             resolve: {
                 Module: function (Module) {
                     return Module;
@@ -219,6 +226,7 @@ angular.module('workingRoom', [
             url: '/edit',
             templateUrl: 'partials/modules/edit-modules.html',
             controller: 'EditModulesCtrl as vm',
+            authenticate: true,
             resolve: {
                 Module: function (Module) {
                     return Module;
@@ -237,6 +245,7 @@ angular.module('workingRoom', [
             url: 'users/:id',
             templateUrl: 'partials/users/user.html',
             controller: 'UserCtrl as vm',
+            authenticate: true,
             resolve: {
                 User: function (Users) {
                     return Users.current();
@@ -258,6 +267,7 @@ angular.module('workingRoom', [
             url: '/edit',
             templateUrl: 'partials/users/edit-user.html',
             controller: 'EditUserCtrl as vm',
+            authenticate: true,
             resolve: {
                 user: function (user, admin, $q) {
                     return $q(function (resolve, reject) {
@@ -280,6 +290,7 @@ angular.module('workingRoom', [
             url: 'admin',
             templateUrl: 'partials/admin/admin.html',
             controller: 'AdminCtrl as vm',
+            authenticate: true,
             resolve: {
                 admin: function (User, $q, admin) {
                     return $q(function (resolve, reject) {
@@ -294,18 +305,20 @@ angular.module('workingRoom', [
     amMoment.changeLocale('fr');
 
     $rootScope.globals = $cookieStore.get('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
-        }
 
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login','/']) === -1;
-            var loggedIn = $rootScope.globals.currentUser;
-            if (restrictedPage && !loggedIn) {
-                $location.path('/login');
-            }
-        });
+    if ($rootScope.globals.currentUser) {
+        $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+    }
+
+    $rootScope.$on("$stateChangeStart", function(event, toState, toParams, fromState, fromParams){
+      console.log(fromState);
+      console.log($rootScope.globals.currentUser);
+      if (toState.authenticate && !$rootScope.globals.currentUser) {
+        $state.transitionTo("login");
+        event.preventDefault();
+      }
+      //$state.go('main');
+    });
 });
 
 angular.element(document).ready(function () {
