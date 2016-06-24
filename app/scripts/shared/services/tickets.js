@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Tickets', function ($http, $q, $log) {
+    .factory('Tickets', function ($http, $q, $log, Socket) {
         var ticketsForModule = {};
         var tickets = null;
         var vm = this;

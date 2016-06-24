@@ -122,38 +122,36 @@
   var flag = true;
   $('#table_all tbody').on('inview', function(event, isInView) {
       if (isInView && flag) {
-        setTimeout(function(){
-            tfall = new TableFilter(document.querySelector('#table_all'), {base_path: '/tablefilter/'
-                                                                          ,
-                                                                          fixed_headers: true ,
-                                                                          flts_row_css_class: "test",
-                                                                          flt_css_class: "input-sm form-control",
-                                                                          filters_row_index: 1,
-                                                                          col_3: 'select',
-                                                                          col_7: 'select',
-                                                                          col_8: 'select',
-                                                                          paging: true,
-                                                                          results_per_page: ['Tickets par page: ', [10,25,50,100]],
-                                                                          remember_grid_values: true,
-                                                                          remember_page_number: true,
-                                                                          remember_page_length: true,
-                                                                          rows_counter: true,
-                                                                          loader: true,
-                                                                          alternate_rows: true,
-                                                                          btn_reset: true,
-                                                                          btn_reset_text: "Clear",
-                                                                          extensions:[{
-                                                                            name: 'sort',
-                                                                            types: [
-                                                                            'number', 'string', 'string',
-                                                                            'string', 'dmydate', 'string',
-                                                                            'string', 'string', 'string',
-                                                                            'number', 'number'
-                                                                            ]
-                                                                          }]
-                                                                        });
-            tfall.init();
-        }, 200);
+        tfall = new TableFilter(document.querySelector('#table_all'), {base_path: '/tablefilter/'
+                                                                      ,
+                                                                      fixed_headers: true ,
+                                                                      flts_row_css_class: "test",
+                                                                      flt_css_class: "input-sm form-control",
+                                                                      filters_row_index: 1,
+                                                                      col_3: 'select',
+                                                                      col_7: 'select',
+                                                                      col_8: 'select',
+                                                                      paging: true,
+                                                                      results_per_page: ['Tickets par page: ', [10,25,50,100]],
+                                                                      remember_grid_values: true,
+                                                                      remember_page_number: true,
+                                                                      remember_page_length: true,
+                                                                      rows_counter: true,
+                                                                      loader: true,
+                                                                      alternate_rows: true,
+                                                                      btn_reset: true,
+                                                                      btn_reset_text: "Clear",
+                                                                      extensions:[{
+                                                                        name: 'sort',
+                                                                        types: [
+                                                                        'number', 'string', 'string',
+                                                                        'string', 'dmydate', 'string',
+                                                                        'string', 'string', 'string',
+                                                                        'number', 'number'
+                                                                        ]
+                                                                      }]
+                                                                    });
+        tfall.init();
         flag=false;
       }
       else{

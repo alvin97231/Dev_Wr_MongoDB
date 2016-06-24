@@ -67,6 +67,7 @@ angular.module('workingRoom')
 
         });
         Socket.on('update_ticket', function (data) {
+          console.log(data);
           updateArray(TicketsList, data, 'update');
         });
 

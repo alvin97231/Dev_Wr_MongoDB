@@ -23,6 +23,12 @@ angular.module('workingRoom')
         vm.QSCpm = false;
         vm.exportExcel = exportExcel;
 
+        function filterTicketList() {
+             $timeout(function () {
+                vm.tickets = $filter('filter')(TicketsList, vm.currentFilter);
+            });
+        }
+
         Socket.on('new_user', function (data) {
           updateArray(vm.users, data, 'add');
         });

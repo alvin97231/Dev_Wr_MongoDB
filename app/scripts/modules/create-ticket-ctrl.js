@@ -52,11 +52,13 @@ angular.module('workingRoom')
         };
 
         function getAttribution() {
-          for (var objet in vm.groups){
-            if(vm.groups[objet].name.slice(0, 3).toLowerCase() == vm.ticket[5].first.slice(0, 3).toLowerCase()){
-              vm.attributed = vm.groups[objet];
-              vm.ticket[6] = vm.attributed;
-              console.log(vm.ticket);
+          if (vm.module.name == 'Escalade'){
+            for (var objet in vm.groups){
+              if(vm.groups[objet].name.slice(0, 3).toLowerCase() == vm.ticket[5].first.slice(0, 3).toLowerCase()){
+                vm.attributed = vm.groups[objet];
+                vm.ticket[6] = vm.attributed;
+                console.log(vm.ticket);
+              }
             }
           }
         }

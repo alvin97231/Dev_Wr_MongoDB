@@ -26,7 +26,7 @@ var express = require('express')
 , server = require('http').createServer(app)
 , io = require('socket.io').listen(server);
 
-io.sockets.on('connection', require('./server/socket/socket'));
+io.on('connection', require('./server/socket/socket'));
 //==================================================================
 
 

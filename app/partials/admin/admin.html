@@ -68,40 +68,61 @@
                 </div>
             </md-toolbar>
 
-                <table id="user" si-table class="table">
+                <table id="table_users" class="table">
                   <thead>
                     <tr>
-                        <td><input class="input-sm form-control" placeholder="#" size="5" ng-model="filters['id']"></td>
-                        <td><input class="input-sm form-control" placeholder="Nom" size="10" ng-model="filters['name']"></td>
-                        <td><input class="input-sm form-control" placeholder="Email" size="10" ng-model="filters['email']"></td>
-                        <td><select class="input-sm form-control" ng-model="filters['type']"><option placeholder="Type" data-ng-repeat="type in vm.types">{{type}}</option></select></td>
-                    </tr>
-                    <tr>
-                        <th sort-by="id" sort-init="desc">#</th>
-                        <th sort-by="name">Nom</th>
-                        <th sort-by="email">Email</th>
-                        <th sort-by="type">Type</th>
+                        <th>#</th>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Type</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr ng-repeat="user in vm.users | filter:{id:filters.id} | filter:{name:filters.name} | filter:{email:filters.email} | filter:{type:filters.type}"
-                        data-ui-sref="main.users({id: user.id})"
-                        si-sortable>
+                        data-ui-sref="main.users({id: user.id})">
                         <td>{{user.id}}</td>
                         <td>{{user.name}}</td>
                         <td>{{user.email}}</td>
                         <td>{{user.type}}</td>
                     </tr>
                   </tbody>
-                  <tfoot>
-                    <tr>
-                        <td colspan="4">
-                          <si-table-pagination limit="50"  first-text="First page"  last-text="Last page"  previous-text="«"  next-text="»" />
-                        </td>
-                    </tr>
-                  </tfoot>
-                </table>
+              </table>
 
         </md-card>
     </div>
 </div>
+<script data-ng-if="vm.users">
+  var flag = true;
+  $('#table_users tbody').on('inview', function(event, isInView) {
+      if (isInView && flag) {
+        tfusers = new TableFilter(document.querySelector('#table_users'), {base_path: '/tablefilter/'
+                                                                      ,flts_row_css_class: "test",
+                                                                      fixed_headers: true ,
+                                                                      flt_css_class: "input-sm form-control",
+                                                                      filters_row_index: 1,
+                                                                      col_3: 'select',
+                                                                      paging: true,
+                                                                      results_per_page: ['Utilisateurs par page: ', [10,25,50,100]],
+                                                                      remember_grid_values: true,
+                                                                      remember_page_number: true,
+                                                                      remember_page_length: true,
+                                                                      rows_counter: true,
+                                                                      loader: true,
+                                                                      alternate_rows: true,
+                                                                      btn_reset: true,
+                                                                      btn_reset_text: "Clear",
+                                                                      extensions:[{
+                                                                        name: 'sort',
+                                                                        types: [
+                                                                        'number', 'string', 'string', 'string'
+                                                                        ]
+                                                                      }]
+                                                                    });
+        tfusers.init();
+        flag = false;
+      }
+      else{
+        console.log('Error');
+      }
+  });
+</script>
