@@ -693,8 +693,6 @@ angular.module('workingRoom')
                   switch(ticket.status){
                     case 'En cours':
                       vm.takeLate(ticket,delais);
-                      i ++;
-                      status[1]=i;
                     break;
 
                     case 'Clos-Traité':

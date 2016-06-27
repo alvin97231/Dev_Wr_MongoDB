@@ -259,7 +259,7 @@ angular.module('workingRoom')
         {
 
             var i=0;
-            var status = [];
+            var status = 0;
             var delais = [];
 
               tickets.forEach(function (ticket){
@@ -268,7 +268,7 @@ angular.module('workingRoom')
                 case 'En cours':
                   vm.takeLate(ticket,delais);
                   i ++;
-                  status[1]=i;
+                  status=i;
                 break;
 
                 case 'Clos-Traité':
@@ -282,20 +282,10 @@ angular.module('workingRoom')
                 break;
               }
           });
-          for ( var x=0; x < status.length; x++){
-            if(status[x] >= 0){
-              switch (x) {
-                case 0:
-                    Toasts.simple('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');
-                    console.log('Il y a '+ status[0] +' ticket En attente de recontact client depuis plus de 48H');
-                break;
-                case 1:
-                setTimeout(function(){
-                    Toasts.simple('Il y a '+ status[1] +' ticket En cours depuis plus de 48H');
-                    console.log('Il y a '+ status[1] +' ticket En cours depuis plus de 48H');}, 5000);
-                break;
-              }
-            }
+
+          if(status >= 0){
+            Toasts.simple('Il y a '+ status +' ticket En cours depuis plus de 48H');
+            console.log('Il y a '+ status +' ticket En cours depuis plus de 48H');
           }
       }
 
