@@ -30,9 +30,12 @@
     "nodemon": "^1.9.2",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
+    "password-reset": "^0.1.4",
+    "password-reset-nodemailer": "0.0.1",
     "requirejs": "^2.2.0",
     "rethinkdb": "^2.3.0",
     "serve-favicon": "^2.3.0",
+    "smtp-server": "^1.9.1",
     "socket.io": "^1.4.8",
     "tablefilter": "^0.1.14",
     "wiredep": "^2.2.2"

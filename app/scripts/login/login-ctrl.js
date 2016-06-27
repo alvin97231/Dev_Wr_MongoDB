@@ -3,7 +3,7 @@
 angular.module('workingRoom')
     .controller('LoginCtrl', function ($rootScope, $state, $stateParams,$location, $mdDialog, Toasts, $http, Authentication) {
         var vm = this;
-        //vm.passwordReset = passwordReset;
+        vm.passwordReset = passwordReset;
         vm.testValues = testValues;
         vm.login = login;
 
@@ -39,13 +39,13 @@ angular.module('workingRoom')
             });
         };
 
-        /*function passwordReset(event) {
+        function passwordReset(event) {
             $mdDialog.show({
                 controller: 'resetPasswordCtrl as vm',
                 templateUrl: 'partials/login/reset-password-modal.html',
                 targetEvent: event
             }).then(function (email) {
-                Auth.$resetPassword({
+                Authentication.resetPassword({
                     email: email
                 }).then(function () {
                     Toasts.simple('Email de récupération envoyé');
@@ -53,8 +53,9 @@ angular.module('workingRoom')
                     Toasts.error(error);
                 });
             });
-        }*/
+        }
 
+        
         function testValues(){
           loginForm.$invalid=true;
         }

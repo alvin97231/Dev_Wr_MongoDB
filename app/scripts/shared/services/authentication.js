@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .factory('Authentication', function ($http, $q, $cookieStore, $rootScope, $timeout, Users, Toasts) {
+    .factory('Authentication', function ($http, $log, $q, $cookieStore, $rootScope, $timeout, Users, Toasts) {
 
       var vm = this;
       var authentication = null;
@@ -116,6 +116,16 @@ angular.module('workingRoom')
               $rootScope.globals = {};
               $cookieStore.remove('globals');
               $http.defaults.headers.common.Authorization = 'Basic';
+          },
+
+          resetPassword : function (user) {
+              var url = '/forgot';
+              return $http.post(url, user).
+                then(function mySucces(response) {
+                  $log.info(response);
+                }, function myError(response) {
+                  $log.error(response.statusText);
+              });
           }
 
       };
