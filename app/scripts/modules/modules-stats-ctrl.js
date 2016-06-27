@@ -691,29 +691,20 @@ angular.module('workingRoom')
 
                 if(ticket.lang == moment.locale()){
                   switch(ticket.status){
-
-                    case 'Clos':
+                    case 'En cours':
                       vm.takeLate(ticket,delais);
+                      i ++;
+                      status[1]=i;
                     break;
 
-                    case 'Soldé : Recontact client effectué':
+                    case 'Clos-Traité':
                       vm.takeLate(ticket,delais);
+                      tableAvg(delais);
                     break;
 
-                    case 'Traité avec résolution DC':
+                    case 'Clos-Non traité':
                       vm.takeLate(ticket,delais);
-                    break;
-
-                    case 'Traité sans résolution DC':
-                      vm.takeLate(ticket, delais);
-                    break;
-
-                    case 'Résolu avec solution satisfaisante':
-                      vm.takeLate(ticket, delais);
-                    break;
-
-                    case 'Résolu sans solution satisfaisante':
-                      vm.takeLate(ticket, delais);
+                      tableAvg(delais);
                     break;
                   }
                 }

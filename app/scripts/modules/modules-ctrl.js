@@ -265,45 +265,19 @@ angular.module('workingRoom')
               tickets.forEach(function (ticket){
 
               switch(ticket.status){
-                case 'A solder : En attente de recontact client':
-                  vm.takeLate(ticket,delais);
-                  i ++;
-                  status[0] = i;
-                break;
-
                 case 'En cours':
                   vm.takeLate(ticket,delais);
                   i ++;
                   status[1]=i;
                 break;
 
-                case 'En cours : Attente CPM':
-                  vm.takeLate(ticket,delais);
-                  status[1] = status[1]+1;
-                break;
-
-                case 'En cours : Attente conseiller':
-                  vm.takeLate(ticket,delais);
-                  status[1] = status[1]+1;
-                break;
-
-                case 'Soldé : Recontact client effectué':
+                case 'Clos-Traité':
                   vm.takeLate(ticket,delais);
                   tableAvg(delais);
                 break;
 
-                case 'Clos':
+                case 'Clos-Non traité':
                   vm.takeLate(ticket,delais);
-                  tableAvg(delais);
-                break;
-
-                case 'Traité avec résolution DC':
-                  vm.takeLate(ticket,delais);
-                  tableAvg(delais);
-                break;
-
-                case 'Traité sans résolution DC':
-                  vm.takeLate(ticket, delais);
                   tableAvg(delais);
                 break;
               }
