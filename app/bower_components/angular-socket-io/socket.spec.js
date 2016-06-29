@@ -23,7 +23,7 @@ describe('socketFactory', function () {
     $timeout = _$timeout_;
     scope = $rootScope.$new();
     spy = jasmine.createSpy('emitSpy');
-    mockIoSocket = io.connect();
+    mockIoSocket = io.connect('http://192.168.1.200', {'transports': ['websocket', 'polling']});
     socket = socketFactory({
       ioSocket: mockIoSocket,
       scope: scope

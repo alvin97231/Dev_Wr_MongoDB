@@ -7,7 +7,6 @@ var r = require('rethinkdb')
   , db = require('../../server/db/db');
 
 module.exports = function (socket) {
-  console.log('bitch');
   onConnect(function (err, connection) {
     r.db(db.dbConfig['db']).table('tickets').changes().run(connection).then(function (cursor) {
         cursor.each(function (err, row) {

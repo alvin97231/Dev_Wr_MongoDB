@@ -28,7 +28,7 @@ angular.module('btford.socket-io', []).
 
       return function socketFactory (options) {
         options = options || {};
-        var socket = options.ioSocket || io.connect();
+        var socket = options.ioSocket || io.connect('http://192.168.1.200', {'transports': ['websocket', 'polling']});
         var prefix = options.prefix === undefined ? defaultPrefix : options.prefix ;
         var defaultScope = options.scope || $rootScope;
 

@@ -21,20 +21,16 @@ angular.module('workingRoom')
         }
 
         function login() {
-            vm.dataLoading = true;
             Authentication.login(vm.email, vm.password, function (response) {
-                console.log(response);
-                if (response) {
+                if (response.email) {
                   $rootScope.message = 'Authentication successful!';
                   Toasts.simple($rootScope.message);
                   Authentication.setCredentials(response, vm.email, vm.password);
                   $location.path('/');
                 }
-                else {
+                else{
                   $rootScope.message = 'Authentication Failed!';
                   Toasts.simple($rootScope.message);
-                  $log.error(response.message);
-                  vm.dataLoading = false;
                 }
             });
         };
@@ -55,7 +51,7 @@ angular.module('workingRoom')
             });
         }
 
-        
+
         function testValues(){
           loginForm.$invalid=true;
         }

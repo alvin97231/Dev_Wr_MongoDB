@@ -92,6 +92,13 @@ angular.module('workingRoom')
     DELETE_USER_MODAL_DELETE_ACCOUNT: 'Suppression du compte',
     DELETE_USER_MODAL_PWD: 'Mot de passe',
     DELETE_USER_MODAL_CANCEL: 'ANNULER',
-    DELETE_USER_MODAL_BUTTON_DEL: 'SUPPRIMER'
+    DELETE_USER_MODAL_BUTTON_DEL: 'SUPPRIMER',
+    TABLE_NUMBER: 'N°',
+    TABLE_NAME: 'Nom',
+    TABLE_SUBJECT: 'Sujet',
+    TABLE_STATUS: 'Statut',
+    TABLE_CREATED: 'Créé',
+    TABLE_RESPONSE: 'Réponse'
+
   }).useSanitizeValueStrategy('escape').preferredLanguage('fr');
 });

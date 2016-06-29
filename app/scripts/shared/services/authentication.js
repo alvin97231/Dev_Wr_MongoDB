@@ -95,6 +95,9 @@ angular.module('workingRoom')
           $http.post(url, {username: username, password: password}).
             success(function (response) {
               callback(response);
+            }).
+            error(function (response) {
+              callback(response);
             });
           },
 

@@ -24,8 +24,11 @@ var express = require('express')
 
 , app = express()
 , server = require('http').createServer(app)
-, io = require('socket.io').listen(server);
+, io = require('socket.io')(server);
+//, redis = require('socket.io-redis');
 
+//io.adapter(redis({host: 'localhost',port: 6379}));
+//io.set('transports', ['websocket', 'polling']);
 io.on('connection', require('./server/socket/socket'));
 //==================================================================
 

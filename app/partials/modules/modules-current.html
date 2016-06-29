@@ -53,12 +53,12 @@
                 <md-tab-body><br/>
                   <table id="table_current" class="table">
                       <thead>
-                            <th style="text-align:center">N°</th>
-                            <th style="text-align:center">Nom</th>
-                            <th style="text-align:center">Sujet</th>
-                            <th style="text-align:center">Statut</th>
-                            <th style="text-align:center">Créé</th>
-                            <th style="text-align:center">Réponse par</th>
+                            <th style="text-align:center">{{ 'TABLE_NUMBER' | translate }}</th>
+                            <th style="text-align:center">{{ 'TABLE_NAME' | translate }}</th>
+                            <th style="text-align:center">{{ 'TABLE_SUBJECT' | translate }}</th>
+                            <th style="text-align:center">{{ 'TABLE_STATUS' | translate }}</th>
+                            <th style="text-align:center">{{ 'TABLE_CREATED' | translate }}</th>
+                            <th style="text-align:center">{{ 'TABLE_RESPONSE' | translate }}</th>
                             <th style="text-align:center">J+</th>
                             <th style="text-align:center" data-ng-repeat="(key, field) in vm.module.ticketFields">{{field.name}}</th>
                       </thead>

@@ -1,7 +1,7 @@
-'use strict';
+//'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesStatsCtrl', function ($scope, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList, Socket) {
+    .controller('ModulesStatsCtrl', function ($scope, $filter, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList, Socket) {
         var vm = this;
         vm.users = UsersList;
         vm.groups = GroupsList;
@@ -149,7 +149,6 @@ angular.module('workingRoom')
                   if (vm.tickets[i].messages[j].ei && vm.tickets[i].lang == moment.locale()) {
                     if (vm.ticketEi.indexOf(vm.tickets[i]) === -1) {
                       vm.ticketEi.push(vm.tickets[i]);
-                      console.log(vm.ticketEi);
                     }
                   }
                 }
@@ -185,18 +184,24 @@ angular.module('workingRoom')
                 vm.countTicketTableToDeal.push({date:vm.dateTableToDeal[i], count:vm.qsTicketsToDeal.length});
               }
 
-              vm.oldiestTicketClimb = vm.statsStatus[2][0];
-              if(vm.oldiestTicketClimb){
-                vm.QSDaysClimb = (new Date().getTime() - vm.oldiestTicketClimb.created)/86400000;
-                vm.QSHoursClimb = (Math.round(vm.QSDaysClimb))*24;
+              vm.climbToTest = vm.statsStatus[2];
+              vm.testValues = [];
+              for (var i = 0; i < vm.climbToTest.length; i++) {
+                vm.oldiestTicketClimb = vm.statsStatus[2][i];
+                vm.oldiestTicketClimbDate = vm.oldiestTicketClimb.messages[vm.oldiestTicketClimb.messages.length-1].date;
+                vm.testValues.push(vm.oldiestTicketClimbDate);
               }
+              vm.oldiestTicketClimb = Math.min.apply(null, vm.testValues);
+              vm.QSDaysClimb = (new Date().getTime() - vm.oldiestTicketClimb)/86400000;
+              vm.QSHoursClimb = (Math.round(vm.QSDaysClimb))*24;
 
               vm.dateTableClimb=[]
               if(vm.dateTableClimb){
-                for (var i = 0; i < vm.statsStatus[2].length; i++) {
-                  var dateToDeal = moment(vm.statsStatus[6][i].created).format("DD-MM-YYYY");
-                  if(vm.dateTableClimb.indexOf(dateToDeal) === -1){
-                    vm.dateTableClimb.push(dateToDeal);
+                for (var i = 0; i < vm.climbToTest.length; i++) {
+                  vm.oldiestTicketClimb = vm.statsStatus[2][i];
+                  var dateClimb = moment(vm.oldiestTicketClimb.messages[vm.oldiestTicketClimb.messages.length-1].date).format("DD-MM-YYYY");
+                  if(vm.dateTableClimb.indexOf(dateClimb) === -1){
+                    vm.dateTableClimb.push(dateClimb);
                   }
                 }
               }
@@ -204,7 +209,7 @@ angular.module('workingRoom')
               vm.countTicketTableClimb=[]
               if(vm.countTicketTableClimb){
                 for (var i = 0; i < vm.dateTableClimb.length; i++) {
-                  vm.qsTicketsClimb = vm.statsStatus[2].filter(function (ticket){return moment(ticket.created).format("DD-MM-YYYY") === vm.dateTableClimb[i];});
+                  vm.qsTicketsClimb = vm.statsStatus[2].filter(function (ticket){return moment(ticket.messages[ticket.messages.length-1].date).format("DD-MM-YYYY") === vm.dateTableClimb[i];});
                   vm.countTicketTableClimb.push({date:vm.dateTableClimb[i], count:vm.qsTicketsClimb.length});
                 }
               }
