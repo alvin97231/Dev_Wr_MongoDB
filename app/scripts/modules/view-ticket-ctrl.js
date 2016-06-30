@@ -25,6 +25,7 @@ angular.module('workingRoom')
 
         function sendMessage() {
             if (vm.newMessage.length > 0) {
+              console.log(ticket);
                 if (vm.newStatus === 'Injustifié' && ticket.status === 'Escaladé'){
                   ticket.status = 'A traiter';
                   vm.ei = true;

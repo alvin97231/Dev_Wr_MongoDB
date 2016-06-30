@@ -71,12 +71,14 @@
             </md-ckeckbox>
         </div>
         <div>
-            <md-select data-ng-model="vm.newStatus" required placeholder="Statut">
-                <md-option data-ng-if="vm.user" data-ng-repeat="status in vm.module.status | filter: {name: '!Clos'} | filter: {name: '!Traité avec résolution DC'} | filter: {name: '!Traité sans résolution DC'} | filter: {name: '!Escalade injustifié'}" value="{{status.name}}">
+            <md-select data-ng-if="vm.admin || vm.super" data-ng-model="vm.newStatus" required placeholder="Statut">
+                <md-option data-ng-repeat="status in vm.module.status" value="{{status.name}}">
                     {{status.name}}
                 </md-option>
-                <md-option data-ng-if="vm.admin || vm.super" data-ng-repeat="status in vm.module.status" value="{{status.name}}">
-                    {{status.name}}
+            </md-select>
+            <md-select data-ng-if="vm.user" data-ng-model="vm.newStatus" required placeholder="Statut">
+                <md-option value="{{vm.ticket.status}}">
+                    {{vm.ticket.status}}
                 </md-option>
             </md-select>
         </div>

@@ -62,12 +62,10 @@ angular.module('workingRoom')
         filterTicketList();
 
         Socket.on('new_ticket', function (data) {
-          console.log(data);
           updateArray(TicketsList, data, 'add');
 
         });
         Socket.on('update_ticket', function (data) {
-          console.log(data);
           updateArray(TicketsList, data, 'update');
         });
 
