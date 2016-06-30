@@ -29,16 +29,16 @@ module.exports = function (socket) {
     onConnect(function (err, connection) {
       r.db(db.dbConfig['db']).table('users').changes().run(connection).then(function (cursor) {
          cursor.each(function (err, users) {
-           if(users && users.new_val && users.old_val === undefined){
-             socket.broadcast.emit('new_user', users.new_val);
+           if(users && users.new_val && users.old_val === null){
+             socket.emit('new_user', users.new_val);
              console.log('New user inserted');
            }
            else if(users && users.new_val && users.old_val){
-             socket.broadcast.emit('update_user', users.new_val);
+             socket.emit('update_user', users.new_val);
              console.log('User updated');
            }
            else if(users && users.new_val === null){
-             socket.broadcast.emit('delete_user', users.new_val);
+             socket.emit('delete_user', users.new_val);
              console.log('User deleted');
            }
          });
@@ -48,16 +48,16 @@ module.exports = function (socket) {
      onConnect(function (err, connection) {
        r.db(db.dbConfig['db']).table('modules').changes().run(connection).then(function (cursor) {
             cursor.each(function (err, modules) {
-              if(modules && modules.new_val && modules.old_val === undefined){
-                socket.broadcast.emit('new_module', modules.new_val);
+              if(modules && modules.new_val && modules.old_val === null){
+                socket.emit('new_module', modules.new_val);
                 console.log('New module inserted');
               }
               else if(modules && modules.new_val && modules.old_val){
-                socket.broadcast.emit('update_module', modules.new_val);
+                socket.emit('update_module', modules.new_val);
                 console.log('Module updated');
               }
               else if(modules && modules.new_val === null){
-                socket.broadcast.emit('delete_module', modules.old_val);
+                socket.emit('delete_module', modules.old_val);
                 console.log('Module deleted');
               }
             });
@@ -67,16 +67,16 @@ module.exports = function (socket) {
         onConnect(function (err, connection) {
           r.db(db.dbConfig['db']).table('groups').changes().run(connection).then(function (cursor) {
              cursor.each(function (err, groups) {
-               if(groups && groups.new_val && groups.old_val === undefined){
-                 socket.broadcast.emit('new_group', groups.new_val);
+               if(groups && groups.new_val && groups.old_val === null){
+                 socket.emit('new_group', groups.new_val);
                  console.log('New group inserted');
                }
                else if(groups && groups.new_val && groups.old_val){
-                 socket.broadcast.emit('update_groups', groups.new_val);
+                 socket.emit('update_groups', groups.new_val);
                  console.log('Group updated');
                }
                else if(groups && groups.new_val === null){
-                 socket.broadcast.emit('delete_group', groups.old_val);
+                 socket.emit('delete_group', groups.old_val);
                  console.log('Group deleted');
                }
              });

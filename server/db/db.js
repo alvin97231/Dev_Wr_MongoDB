@@ -63,7 +63,7 @@ module.exports.findUserByEmail = function (mail, callback) {
           else {
             callback(null, row);
           }
-          connection.close();
+          //connection.close();
         });
       }
     });
@@ -80,7 +80,7 @@ module.exports.findUserById = function (userId, callback) {
       else {
         callback(null, result);
       }
-      connection.close();
+      //connection.close();
     });
   });
 };
@@ -211,7 +211,7 @@ module.exports.AddTicket = function (req, res, next) {
         res.json({success: true});
       }
     });
-    //connection.close();
+    ////connection.close();
   });
 };
 
@@ -230,7 +230,7 @@ module.exports.AddGroup = function (req, res, next) {
         res.json({success: true});
       }
     });
-    connection.close();
+    //connection.close();
   });
 };
 
