@@ -236,11 +236,12 @@ angular.module('workingRoom')
           vm.diff = currentDate - dateStatusChange;
           if(vm.diff >= 172800000)
           {
+            return true
             console.log('Notif Necessaire');
           }
           else if(vm.diff < 604800000)
           {
-            if (ticket.status === 'Soldé : Recontact client effectué' || 'Clos' || 'Traité avec résolution DC' || 'Traité sans résolution DC') {
+            if (ticket.status === 'Clos-Traité' || 'Clos-Non traité') {
               console.log('Notif Non Necessaire');
               vm.done = dateStatusChange - ticket.created;
               vm.diffDisp = vm.done/3600000;
@@ -265,8 +266,10 @@ angular.module('workingRoom')
               switch(ticket.status){
                 case 'En cours':
                   vm.takeLate(ticket,delais);
-                  i ++;
-                  status=i;
+                  if(vm.takeLate(ticket, delais) === true){
+                    i ++;
+                    status=i;
+                  }
                 break;
 
                 case 'Clos-Traité':

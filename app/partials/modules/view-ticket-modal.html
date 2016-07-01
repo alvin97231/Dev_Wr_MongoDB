@@ -11,7 +11,7 @@
                   M'abonner
                 </md-switch>
                 -->
-                <md-button type="button" data-ng-if="vm.ticket.status === 'Clos' && vm.admin" data-ng-click="vm.unlock()" class="md-icon-button">
+                <md-button type="button" data-ng-if="vm.ticket.status === 'Clos-Traité' || vm.ticket.status === 'Clos-Non traité'&& vm.admin" data-ng-click="vm.unlock()" class="md-icon-button">
                   <md-icon>lock_open</md-icon>
                 </md-button>
                 <md-button type="button" aria-label="close" data-ng-click="vm.cancel()" class="md-icon-button">
@@ -57,7 +57,7 @@
         <md-divider></md-divider>
     </md-dialog-content>
     <form class="md-actions" layout="row" ng-hide="vm.ticket.status === 'Clos-Traité' || vm.ticket.status === 'Clos-Non traité'"
-          name="responseForm" data-ng-submit="vm.sendMessage()">
+          name="responseForm" data-ng-submit="vm.sendMessage()" ng-show="vm.lock">
         <div flex>
             <md-input-container>
                 <label>{{'VIEW_TICKET_MODAL_ANSWER' | translate}}</label>

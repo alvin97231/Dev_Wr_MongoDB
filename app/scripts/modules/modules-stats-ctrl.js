@@ -696,10 +696,6 @@ angular.module('workingRoom')
 
                 if(ticket.lang == moment.locale()){
                   switch(ticket.status){
-                    case 'En cours':
-                      vm.takeLate(ticket,delais);
-                    break;
-
                     case 'Clos-Traité':
                       vm.takeLate(ticket,delais);
                       tableAvg(delais);

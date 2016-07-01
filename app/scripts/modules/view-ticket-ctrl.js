@@ -88,7 +88,7 @@ angular.module('workingRoom')
         }
 
         function unlock() {
-          vm.ticket.status = '';
+          vm.lock = true;
         }
 
         /*function subscribe(){
