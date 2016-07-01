@@ -168,6 +168,16 @@ module.exports.GetModule = function (req, res, next) {
         });
       }
     });
+    r.db(dbConfig['db']).table('modules').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -187,6 +197,16 @@ module.exports.GetUser = function (req, res, next) {
           }
           res.json(result);
         });
+      }
+    });
+    r.db(dbConfig['db']).table('users').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
       }
     });
   });
@@ -211,7 +231,16 @@ module.exports.AddTicket = function (req, res, next) {
         res.json({success: true});
       }
     });
-    ////connection.close();
+    r.db(dbConfig['db']).table('tickets').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -230,7 +259,16 @@ module.exports.AddGroup = function (req, res, next) {
         res.json({success: true});
       }
     });
-    //connection.close();
+    r.db(dbConfig['db']).table('groups').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -267,6 +305,16 @@ module.exports.AddUser = function (req, res, next) {
         });
       }
     });
+    r.db(dbConfig['db']).table('users').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -276,6 +324,16 @@ module.exports.AddModule = function (req, res, next) {
 
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('modules').insert(Module).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+    r.db(dbConfig['db']).table('modules').sync().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
@@ -311,6 +369,16 @@ module.exports.UpdateTicket = function (req, res, next) {
         res.json({success: true});
       }
     });
+    r.db(dbConfig['db']).table('tickets').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -330,6 +398,16 @@ module.exports.UpdateModule = function (req, res, next) {
         res.json({success: true});
       }
     });
+    r.db(dbConfig['db']).table('modules').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -340,6 +418,16 @@ module.exports.UpdateGroup = function (req, res, next) {
 
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('groups').get(groupId).update(Group).run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+    r.db(dbConfig['db']).table('groups').sync().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
@@ -400,6 +488,16 @@ module.exports.UpdateUser = function (req, res, next) {
         }
       });
     }
+    r.db(dbConfig['db']).table('users').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 
   };
@@ -410,7 +508,17 @@ module.exports.DeleteUser = function (req, res, next) {
   console.log('Suppresion de l\'utilisateur '+userId);
 
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').filter(r.row('id').eq(userId)).delete().run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('users').get(userId).delete().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+    r.db(dbConfig['db']).table('users').sync().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);
@@ -438,6 +546,16 @@ module.exports.DeleteGroup = function (req, res, next) {
         res.json({success: true});
       }
     });
+    r.db(dbConfig['db']).table('groups').sync().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
   });
 };
 
@@ -447,6 +565,16 @@ module.exports.DeleteModule = function (req, res, next) {
 
   onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('modules').get(moduleId).delete().run(connection, function(err, result) {
+      if(err) {
+        logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+        return next(err);
+      }
+      else {
+        console.log(result);
+        res.json({success: true});
+      }
+    });
+    r.db(dbConfig['db']).table('modules').sync().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);

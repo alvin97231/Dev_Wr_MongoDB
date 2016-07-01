@@ -56,7 +56,7 @@
         </md-content>
         <md-divider></md-divider>
     </md-dialog-content>
-    <form class="md-actions" layout="row" ng-hide="vm.ticket.status === 'Clos' || vm.ticket.status === 'Résolu avec solution satisfaisante' || vm.ticket.status === 'Résolu sans solution satisfaisante'"
+    <form class="md-actions" layout="row" ng-hide="vm.ticket.status === 'Clos-Traité' || vm.ticket.status === 'Clos-Non traité'"
           name="responseForm" data-ng-submit="vm.sendMessage()">
         <div flex>
             <md-input-container>
