@@ -219,6 +219,9 @@ angular.module('workingRoom', [
             resolve: {
                 Module: function (Module) {
                     return Module;
+                },
+                User: function (User) {
+                    return User;
                 }
             }
         })
