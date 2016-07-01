@@ -83,7 +83,7 @@
                     </md-card-content>
 
                     <div class="md-actions" layout="row" layout-align="end center">
-                        <md-button class="md-accent" data-ui-sref="main.modulesStats({id: module.id})">
+                        <md-button data-ng-if="vm.admin" class="md-accent" data-ui-sref="main.modulesStats({id: module.id})">
                             {{ 'HOME_PAGE_MODULES_STAT_CPM' | translate }}
                         </md-button>
                         <md-button class="md-accent" data-ui-sref="main.modules({id: module.id})">
