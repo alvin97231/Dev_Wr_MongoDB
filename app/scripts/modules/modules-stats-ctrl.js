@@ -1,8 +1,10 @@
 //'use strict';
 
 angular.module('workingRoom')
-    .controller('ModulesStatsCtrl', function ($scope, $filter, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList, Socket) {
+    .controller('ModulesStatsCtrl', function ($scope, $filter, $mdDialog, $timeout, $stateParams, $log, $q,  Module, TicketsList, UsersList, GroupsList, Socket, admin, user, User) {
         var vm = this;
+        vm.admin = admin;
+        vm.user = user;
         vm.users = UsersList;
         vm.groups = GroupsList;
         vm.tickets = TicketsList;
@@ -23,6 +25,7 @@ angular.module('workingRoom')
         vm.QSCpm = false;
         vm.exportExcel = exportExcel;
 
+        if (vm.user){vm.openLogin[0] = User;} 
         function filterTicketList() {
              $timeout(function () {
                 vm.tickets = $filter('filter')(TicketsList, vm.currentFilter);
@@ -87,7 +90,7 @@ angular.module('workingRoom')
             case 'delete':
               var i;
               for (i = 0; i < array.length; i++) {
-                if (array[i].id === newValue.id) {
+                if (array[i].id === null) {
                   array.splice(i,1);
                 }
               }

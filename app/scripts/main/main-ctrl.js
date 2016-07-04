@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('workingRoom')
-    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts, Socket, Authentication) {
+    .controller('MainCtrl', function ($rootScope,$scope, $state, $mdSidenav, $translate,$location, amMoment, User, ModulesList, Modules, $http, Toasts, Socket, Authentication, admin) {
         var vm = this;
 
         vm.logout = logout;
@@ -9,6 +9,7 @@ angular.module('workingRoom')
         vm.toggleSidenav = toogleSidenav;
         vm.modules = ModulesList;
         vm.user = User;
+        vm.admin = admin;
         vm.showModulesGrid = true;
         $scope.selectedLocale = 'fr';
         vm.changeLocale = changeLocale;
@@ -42,7 +43,7 @@ angular.module('workingRoom')
             case 'delete':
               var i;
               for (i = 0; i < array.length; i++) {
-                if (array[i].id === newValue.id) {
+                if (array[i].id === null) {
                   array.splice(i,1);
                 }
               }

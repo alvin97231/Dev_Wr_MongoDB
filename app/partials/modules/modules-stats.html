@@ -9,6 +9,7 @@
           <div flex ng-if="!vm.closeLogin[0]">
             <md-chips
                 ng-model="vm.openLogin"
+                ng-if = "vm.admin"
                 md-autocomplete-snap
                 md-transform-chip="vm.transformChip($chip)">
                 <md-autocomplete
@@ -29,6 +30,11 @@
                 </span>
               </md-chip-template>
             </md-chips>
+            <md-chips ng-model="vm.openLogin" readonly="vm.user">
+              <md-chip-template>
+                <strong>{{$chip.name}}</strong>
+              </md-chip-template>
+            </md-chips>
         </div>
       </div>
 
@@ -36,6 +42,7 @@
         <div flex ng-if="!vm.openLogin[0]">
           <md-chips
               ng-model="vm.closeLogin"
+              ng-if = "vm.admin"
               md-autocomplete-snap
               md-transform-chip="vm.transformChip($chip)">
               <md-autocomplete

@@ -197,8 +197,11 @@ angular.module('workingRoom', [
                 ModulesList: function (User, Modules, GroupsList) {
                     return Modules.all(User, GroupsList);
                 },
-                User: function (Users) {
-                    return Users.current();
+                User: function (User) {
+                    return User;
+                },
+                user: function (User) {
+                    return User.type === 'user';
                 },
                 admin: function (User) {
                     return User.type === 'admin';

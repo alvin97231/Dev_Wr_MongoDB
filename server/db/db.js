@@ -504,11 +504,11 @@ module.exports.UpdateUser = function (req, res, next) {
 
 module.exports.DeleteUser = function (req, res, next) {
 
-  var userId = req.params.id;
-  console.log('Suppresion de l\'utilisateur '+userId);
+  var userMail = req.params.email;
+  console.log('Suppresion de l\'utilisateur '+userMail);
 
   onConnect(function (err, connection) {
-    r.db(dbConfig['db']).table('users').get(userId).delete().run(connection, function(err, result) {
+    r.db(dbConfig['db']).table('users').filter({'email' : userMail}).delete().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
         return next(err);

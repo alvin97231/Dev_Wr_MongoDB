@@ -15,8 +15,7 @@ angular.module('workingRoom')
                 .content('Voulez-vous vraiment supprimer cet utilisateur ?')
                 .ariaLabel('confirm delete')
                 .ok('Oui')
-                .cancel('Non')
-                .targetEvent(event);
+                .cancel('Non');
             $mdDialog.show(confirm).then(function () {
               console.log(user);
               if(User.type == 'admin'){Users.delete(user);}

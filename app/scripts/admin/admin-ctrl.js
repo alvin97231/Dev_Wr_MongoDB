@@ -77,7 +77,7 @@ angular.module('workingRoom')
             case 'delete':
               var i;
               for (i = 0; i < array.length; i++) {
-                if (array[i].id === newValue.id) {
+                if (array[i].id === null) {
                   array.splice(i,1);
                 }
               }

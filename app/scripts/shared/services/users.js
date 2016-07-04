@@ -80,7 +80,7 @@ angular.module('workingRoom')
           },
 
           delete: function(user) {
-            var url = '/users/' + user.id;
+            var url = '/users/' + user.email;
             $http.delete(url).
               then(function mySucces(response) {
                 $log.info('Utilisateur supprimé')
