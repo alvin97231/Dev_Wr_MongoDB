@@ -85,8 +85,8 @@ require('./server/routes/auth')(app);
 app.get('/users', db.UsersList);
 app.get('/users/:id', db.GetUser);
 app.post('/users', db.AddUser);
-app.put('/users/:id', db.UpdateUser);
-app.delete('/users/:id', db.DeleteUser);
+app.put('/users/:email', db.UpdateUser);
+app.delete('/users/:email', db.DeleteUser);
 
 app.get('/modules', db.ModulesList);
 app.get('/modules/:id', db.GetModule);

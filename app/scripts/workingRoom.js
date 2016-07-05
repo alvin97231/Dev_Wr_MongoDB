@@ -237,10 +237,11 @@ angular.module('workingRoom', [
                 Module: function (Module) {
                     return Module;
                 },
-                admin: function (User, Module, $q, admin) {
-                    return $q(function (resolve, reject) {
-                        User.type === 'admin' || Module.$rights === 'a' ? resolve(admin) : reject(admin);
-                    });
+                admin: function (admin) {
+                    return admin;
+                },
+                User: function (User) {
+                    return User;
                 },
                 TicketsList: function (TicketsList) {
                     return TicketsList;
@@ -256,10 +257,8 @@ angular.module('workingRoom', [
                 User: function (Users) {
                     return Users.current();
                 },
-                admin: function (User, $stateParams, admin, $q) {
-                    return $q(function (resolve) {
-                        resolve(User.id === $stateParams.id || User.type === 'admin');
-                    });
+                admin: function (admin) {
+                    return admin;
                 },
                 user: function (Users, $stateParams) {
                     return Users.get($stateParams.id);
@@ -275,14 +274,8 @@ angular.module('workingRoom', [
             controller: 'EditUserCtrl as vm',
             authenticate: true,
             resolve: {
-                user: function (user, admin, $q) {
-                    return $q(function (resolve, reject) {
-                        if (admin) {
-                            resolve(user);
-                        } else {
-                            reject('NOT_AUTHORIZED');
-                        }
-                    });
+                user: function (user) {
+                    return user;
                 },
                 User: function (User) {
                     return User;

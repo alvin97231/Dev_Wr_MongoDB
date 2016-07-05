@@ -275,7 +275,7 @@ module.exports.AddGroup = function (req, res, next) {
 module.exports.AddUser = function (req, res, next) {
 
   var User = req.body;
-  User.password = bcrypt.hashSync('workingRoom', 10);
+  User.password = bcrypt.hashSync('workingroom', 10);
 
   onConnect(function (err, connection) {
     r.db(dbConfig.db).table('counter').get('ea507c88-ed43-4833-b3ec-b2b7948c8a51').run(req.app._rdbConn, function(err, result) {
@@ -291,15 +291,18 @@ module.exports.AddUser = function (req, res, next) {
           }
           else {
             counter = User.id +1;
-            r.db(dbConfig.db).table('counter').get('ea507c88-ed43-4833-b3ec-b2b7948c8a51').update({userCounter : counter}).run(connection, function(err, result) {
+            console.log(result2);
+            r.db(dbConfig.db).table('counter').get('ea507c88-ed43-4833-b3ec-b2b7948c8a51').update({usersCounter : counter}).run(connection, function(err, result) {
               if(err) {
                 logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
                 return next(err);
               }
               else {
+                console.log(result);
                 res.json({success: true});
               }
             });
+            console.log(result);
             res.json({success: true});
           }
         });
@@ -443,11 +446,41 @@ module.exports.UpdateGroup = function (req, res, next) {
 module.exports.UpdateUser = function (req, res, next) {
 
   var User = req.body;
-  var userId = req.params.id;
+  var userMail = req.params.email;
 
-  onConnect(function (err, connection) {
-    if (User.name) {
-      r.db(dbConfig['db']).table('users').get(userId).update({
+  if (User.newPassword) {
+    onConnect(function (err, connection) {
+      r.db(dbConfig['db']).table('users').filter({'email' : userMail}).run(connection, function(err, cursor) {
+        if(err) {
+          logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+          return next(err);
+        }
+        if(cursor){
+          cursor.next(function(err, result) {
+            if(err) {
+              return next(err);
+            }
+            console.log(result.password);
+            if(bcrypt.compareSync(User.oldPassword, result.password)){
+              r.db(dbConfig['db']).table('users').filter({'email' : userMail}).update({password: bcrypt.hashSync(User.newPassword, 10)}).run(connection, function(err, result) {
+                if(err) {
+                  logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+                  return next(err);
+                }
+                else {
+                  console.log(result);
+                }
+              });
+            }
+            res.json(result);
+          });
+        }
+      });
+    });
+  }
+  else if (User.name) {
+    onConnect(function (err, connection) {
+      r.db(dbConfig['db']).table('users').filter({'email' : userMail}).update({
         "name": User.name,
         "email":User.email,
         "groups": User.groups,
@@ -463,31 +496,10 @@ module.exports.UpdateUser = function (req, res, next) {
           res.json({success: true});
         }
       });
-    }
+    });
+  }
 
-    else if (User.newPassword) {
-      r.db(dbConfig['db']).table('users').get(userId).run(connection, function(err, result) {
-        if(err) {
-          logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-          return next(err);
-        }
-        else if (result) {
-          if(bcrypt.compareSync(User.oldPassword, result.password)){
-            console.log(User);
-            r.db(dbConfig['db']).table('users').get(userId).update({password: bcrypt.hashSync(User.newPassword, 10)}).run(connection, function(err, result) {
-              if(err) {
-                logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
-                return next(err);
-              }
-              else {
-                console.log(result);
-                res.json({success: true});
-              }
-            });
-          }
-        }
-      });
-    }
+  onConnect(function (err, connection) {
     r.db(dbConfig['db']).table('users').sync().run(connection, function(err, result) {
       if(err) {
         logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);

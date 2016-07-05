@@ -59,7 +59,7 @@ angular.module('workingRoom')
           },
 
           update: function (user) {
-            var url = '/users/' + user.id;
+            var url = '/users/' + user.email;
             return $http.put(url, user).
               then(function mySucces(response) {
                 $log.info('Nouvel utilisateur modifié');
@@ -69,7 +69,7 @@ angular.module('workingRoom')
           },
 
           changePassword: function (obj, user) {
-            var url = '/users/' + user.id;
+            var url = '/users/' + user.email;
             return $http.put(url, obj).
               then(function mySucces(response) {
                 $log.info('Mot de passe changé');
