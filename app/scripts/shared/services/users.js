@@ -79,6 +79,18 @@ angular.module('workingRoom')
               });
           },
 
+          changeEmail: function (obj, user) {
+            var url = '/users/' + user.email;
+            return $http.put(url, obj).
+              then(function mySucces(response) {
+                $log.info('Email changé');
+                Toasts.simple('Email changé');
+              }, function myError(response) {
+                $log.error(response.statusText);
+              });
+          },
+
+
           delete: function(user) {
             var url = '/users/' + user.email;
             $http.delete(url).

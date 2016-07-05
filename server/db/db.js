@@ -447,7 +447,7 @@ module.exports.UpdateUser = function (req, res, next) {
 
   var User = req.body;
   var userMail = req.params.email;
-
+  console.log(User);
   if (User.newPassword) {
     onConnect(function (err, connection) {
       r.db(dbConfig['db']).table('users').filter({'email' : userMail}).run(connection, function(err, cursor) {
@@ -463,6 +463,36 @@ module.exports.UpdateUser = function (req, res, next) {
             console.log(result.password);
             if(bcrypt.compareSync(User.oldPassword, result.password)){
               r.db(dbConfig['db']).table('users').filter({'email' : userMail}).update({password: bcrypt.hashSync(User.newPassword, 10)}).run(connection, function(err, result) {
+                if(err) {
+                  logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+                  return next(err);
+                }
+                else {
+                  console.log(result);
+                }
+              });
+            }
+            res.json(result);
+          });
+        }
+      });
+    });
+  }
+  if (User.newEmail) {
+    onConnect(function (err, connection) {
+      r.db(dbConfig['db']).table('users').filter({'email' : userMail}).run(connection, function(err, cursor) {
+        if(err) {
+          logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
+          return next(err);
+        }
+        if(cursor){
+          cursor.next(function(err, result) {
+            if(err) {
+              return next(err);
+            }
+            console.log(result.password);
+            if(bcrypt.compareSync(User.password, result.password)){
+              r.db(dbConfig['db']).table('users').filter({'email' : userMail}).update({email: User.newEmail}).run(connection, function(err, result) {
                 if(err) {
                   logerror("[ERROR][%s][saveMessage] %s:%s\n%s", connection['_id'], err.name, err.msg, err.message);
                   return next(err);

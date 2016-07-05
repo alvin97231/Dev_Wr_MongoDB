@@ -21,7 +21,6 @@ module.exports = function(app) {
         function(username, password, done) {
 
             db.findUserByEmail(username, function (err, user) {
-              console.log(bcrypt.compareSync(password, user.password));
                 if (err) {
                     return done(err);
                 }

@@ -7,7 +7,8 @@
                 <md-input-container flex class="md-icon-float">
                     <label>{{'EDIT_PROFIL_NAME' | translate}}</label>
                     <md-icon>person</md-icon>
-                    <input data-ng-model="vm.user.name" type="text" title="Nom d'utilisateur">
+                    <input data-ng-if="vm.admin" data-ng-model="vm.user.name" type="text" title="Nom d'utilisateur">
+                    <input data-ng-if="!vm.admin" disabled data-ng-model="vm.user.name" type="text" title="Nom d'utilisateur">
                 </md-input-container>
                 <md-radio-group data-ng-show="vm.admin" data-ng-model="vm.user.type">
                     <md-radio-button value="user">{{'EDIT_PROFIL_USER' | translate}}</md-radio-button>
